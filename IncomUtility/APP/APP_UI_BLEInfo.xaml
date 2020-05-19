@@ -1,0 +1,41 @@
+﻿<Window x:Class="IncomUtility.APP_UI_BLEInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IncomUtility"
+        mc:Ignorable="d"
+        Title="APP_UI_BLEInfo" Height="450" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100*"/>
+            <RowDefinition Height="100*"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="BLE information" Margin="10,10,10,10" Grid.RowSpan="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90*"/>
+                    <ColumnDefinition Width="90*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Label Content="BLE Device Name" Margin="10,5,10,0"></Label>
+                    <TextBox Margin="10,0,10,0"></TextBox>
+                    <Label Content="BLE Mac Address" Margin="10,5,10,0"></Label>
+                    <TextBox Margin="10,0,10,0"></TextBox>
+                    <Label Content="BLE TX Power" Margin="10,5,10,0"></Label>
+                    <TextBox Margin="10,0,10,0"></TextBox>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Label Content="BLE SW Version" Margin="10,5,10,0"></Label>
+                    <TextBox Margin="10,0,10,0"></TextBox>
+                    <Label Content="BLE Instrument ID" Margin="10,5,10,0"></Label>
+                    <TextBox Margin="10,0,10,0"></TextBox>
+                    <Button Content="Refresh BLE Info" Margin="10,15,10,5" Height="45"></Button>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <Border Grid.Row="1" Margin="10,10,10,10" BorderThickness="1" BorderBrush="Black">
+            <TextBlock ></TextBlock>
+        </Border>
+    </Grid>
+</Window>

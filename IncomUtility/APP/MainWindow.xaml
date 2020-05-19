@@ -1,0 +1,103 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IncomUtility"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="IncomUtility.MainWindow"
+        mc:Ignorable="d" 
+        Loaded="Window_Loaded"  SizeChanged="Window_SizeChanged"  Closing="Window_Closing"
+        Title="Incom Utility v.0.0.1" Height="600" Width="1350">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="694*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="38*"/>
+            <RowDefinition Height="52*"/>
+            <RowDefinition Height="433*"/>
+            <RowDefinition Height="161*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.RowSpan="1" Grid.ColumnSpan="4" Background="White" Margin="10,5,0,0" FontStyle="Normal" FontWeight="Normal" FontSize="13">
+            <MenuItem Header="_View">
+                <MenuItem x:Name="tMenu_ViewBLEInfo" Header="View BLE Info" Click="tMenu_ViewBLEInfo_Click"/>
+                <MenuItem x:Name="tMenu_ViewDeviceInfo" Header="View Device Info" Click="tMenu_ViewDeviceInfo_Click"/>
+                <MenuItem x:Name="tMenu_ViewLogs" Header="View Logs"/>
+            </MenuItem>
+            <MenuItem Header="_Status" >
+                <MenuItem Header="Monitor Device Status" x:Name="tMenu_MonitorDeviceStatus" Click="tMenu_MonitorDeviceStatus_Click"/>
+                <MenuItem x:Name="tMenu_MonitorRawData" Header="Monitor Raw Data" Click="tMenu_MonitorRawData_Click" />
+            </MenuItem>
+            <MenuItem Header="_Setting" >
+                <MenuItem Header="Edit Sensor Data"/>
+                <MenuItem Header="Edit Instrument Settings"/>
+                <MenuItem Header="Securtiy Control"/>
+                <MenuItem Header="Communication" x:Name="tMenu_Communication" Click="tMenu_Communication_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Calibrate">
+                <MenuItem Header="Gas Calibration"/>
+                <MenuItem Header="Calibrate Analogue Output"/>
+                <MenuItem Header="Calibrate Voltage Output"/>
+                <MenuItem Header="Calibrate Cell Drive"/>
+            </MenuItem>
+            <MenuItem Header="_Test">
+                <MenuItem Header="Hardware Test"/>
+            </MenuItem>
+            <MenuItem Header="_Debug">
+                <MenuItem Header="Comm. Log"/>
+                <MenuItem x:Name="tMenu_Debug" Header="Debug" Click="tMenu_Debug_Click"/>
+            </MenuItem>
+        </Menu>
+        <DataGrid Grid.ColumnSpan="2" Grid.Column="2" Margin="10,10,10,10" Grid.Row="2" >
+            <DataGrid.ColumnHeaderStyle >
+                <Style TargetType = "{x:Type DataGridColumnHeader}">
+                    <Setter Property = "HorizontalContentAlignment" Value = "Center" />
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date/Time"/>
+                <DataGridTextColumn Header="Raw ADC"/>
+                <DataGridTextColumn Header="Cell Output"/>
+                <DataGridTextColumn Header="Primary Conc."/>
+                <DataGridTextColumn Header="Lin. Conc."/>
+                <DataGridTextColumn Header="Deadband"/>
+                <DataGridTextColumn Header="Display Conc."/>
+                <DataGridTextColumn Header="Raw NTC"/>
+                <DataGridTextColumn Header="Comp'd Temp"/>
+                <DataGridTextColumn Header="Fault Status"/>
+                <DataGridTextColumn Header="Warning Status"/>
+                <DataGridTextColumn Header="Alarm"/>
+                <DataGridTextColumn Header="Voltage Out"/>
+                <DataGridTextColumn Header="Voltage"/>
+                <DataGridTextColumn Header="mA Out"/>
+                <DataGridTextColumn Header="mA Loop"/>
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <Button x:Name="tBtn_MainStart" Content="START" Margin="10,0,0,4" Grid.Row="1" Grid.Column="0" />
+        <Button x:Name="tBtn_MainStop" Content="STOP" Margin="0,0,0,4" Grid.Row="1" Grid.Column="1"/>
+        <Button x:Name="tBtn_MainClear" Content="CLEAR" Margin="0,0,0,4" Grid.Row="1" Grid.Column="2" />
+
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,4,95,4" Grid.RowSpan="3">
+            <Label Content="Log Interval" Margin="10,10,10,5"/>
+            <syncfusion:UpDown Margin="14,0,70,0" NumberDecimalDigits="0" ZeroColor="Black" Background="White" TextAlignment="Left" Value="1" MinValue="0"/>
+            <Label Content="Firmware Version" Margin="10,10,10,5"/>
+            <TextBox Margin="14,0,70,0"/>
+            <Label Content="Sensor Data Version" Margin="10,10,10,5"/>
+            <TextBox x:Name="tTxt_SensorDataVersion" Margin="14,0,70,0"/>
+            <Label Content="Number of readings" Margin="10,10,10,5"/>
+            <syncfusion:UpDown Margin="14,0,70,0" NumberDecimalDigits="0" ZeroColor="Black" Background="White" TextAlignment="Left" Value="600" MinValue="0"/>
+
+            <CheckBox Content="Capture Debug Packets" Margin="10,10,10,0"/>
+            <CheckBox Content="Filter invaild gas reading" Margin="10,10,10,0"/>
+
+            <Button x:Name="tBtn_ResetAlarmFaults" Content="Reset Alarams &amp; Faults" Margin="10,10,10,0" Height="45" Click="tBtn_ResetAlarmFaults_Click"/>
+            
+        </StackPanel>
+        <GroupBox Grid.Row="3" Header="Chart" Grid.ColumnSpan="4" Margin="10,10,10,10"/>
+    </Grid>
+</Window>
