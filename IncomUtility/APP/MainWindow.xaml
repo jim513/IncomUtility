@@ -32,7 +32,7 @@
                 <MenuItem x:Name="tMenu_MonitorRawData" Header="Monitor Raw Data" Click="tMenu_MonitorRawData_Click" />
             </MenuItem>
             <MenuItem Header="_Setting" >
-                <MenuItem Header="Edit Sensor Data"/>
+                <MenuItem x:Name="tMenu_EditSensorData" Header="Edit Sensor Data" Click="tMenu_EditSensorData_Click"/>
                 <MenuItem Header="Edit Instrument Settings"/>
                 <MenuItem Header="Securtiy Control"/>
                 <MenuItem Header="Communication" x:Name="tMenu_Communication" Click="tMenu_Communication_Click"/>
