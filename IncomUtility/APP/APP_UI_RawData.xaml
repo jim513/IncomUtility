@@ -5,12 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IncomUtility.APP"
         mc:Ignorable="d"
-        Title="APP_UI_RawData" Height="450" Width="800">
-    <Grid>
+        Title="APP_UI_RawData" Height="600" Width="600">
+    <Grid MinHeight="40" MinWidth="170">
         <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="7*"/>
+            <RowDefinition Height="44*"/>
+            <RowDefinition Height="51*"/>
         </Grid.RowDefinitions>
-
+        <Button Content="Get Gas Reading" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="170" MinWidth="170" MinHeight="30" Height="40"/>
+        <Button Content="Read Raw ADC" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="170" MinHeight="30" MinWidth="170" Height="40"/>
+        <Button Content="Read Temperature" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="170" MinHeight="30" MinWidth="170" Height="40"/>
+        <Button Content="Read Analogue Output" Margin="10,210,0,0" VerticalAlignment="Top" Width="170" MinHeight="30" MinWidth="170" HorizontalAlignment="Left" Height="40"/>
+        <Button Content="Debug Gas Reading" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="170" RenderTransformOrigin="-1.234,0.475" MinHeight="30" MinWidth="170" Height="40"/>
+        <Button Content="Read Voltage Output" HorizontalAlignment="Left" Margin="210,10,0,0" VerticalAlignment="Top" Width="170" MinHeight="30" MinWidth="170" Height="40"/>
+        <Button Content="Read Voltage Levels" HorizontalAlignment="Left" Margin="210,60,0,0" VerticalAlignment="Top" Width="170" RenderTransformOrigin="-0.032,0.553" MinHeight="30" MinWidth="170" Height="40"/>
+        <Button Content="Read Cell Voltage/Current" HorizontalAlignment="Left" Margin="210,110,0,0" VerticalAlignment="Top" Width="170" MinHeight="30" MinWidth="170" Height="40"/>
+        <Button Content="Read Raw Cell Signal" HorizontalAlignment="Left" Margin="210,160,0,0" VerticalAlignment="Top" Width="170" MinHeight="30" MinWidth="170" Height="40"/>
+        <TextBox Grid.Row="1" Margin="10"></TextBox>
     </Grid>
 </Window>

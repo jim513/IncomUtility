@@ -32,3 +32,5 @@ C:\Users\Honeywell\source\repos\IncomUtility\out\IncomUtility.exe
 C:\Users\Honeywell\source\repos\IncomUtility\out\IncomUtility.pdb
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_Debug.g.cs
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_Debug.baml
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_RawData.g.cs
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_RawData.baml

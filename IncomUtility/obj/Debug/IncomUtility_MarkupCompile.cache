@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\App.xaml
-71483779669
+81796041348
 
-151095704827
+16-962110739
 151918300100
-APP\APP_UI_BLEInfo.xaml;APP\APP_UI_Communication.xaml;APP\APP_UI_Debug.xaml;APP\APP_UI_DeviceInfo.xaml;APP\APP_UI_MonitorDeviceStatus.xaml;APP\MainWindow.xaml;APP\APP_UI_ViewLogs.xaml;
+APP\APP_UI_BLEInfo.xaml;APP\APP_UI_Communication.xaml;APP\APP_UI_Debug.xaml;APP\APP_UI_DeviceInfo.xaml;APP\APP_UI_MonitorDeviceStatus.xaml;APP\APP_UI_RawData.xaml;APP\MainWindow.xaml;APP\APP_UI_ViewLogs.xaml;
 
 False
 
