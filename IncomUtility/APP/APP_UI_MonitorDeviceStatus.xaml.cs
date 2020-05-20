@@ -1,5 +1,4 @@
-﻿using Syncfusion.Windows.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Xceed.Wpf.Toolkit;
 
 namespace IncomUtility
 {
@@ -48,13 +48,6 @@ namespace IncomUtility
             makeDataGrid(warning_status_grid_data, warning_status_grid_data_list, WarningStatus);
 
             tTxtMemo1.AppendText(Environment.NewLine);
-        }
-
-        private void TimeSpanEdit_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            // Get old and new value
-            var newValue = e.NewValue;
-            var oldValue = e.OldValue;
         }
 
         private string[] InstrumentStatus = { "Fault", "Warning", "Gas Alarm 1", "Gas Alarm 2", "Inhibit", "Over-range", "BLE Status" };
@@ -252,9 +245,10 @@ namespace IncomUtility
                     tTxtMemo1.AppendText(Environment.NewLine);
                     return;
                 }
-              
-                tDate_DatePicker.SelectedDate = new DateTime(year, month, day);
-                tTime_TimePicker.Value = new TimeSpan(hour, minute, second);
+
+                DateTime readingTime = new DateTime(year, month, day, hour, minute, second);
+                tDate_DatePicker.SelectedDate = readingTime;
+                tTime_TimePicker.Value = readingTime;
             }
             catch(IndexOutOfRangeException)
             {
@@ -283,16 +277,16 @@ namespace IncomUtility
                 byte[] timeToSend = new byte[7];
 
                 DateTime setDate = tDate_DatePicker.SelectedDate.Value;
-                TimeSpan setTime = tTime_TimePicker.Value.Value;
+                DateTime setTime = (DateTime)tTime_TimePicker.Value;
 
                 int year = setDate.Year;
                 timeToSend[0] = (byte)(year >> 8);
                 timeToSend[1] = (byte)year;
                 timeToSend[2] = (byte)setDate.Month;
                 timeToSend[3] = (byte)setDate.Day;
-                timeToSend[4] = (byte)setTime.Hours;
-                timeToSend[5] = (byte)setTime.Minutes;
-                timeToSend[6] = (byte)setTime.Seconds;
+                timeToSend[4] = (byte)setTime.Hour;
+                timeToSend[5] = (byte)setTime.Minute;
+                timeToSend[6] = (byte)setTime.Second;
 
                 serial.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err);
 
@@ -336,4 +330,8 @@ namespace IncomUtility
             return true;
         }
     }
+    class CurrentTime
+    { 
+    }
+
 }
