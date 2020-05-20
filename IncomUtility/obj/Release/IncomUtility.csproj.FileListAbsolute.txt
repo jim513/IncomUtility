@@ -27,3 +27,11 @@ C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\IncomUtili
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\IncomUtility.csproj.CopyComplete
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\IncomUtility.exe
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\IncomUtility.pdb
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_Debug.g.cs
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_InstrumentSetting.g.cs
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_SensorData.g.cs
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_RawData.g.cs
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_Debug.baml
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_InstrumentSetting.baml
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_SensorData.baml
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_RawData.baml

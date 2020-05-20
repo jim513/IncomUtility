@@ -267,6 +267,8 @@ namespace IncomUtility
             CMD[totalPackageLength - 2] = (byte)((calcurateCRC) & 0x00FF);
             CMD[totalPackageLength - 1] = (byte)PACKET_CONF.COMM_EOF;
 
+            ret = ERROR_LIST.ERROR_NONE;
+
             return CMD;
         }
 

@@ -1,7 +1,6 @@
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\bin\Debug\IncomUtility.exe.config
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\bin\Debug\IncomUtility.exe
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\bin\Debug\IncomUtility.pdb
-C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\IncomUtility.csprojAssemblyReference.cache
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\MainWindow.g.cs
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\App.g.cs
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\IncomUtility_MarkupCompile.cache
@@ -38,3 +37,4 @@ C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_I
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_SensorData.g.cs
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_InstrumentSetting.baml
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_SensorData.baml
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\IncomUtility.csprojAssemblyReference.cache

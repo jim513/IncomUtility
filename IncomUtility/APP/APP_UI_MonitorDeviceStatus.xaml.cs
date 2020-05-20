@@ -126,7 +126,7 @@ namespace IncomUtility
              * Read Device Status
              */
             byte[] u8RXbuffer = serial.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DEVICE_STATUS,ref err);
-            if (err != ERROR_LIST.ERROR_NONE) {
+            if (err != ERROR_LIST.ERROR_NONE ) {
                 tTxtMemo1.AppendText("ERROR - READ INCOM STATUS");
                 tTxtMemo1.AppendText(Environment.NewLine);
                 return;
@@ -174,6 +174,7 @@ namespace IncomUtility
                 tTxtMemo1.AppendText(Environment.NewLine);
                 return;
             }
+            if(u8RXbuffer ==null)
             switch (u8RXbuffer[u8RXbuffer.Length - 4])
             {
                 case 0:
@@ -231,12 +232,6 @@ namespace IncomUtility
             byte[] u8RXbuffer = serial.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_TIME,ref err);
 
             if (err != ERROR_LIST.ERROR_NONE)
-            {
-                tTxtMemo1.AppendText("ERROR - READ TIME");
-                tTxtMemo1.AppendText(Environment.NewLine);
-                return;
-            }
-            if(u8RXbuffer == null)
             {
                 tTxtMemo1.AppendText("ERROR - READ TIME");
                 tTxtMemo1.AppendText(Environment.NewLine);
@@ -309,7 +304,7 @@ namespace IncomUtility
                 tTxtMemo1.AppendText(Environment.NewLine);
             }));
 
-            Thread.Sleep(900);
+            Thread.Sleep(1000);
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
