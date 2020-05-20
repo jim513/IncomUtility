@@ -17,9 +17,9 @@ namespace IncomUtility.APP
     /// <summary>
     /// APP_UI_EditSensorData.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class APP_UI_EditSensorData : Window
+    public partial class APP_UI_SensorData : Window
     {
-        public APP_UI_EditSensorData()
+        public APP_UI_SensorData()
         {
             InitializeComponent();
         }

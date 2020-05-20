@@ -33,8 +33,8 @@ namespace IncomUtility
         private APP_UI_DeviceInfo winDeviceInfo;
         private APP_UI_Debug winDebug;
         private APP_UI_RawData winRawData;
-        private APP_UI_EditSensorData winEditSensorData;
-
+        private APP_UI_SensorData winSensorData;
+        private APP_UI_InstrumentSetting winInstrumentSetting
         public MainWindow()
         {
             InitializeComponent();
@@ -130,7 +130,7 @@ namespace IncomUtility
 
         private void tMenu_EditSensorData_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_EditSensorData>(ref winEditSensorData);
+            Win_Open<APP_UI_SensorData>(ref winSensorData);
         }
 
         private void tBtn_ResetAlarmFaults_Click(object sender, RoutedEventArgs e)

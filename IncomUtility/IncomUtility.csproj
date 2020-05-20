@@ -92,7 +92,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="APP\APP_UI_EditSensorData.xaml">
+    <Page Include="APP\APP_UI_InstrumentSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="APP\APP_UI_SensorData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -125,8 +129,11 @@
     <Compile Include="APP\APP_UI_DeviceInfo.xaml.cs">
       <DependentUpon>APP_UI_DeviceInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="APP\APP_UI_EditSensorData.xaml.cs">
-      <DependentUpon>APP_UI_EditSensorData.xaml</DependentUpon>
+    <Compile Include="APP\APP_UI_InstrumentSetting.xaml.cs">
+      <DependentUpon>APP_UI_InstrumentSetting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="APP\APP_UI_SensorData.xaml.cs">
+      <DependentUpon>APP_UI_SensorData.xaml</DependentUpon>
     </Compile>
     <Compile Include="APP\APP_UI_MonitorDeviceStatus.xaml.cs">
       <DependentUpon>APP_UI_MonitorDeviceStatus.xaml</DependentUpon>
