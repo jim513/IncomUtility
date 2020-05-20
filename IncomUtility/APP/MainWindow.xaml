@@ -33,7 +33,7 @@
             </MenuItem>
             <MenuItem Header="_Setting" >
                 <MenuItem x:Name="tMenu_EditSensorData" Header="Edit Sensor Data" Click="tMenu_EditSensorData_Click"/>
-                <MenuItem Header="Edit Instrument Settings"/>
+                <MenuItem x:Name="tMenu_EditInstrumentSettings" Header="Edit Instrument Settings" Click="tMenu_EditInstrumentSettings_Click"/>
                 <MenuItem Header="Securtiy Control"/>
                 <MenuItem Header="Communication" x:Name="tMenu_Communication" Click="tMenu_Communication_Click"/>
             </MenuItem>

@@ -34,5 +34,7 @@ C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_D
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_Debug.baml
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_RawData.g.cs
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_RawData.baml
-C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_EditSensorData.g.cs
-C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_EditSensorData.baml
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_InstrumentSetting.g.cs
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_SensorData.g.cs
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_InstrumentSetting.baml
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_SensorData.baml

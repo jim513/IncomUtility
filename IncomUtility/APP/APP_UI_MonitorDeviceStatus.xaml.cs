@@ -270,12 +270,10 @@ namespace IncomUtility
         }
 
         private void tBtn_SetTime_Click(object sender, RoutedEventArgs e)
-        {
-            tBtn_SetTime.IsEnabled = false;
+        {    
             timeLock = new Thread(setTime);
             timeLock.Start();
-            Thread.Sleep(50);
-            tBtn_SetTime.IsEnabled = true;
+            Thread.Sleep(50);     
         }
         private void setTime()
         {
@@ -284,6 +282,7 @@ namespace IncomUtility
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                tBtn_SetTime.IsEnabled = false;
                 tBtn_ReadTime.IsEnabled = false;
 
                 byte[] timeToSend = new byte[7];
@@ -315,6 +314,7 @@ namespace IncomUtility
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 tBtn_ReadTime.IsEnabled = true;
+                tBtn_SetTime.IsEnabled = true;
             }));
 
         }
