@@ -6,8 +6,627 @@
         xmlns:local="clr-namespace:IncomUtility.APP"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="APP_UI_InstrumentSetting" Height="450" Width="800">
-    <Grid>
-        <xctk:IntegerUpDown Name="myUpDownControl" />
-    </Grid>
+        Title="APP_UI_InstrumentSetting" Height="1200" Width="1300" >
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="190*"/>
+                <ColumnDefinition Width="170*"/>
+                <ColumnDefinition Width="200*"/>
+                <ColumnDefinition Width="170*"/>
+
+            </Grid.ColumnDefinitions>
+            <StackPanel   >
+                <GroupBox Header="Device Information" Margin="10,10,5,8.6" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Device Serial Number" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <Label Content="Board Serial Number" Grid.Row ="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" Margin="0,2" Text="Incom_pcb_01" SpellCheck.IsEnabled="True" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2" Text="Incom_pcb_01" VerticalAlignment="Center"/>
+                        <Button  Content="Read Device Info" Grid.Row="2"   Height="20" Margin="5" VerticalContentAlignment="Bottom"   />
+                        <Button  Content="Write Device Info" Grid.Row="2" Grid.Column="1"   Height="20" Margin="5" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Relay Options" Margin="10,3.4,2,3" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="65*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="66*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Trigger Event1"  />
+                        <Label Content="Trigger Event2" Grid.Row="1" />
+                        <Label Grid.Row="2" Content="Initial State1"  />
+                        <Label Grid.Row="3" Content="Initial State2"/>
+                        <Label Grid.Row="4" Content="OnDelay Time"  />
+                        <Button Grid.Row="5" Content="Read Realy"   Margin="5" Grid.ColumnSpan="2"   />
+                        <ComboBox Grid.Column="1" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="0" >
+                            <ComboBoxItem Content="0 : Fault" />
+                            <ComboBoxItem Content="1 : Alarm 1" />
+                            <ComboBoxItem Content="2 : Alarm 2"/>
+                        </ComboBox>
+                        <ComboBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="1">
+                            <ComboBoxItem Content="0 : Fault" />
+                            <ComboBoxItem Content="1 : Alarm 1" />
+                            <ComboBoxItem Content="2 : Alarm 2"/>
+                        </ComboBox>
+                        <ComboBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="0">
+                            <ComboBoxItem Content="0 : De-Energised (ND)"/>
+                            <ComboBoxItem Content="1 : Energised (NE)"/>
+                        </ComboBox>
+                        <ComboBox Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="1">
+                            <ComboBoxItem Content="0 : De-Energised (ND)"/>
+                            <ComboBoxItem Content="1 : Energised (NE)"/>
+                        </ComboBox>
+                        <xctk:DecimalUpDown Grid.Row="4" Grid.Column="1" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <Label Content="OffDelay Time" Grid.Row="4" Grid.Column="2" />
+                        <xctk:DecimalUpDown Grid.Row="4" Grid.Column="3" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <Button Content="Write Delay" Grid.Row="5" Grid.Column="2"   Margin="5" Grid.ColumnSpan="2"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Calibartion" Margin="5,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Calibration Interval"/>
+                        <Label Content="Calibration Conc" Grid.Row="1"/>
+                        <Label Content="Last Cal.Date" Grid.Row="2"/>
+                        <Label Content="Days Passed since last cal." Grid.Row="3"/>
+                        <CheckBox Content="Update Cal date Elapsed Cal Days" Grid.Row="4" Margin="5" Grid.ColumnSpan="2"/>
+                        <xctk:DecimalUpDown Value="180" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown Value="1.0" Grid.Row="1" Grid.Column="1" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
+                        <DatePicker SelectedDate="2016/06/21" Grid.Row="2" Grid.Column="1" Margin="0,2"/>
+                        <xctk:DecimalUpDown Value="0" Grid.Row="3" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
+                        <Button Content="Read Cal Param" Grid.Row="5"   Height="20" Margin="5"  />
+                        <Button Content="Write Cal Param" Grid.Row="5"   Height="20" Margin="5" Grid.Column="1"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="mA Output Setting" Margin="10,4,5,7">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Fault Current (mA)" />
+                        <Label Content="Warning Current (mA)" Grid.Row="1" />
+                        <Label  Content="Over-range Current (mA)" Grid.Row="2" />
+                        <Label Content="Inhibit Current (mA)" Grid.Row="3"  />
+                        <Label Content="Inhibit Timeout (mins)" Grid.Row="4" />
+                        <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N1" Margin="0,2" HorizontalContentAlignment="Center" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown Grid.Column="1" Value="3.0" Increment="0.1" FormatString="N1" Grid.Row="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown Grid.Column="1" Value="21.0" Increment="0.1" FormatString="N1" Grid.Row="2" Margin="0,2" TextAlignment="Left" />
+                        <xctk:DoubleUpDown Grid.Column="1" Value="21.0" Increment="0.1" FormatString="N1" Grid.Row="3" IsReadOnly="True" Background="LightGray" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Grid.Column="1" Value="15" Grid.Row="4" Margin="0,2,0,0" TextAlignment="Left" />
+                        <Button Content="Read mA Output" Grid.Row="5"   Height="20" Margin="5" />
+                        <Button Content="Write mA Output" Grid.Row="5"   Height="20" Margin="5" Grid.Column="1"/>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <GroupBox Header="General" Margin="5,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Location Tag"  />
+                        <Label Content="LED Control" Grid.Row="1" />
+                        <Label Grid.Row="2" Content="Alarm Operation mode"  />
+                        <Label Grid.Row="3" Content="Safety mode"/>
+                        <Label Grid.Row="4" Content="Cal Over due indication"  />
+                        <Label Grid.Row="5" Content="Passcode"/>
+                        <Button Grid.Row="6" Height="20" Content="Read General"   Margin="5"   />
+                        <Button Content="Write Genral" Grid.Row="6" Grid.Column="1"   Margin="5" Grid.ColumnSpan="4" VerticalAlignment="Center"/>
+                        <TextBox Text="Incom_loc_01" Grid.Column="1" Grid.ColumnSpan="4" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="1" >
+                            <ComboBoxItem Content="0 : Normal Off" />
+                            <ComboBoxItem Content="1 : Normal Flash" />
+                            <ComboBoxItem Content="2 : Normal On"/>
+                        </ComboBox>
+                        <ComboBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="0">
+                            <ComboBoxItem Content="0 : Normal" />
+                            <ComboBoxItem Content="1 : UL2075" />
+                        </ComboBox>
+                        <ComboBox Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="0">
+                            <ComboBoxItem Content="0 : Normal mode"/>
+                            <ComboBoxItem Content="1 : ATEX mode"/>
+                        </ComboBox>
+                        <ComboBox Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="0">
+                            <ComboBoxItem Content="0 : Off (ignore)"/>
+                            <ComboBoxItem Content="1 : Treat as warning"/>
+                            <ComboBoxItem Content="2 : Treat as Fault"/>
+                        </ComboBox>
+                        <xctk:DecimalUpDown Grid.Row="5" Grid.Column="1" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Grid.Row="5" Grid.Column="2" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Grid.Row="5" Grid.Column="3" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Grid.Row="5" Grid.Column="4" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Modbus" Margin="5,4,5,10" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Slave ID" />
+                        <Label Content="Baudrate" Grid.Row="1" />
+                        <Label Content="Parity" Grid.Row="2" />
+                        <Label Content="Flow Control" Grid.Row="3"  />
+                        <Label Content="Databits" Grid.Row="4" />
+                        <Label Content="Stopbits" Grid.Row="5" />
+                        <xctk:DecimalUpDown Grid.Column="1" Value="1" Margin="0,2" TextAlignment="Left"/>
+                        <ComboBox SelectedIndex="0"  Grid.Row="1" Grid.Column="1" Margin="0,2">
+                            <ComboBoxItem Content="9600 bps"/>
+                            <ComboBoxItem Content="19200 bps"/>
+                        </ComboBox>
+                        <ComboBox SelectedIndex="2"  Grid.Row="2" Grid.Column="1" Margin="0,2">
+                            <ComboBoxItem Content="0 : None"/>
+                            <ComboBoxItem Content="1 : Odd"/>
+                            <ComboBoxItem Content="2 : Even"/>
+                        </ComboBox>
+                        <ComboBox Grid.Row="3" Grid.Column="1" SelectedIndex="0" IsEnabled="False" Foreground="Gray">
+                            <ComboBoxItem Content="0 : None"/>
+                        </ComboBox>
+                        <ComboBox Grid.Row="4" Grid.Column="1" SelectedIndex="0" IsEnabled="False" Foreground="Gray">
+                            <ComboBoxItem Content="0 : 8bit"/>
+                        </ComboBox>
+                        <ComboBox Grid.Row="5" Grid.Column="1" SelectedIndex="0" IsEnabled="False" Foreground="Gray">
+                            <ComboBoxItem Content="0 : 1bit"/>
+                        </ComboBox>
+                        <Button Content="Read Modbus" Grid.Row="6"   Height="20" Margin="5"  />
+                        <Button Content="Write Modbus" Grid.Row="6"   Height="20" Margin="5" Grid.Column="1"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Circuit Calibration" Height="auto" Margin="5,10,5,7">
+                    <Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="4to20mA offset - sink" />
+                            <Label Content="4to20mA span - sink" Grid.Row="1" />
+                            <Label Content="4to20mA offset - source" Grid.Row="2" />
+                            <Label Content="4to20mA span - source" Grid.Row="3"  />
+                            <Label Content="Loopback offset - sink" Grid.Row="4" />
+                            <Label Content="Loopback span - sink" Grid.Row="5" />
+                            <Label Content="Loopback offset - source" Grid.Row="6" />
+                            <Label Content="Loopback span - source" Grid.Row="7" />
+                            <Label Content="Votage out offset" Grid.Row="8" />
+                            <Label Content="Votage out span" Grid.Row="9" />
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="1" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="2" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="3" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="4" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="5" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="6" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="7" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="8" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="9" TextAlignment="Left"/>
+                            <Button Content="Read Circuit Cal" Grid.Row="10"   Height="20" Margin="5" />
+                            <Button Content="Write Circuit Cal" Grid.Row="10"   Height="20" Margin="5" Grid.RowSpan="2" Grid.Column="1"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <GroupBox Header="NTC Compensation" Margin="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="0*"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="NTC Comp (-40oC)" />
+                        <Label Content="NTC Comp (-30oC)" Grid.Row="1" />
+                        <Label Content="NTC Comp (-20oC)" Grid.Row="2" />
+                        <Label Content="NTC Comp (-10oC)" Grid.Row="3" />
+                        <Label Content="NTC Comp (-0oC)" Grid.Row="4" />
+                        <Label Content="NTC Comp (10oC)" Grid.Row="5" />
+
+                        <xctk:IntegerUpDown Value="-25" Grid.Column="1"/>
+                        <xctk:IntegerUpDown Value="-25" Grid.Column="1" Grid.Row="1"/>
+                        <xctk:IntegerUpDown Value="-20" Grid.Column="1" Grid.Row="2"/>
+                        <xctk:IntegerUpDown Value="-12" Grid.Column="1" Grid.Row="3"/>
+                        <xctk:IntegerUpDown Value="-8" Grid.Column="1" Grid.Row="4"/>
+                        <xctk:IntegerUpDown Value="-6" Grid.Column="1" Grid.Row="5"/>
+
+                        <Label Content="NTC Comp (20oC)" Grid.Column="2" />
+                        <Label Content="NTC Comp (30oC)" Grid.Column="2" Grid.Row="1"/>
+                        <Label Content="NTC Comp (40oC)" Grid.Column="2" Grid.Row="2"/>
+                        <Label Content="NTC Comp (50oC)" Grid.Column="2" Grid.Row="3"/>
+                        <Label Content="NTC Comp (60oC)" Grid.Column="2" Grid.Row="4"/>
+                        <Label Content="NTC Comp (70oC)" Grid.Column="2" Grid.Row="5"/>
+                        <xctk:IntegerUpDown Value="-5" Grid.Column="3"/>
+                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="1"/>
+                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="2"/>
+                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="3"/>
+                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="4"/>
+                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="5"/>
+
+                        <Button Content="Read NTC" Margin="5" Grid.Row="6" Grid.ColumnSpan="2"/>
+                        <Button Content="Write NTC" Margin="5" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="6"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="UL 2075 Histogram" Margin="5,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="0*"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Count (10ppm)" />
+                        <Label Content="Count (20ppm)" Grid.Row="1" />
+                        <Label Content="Count (30ppm)" Grid.Row="2" />
+                        <Label Content="Count (40ppm)" Grid.Row="3" />
+                        <Label Content="Count (50ppm)" Grid.Row="4" />
+                        <Label Content="Count (60ppm)" Grid.Row="5" />
+                        <Label Content="Count (70ppm)" Grid.Row="6" />
+                        <Label Content="Count (80ppm)" Grid.Row="7" />
+                        <Label Content="Count (90ppm)" Grid.Row="8" />
+                        <Label Content="Count (100ppm)" Grid.Row="9" />
+                        <Label Content="Count (110ppm)" Grid.Row="10" />
+                        <Label Content="Count (120ppm)" Grid.Row="11" />
+                        <Label Content="Count (130ppm)" Grid.Row="12"/>
+                        <Label Content="Count (140ppm)" Grid.Row="13"/>
+                        <Label Content="Count (150ppm)" Grid.Row="14"/>
+                        <Label Content="Count (160ppm)" Grid.Row="15"/>
+                        <Label Content="Count (170ppm)" Grid.Row="16"/>
+                        <Label Content="Count (180ppm)" Grid.Row="17"/>
+                        <Label Content="Count (190ppm)" Grid.Row="18"/>
+                        <Label Content="Count (200ppm)" Grid.Row="19"/>
+
+                        <xctk:DecimalUpDown Value="255" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="255" Grid.Column="1" Grid.Row="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="255" Grid.Column="1" Grid.Row="2" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="255" Grid.Column="1" Grid.Row="3" Margin="0,2" TextAlignment="Left" />
+                        <xctk:DecimalUpDown Value="133" Grid.Column="1" Grid.Row="4" Margin="0,2" TextAlignment="Left" />
+                        <xctk:DecimalUpDown Value="115" Grid.Column="1" Grid.Row="5" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="97" Grid.Column="1" Grid.Row="6" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="80" Grid.Column="1" Grid.Row="7" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="62" Grid.Column="1" Grid.Row="8" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="45" Grid.Column="1" Grid.Row="9" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="42" Grid.Column="1" Grid.Row="10" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="39" Grid.Column="1" Grid.Row="11" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="36" Grid.Column="1" Grid.Row="12" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="33" Grid.Column="1" Grid.Row="13" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="30" Grid.Column="1" Grid.Row="14" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="28" Grid.Column="1" Grid.Row="15" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="26" Grid.Column="1" Grid.Row="16" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="24" Grid.Column="1" Grid.Row="17" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="22" Grid.Column="1" Grid.Row="18" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="20" Grid.Column="1" Grid.Row="19" Margin="0,2" TextAlignment="Left"/>
+
+                        <Label Content="Count (210ppm)" Grid.Column="2" />
+                        <Label Content="Count (220ppm)" Grid.Column="2" Grid.Row="1" />
+                        <Label Content="Count (230ppm)" Grid.Column="2" Grid.Row="2"/>
+                        <Label Content="Count (240ppm)" Grid.Column="2" Grid.Row="3"/>
+                        <Label Content="Count (250ppm)" Grid.Column="2" Grid.Row="4"/>
+                        <Label Content="Count (260ppm)" Grid.Column="2" Grid.Row="5"/>
+                        <Label Content="Count (270ppm)" Grid.Column="2" Grid.Row="6"/>
+                        <Label Content="Count (280ppm)" Grid.Column="2" Grid.Row="7"/>
+                        <Label Content="Count (290ppm)" Grid.Column="2" Grid.Row="8"/>
+                        <Label Content="Count (300ppm)" Grid.Column="2" Grid.Row="9"/>
+                        <Label Content="Count (310ppm)" Grid.Column="2" Grid.Row="10"/>
+                        <Label Content="Count (320ppm)" Grid.Column="2" Grid.Row="11"/>
+                        <Label Content="Count (330ppm)" Grid.Column="2" Grid.Row="12"/>
+                        <Label Content="Count (340ppm)" Grid.Column="2" Grid.Row="13"/>
+                        <Label Content="Count (350ppm)" Grid.Column="2" Grid.Row="14"/>
+                        <Label Content="Count (360ppm)" Grid.Column="2" Grid.Row="15"/>
+                        <Label Content="Count (370ppm)" Grid.Column="2" Grid.Row="16"/>
+                        <Label Content="Count (380ppm)" Grid.Column="2" Grid.Row="17"/>
+                        <Label Content="Count (390ppm)" Grid.Column="2" Grid.Row="18"/>
+                        <Label Content="Count (400ppm)" Grid.Column="2" Grid.Row="19"/>
+
+                        <xctk:DecimalUpDown Value="19" Grid.Column="3" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="18" Grid.Column="3" Grid.Row="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="17" Grid.Column="3" Grid.Row="2" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="17" Grid.Column="3" Grid.Row="3" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="16" Grid.Column="3" Grid.Row="4" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="16" Grid.Column="3" Grid.Row="5" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="15" Grid.Column="3" Grid.Row="6" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="15" Grid.Column="3" Grid.Row="7" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="14" Grid.Column="3" Grid.Row="8" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="14" Grid.Column="3" Grid.Row="9" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="13" Grid.Column="3" Grid.Row="10" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="13" Grid.Column="3" Grid.Row="11" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="13" Grid.Column="3" Grid.Row="12" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="12" Grid.Column="3" Grid.Row="13" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="12" Grid.Column="3" Grid.Row="14" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="12" Grid.Column="3" Grid.Row="15" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="11" Grid.Column="3" Grid.Row="16" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="11" Grid.Column="3" Grid.Row="17" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="10" Grid.Column="3" Grid.Row="18" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Value="10" Grid.Column="3" Grid.Row="19" Margin="0,2" TextAlignment="Left"/>
+
+                        <Button Content="Read UL2075" Grid.Row="20" Margin="5" Grid.ColumnSpan="2"/>
+                        <Button Content="Write UL2075" Grid.Column="2" Grid.Row="20" Margin="5" Grid.ColumnSpan="2"/>
+                    </Grid>
+                </GroupBox>
+
+            </StackPanel>
+            <StackPanel Grid.Column="3">
+
+                <GroupBox Header="Gas Setttings" Margin="5,4,10,10" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Gas Name" />
+                        <Label Content="Measuring Range" Grid.Row="1" />
+                        <Label Content="Correction Factor" Grid.Row="2" />
+                        <Label Content="Measurement Unit" Grid.Row="3"  />
+                        <Label Content="Unit conversion" Grid.Row="4" />
+                        <Label Content="Deadband" Grid.Row="5" />
+                        <Label Content="Gas Type" Grid.Row="6" />
+                        <Label Content="Target channel" Grid.Row="7"/>
+                        <Label Content="Decimal Points" Grid.Row="8"/>
+                        <Label Content="Display resolution" Grid.Row="9"/>
+                        <TextBox Text="CO" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
+                        <xctk:DoubleUpDown Grid.Column="1" Value="100.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left" Grid.ColumnSpan="2" Grid.Row="1"/>
+                        <xctk:DoubleUpDown Grid.Column="1" Grid.Row="2" Value="1.000" Increment="0.1" FormatString="N3" Margin="0,2" TextAlignment="Left" Grid.ColumnSpan="2"/>
+                        <ComboBox SelectedIndex="1"  Grid.Row="3" Grid.Column="1" Margin="0,2" Grid.ColumnSpan="2">
+                            <ComboBoxItem Content="0x00 : blank"/>
+                            <ComboBoxItem Content="0x01 : %LEL"/>
+                            <ComboBoxItem Content="0x02 : mA"/>
+                            <ComboBoxItem Content="0x03 : mg/m3"/>
+                            <ComboBoxItem Content="0x04 : g/m3"/>
+                            <ComboBoxItem Content="0x05 : %Vol"/>
+                            <ComboBoxItem Content="0x06 : ppm"/>
+                            <ComboBoxItem Content="0x07 : kppm"/>
+                            <ComboBoxItem Content="0x08 : LEL.m"/>
+                            <ComboBoxItem Content="0x09 : A"/>
+                            <ComboBoxItem Content="0x0A : dB"/>
+                            <ComboBoxItem Content="0x0B : dBA"/>
+                            <ComboBoxItem Content="0x0C : ppm.m"/>
+                        </ComboBox>
+                        <xctk:DoubleUpDown Grid.Column="1" Grid.Row="4" Value="1.000" Increment="0.1" FormatString="N3" Margin="0,2" TextAlignment="Left"/>
+                        <Button Content="Apply" Grid.Column="2" Grid.Row="4" Margin="2" />
+                        <ComboBox Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2"  SelectedIndex="0" Margin="0,2">
+                            <ComboBoxItem Content="OFF"/>
+                            <ComboBoxItem Content="ON"/>
+                        </ComboBox>
+                        <ComboBox Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2"  SelectedIndex="1" Margin="0,2">
+                            <ComboBoxItem Content="0 : Custom"/>
+                            <ComboBoxItem Content="1 : Methane"/>
+                            <ComboBoxItem Content="2 : Propane"/>
+                        </ComboBox>
+                        <xctk:DecimalUpDown Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Value="1" TextAlignment="Left"/>
+                        <ComboBox Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2"  SelectedIndex="0" Margin="0,2">
+                            <ComboBoxItem Content="1"/>
+                            <ComboBoxItem Content="0.1"/>
+                            <ComboBoxItem Content="0.01"/>
+                            <ComboBoxItem Content="0.001"/>
+                        </ComboBox>
+                        <xctk:DecimalUpDown Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Value="1" TextAlignment="Left"/>
+
+                        <Button Content="Read Modbus" Grid.Row="10"   Height="20" Margin="5"  />
+                        <Button Content="Write Modbus" Grid.Row="10"   Height="20" Margin="5" Grid.Column="1" Grid.ColumnSpan="2"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Gas Alarm Setttings" Margin="5,4,8,10" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="26*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Alarm Threshold1" />
+                        <Label Content="Alarm Threshold2" Grid.Row="1" />
+                        <Label Content="Alarm Threshold3" Grid.Row="2" />
+                        <Label Content="Alarm Trigger1" Grid.Row="3"  />
+                        <Label Content="Alarm Trigger2" Grid.Row="4" />
+                        <Label Content="Alarm Trigger3" Grid.Row="5" />
+                        <Label Content="Alarm Latching" Grid.Row="6" />
+                        <xctk:DoubleUpDown Grid.Column="1" Value="20.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown Grid.Column="1" Grid.Row="1" Value="40.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown Grid.Column="1" Grid.Row="2" Value="60.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
+                        <ComboBox SelectedIndex="0"  Grid.Row="3" Grid.Column="1" Margin="0,2">
+                            <ComboBoxItem Content="0 : Rising"/>
+                            <ComboBoxItem Content="1 : Falling"/>
+                            <ComboBoxItem Content="2 : Disabled"/>
+                        </ComboBox>
+                        <ComboBox SelectedIndex="0"  Grid.Row="4" Grid.Column="1" Margin="0,2">
+                            <ComboBoxItem Content="0 : Rising"/>
+                            <ComboBoxItem Content="1 : Falling"/>
+                            <ComboBoxItem Content="2 : Disabled"/>
+                        </ComboBox>
+                        <ComboBox SelectedIndex="2"  Grid.Row="5" Grid.Column="1" Margin="0,2">
+                            <ComboBoxItem Content="0 : Rising"/>
+                            <ComboBoxItem Content="1 : Falling"/>
+                            <ComboBoxItem Content="2 : Disabled"/>
+                        </ComboBox>
+                        <ComboBox SelectedIndex="0"  Grid.Row="6" Grid.Column="1" Margin="0,2">
+                            <ComboBoxItem Content="0 : Non-Latching"/>
+                            <ComboBoxItem Content="1 : Latching"/>
+                        </ComboBox>
+                        <Button Content="Read Modbus" Grid.Row="7"   Height="20" Margin="5"  />
+                        <Button Content="Write Modbus" Grid.Row="7"   Height="20" Margin="5" Grid.Column="1"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Security" Margin="5,10,10,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Login Retry"/>
+                        <Label Content="Login Lock Time" Grid.Row="1"/>
+                        <Label Content="OTP Connection" Grid.Row="2"/>
+                        <Label Content="OTP Key" Grid.Row="3" />
+                        <xctk:DecimalUpDown Grid.Column="1" Value="5" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Grid.Column="1" Grid.Row="1" Value="5" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown Grid.Column="1" Grid.Row="2" Value="5" Margin="0,2" TextAlignment="Left"/>
+                        <TextBox Grid.Column="1" Grid.Row="3" Margin="0,2" Text="Incom_loc_01" Background="LightGray" Foreground="Gray" IsReadOnly="True"/>
+                        <Button Content="Read Security" Grid.Row="4" Margin="5"/>
+                        <Button Content="Write Security" Grid.Row="4" Grid.Column="1" Margin="5"/>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+            <DockPanel Grid.ColumnSpan="4" LastChildFill="False" HorizontalAlignment="Center"  Grid.Row="1"  >
+                <Button Content="Read Form Incom"      Margin="0,0,5,20" Padding="1,5" Width="130"/>
+                <Button Content="Save To Incom"      Margin="5,0,5,20" Padding="1,5" Width="130"/>
+                <Button Content="Open"      Margin="5,0,5,20" Padding="1,5" Width="130"/>
+                <Button Content="Save As.."      Margin="5,0,5,20" Padding="1,5" Width="130"/>
+            </DockPanel>
+        </Grid>
+    </ScrollViewer>
 </Window>

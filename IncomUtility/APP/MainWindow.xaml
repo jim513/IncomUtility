@@ -83,7 +83,7 @@
         <Button x:Name="tBtn_MainClear" Content="CLEAR" Margin="0,0,0,4" Grid.Row="1" Grid.Column="2" />
 
         <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,4,95,4" Grid.RowSpan="3">
-            <Label Content="Log Interval" Margin="10,10,10,5"/>
+            <Label Content="Log Interval (s)" Margin="10,10,10,5"/>
             <xctk:DecimalUpDown Margin="14,0,70,0"  DefaultValue="1" DisplayDefaultValueOnEmptyText="True"/>
             <Label Content="Firmware Version" Margin="10,10,10,5"/>
             <TextBox Margin="14,0,70,0"/>

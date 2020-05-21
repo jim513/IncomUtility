@@ -23,5 +23,6 @@ namespace IncomUtility.APP
         {
             InitializeComponent();
         }
+
     }
 }
