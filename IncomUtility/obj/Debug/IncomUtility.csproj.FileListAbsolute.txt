@@ -15,7 +15,6 @@ C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\IncomUtility
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\bin\Debug\Syncfusion.Licensing.dll
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\bin\Debug\Syncfusion.Shared.WPF.dll
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\bin\Debug\Syncfusion.Shared.WPF.xml
-C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\IncomUtility.csproj.CopyComplete
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_MonitorDeviceStatus.g.cs
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_MonitorDeviceStatus.baml
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_Communication.g.cs
@@ -38,3 +37,4 @@ C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_S
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_InstrumentSetting.baml
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\APP\APP_UI_SensorData.baml
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\IncomUtility.csprojAssemblyReference.cache
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\IncomUtility.csproj.Fody.CopyLocal.cache
