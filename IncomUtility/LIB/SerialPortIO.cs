@@ -11,7 +11,8 @@ namespace IncomUtility
 {
     enum Constants
     {
-        retryCount = 3
+        retryCount = 3,
+        defaultSleep = 100
     };
     public class SerialPortIO
     {
@@ -42,7 +43,6 @@ namespace IncomUtility
             mutex.WaitOne();
             serialPort.Write(sendbuffer, 0, sendbuffer.Length);
             err = ERROR_LIST.ERROR_NONE;
-            Thread.Sleep(100);
         }
 
         private byte[] readPacket(ref ERROR_LIST err)
@@ -71,7 +71,7 @@ namespace IncomUtility
 
             return readBuffer;
         }
-        private byte[] sendCommand( byte[] payload, ref ERROR_LIST error)
+        private byte[] sendCommand( byte[] payload, ref ERROR_LIST error ,int sleepTime)
         {
             if (!serialPort.IsOpen)
             {
@@ -101,6 +101,8 @@ namespace IncomUtility
                 if (error != ERROR_LIST.ERROR_NONE)
                     break;
 
+                Thread.Sleep(sleepTime);
+
                 u8RXbuffer = readPacket(ref error);
                 if (error != ERROR_LIST.ERROR_NONE)
                     break;
@@ -115,7 +117,7 @@ namespace IncomUtility
             }
             return u8RXbuffer;
         }
-        public byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
+        public byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err,int sleepTime)
         {
             if(payload == null)
             {
@@ -124,14 +126,23 @@ namespace IncomUtility
             }
             byte[]command = Quattro.commandToByteArray(CMD);
             command = Quattro.mergeByteArray(command, payload);
-           
-            return sendCommand(command, ref err);
+            
+            return sendCommand(command, ref err, sleepTime);
         }
-        public byte[] sendCommand(COMM_COMMAND_LIST CMD,ref ERROR_LIST err)
+        public byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
         {
-            return sendCommand(Quattro.commandToByteArray(CMD), ref err);
+            return sendCommand(CMD, payload, ref err, (int)Constants.defaultSleep);
         }
-        public byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
+        public byte[] sendCommand(COMM_COMMAND_LIST CMD,ref ERROR_LIST err, int sleepTime )
+        {
+            return sendCommand(Quattro.commandToByteArray(CMD), ref err, sleepTime);
+        }
+        public byte[] sendCommand(COMM_COMMAND_LIST CMD, ref ERROR_LIST err)
+        {
+            return sendCommand(Quattro.commandToByteArray(CMD), ref err, (int)Constants.defaultSleep);
+        }
+
+        public byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err, int sleepTime)
         {
             if (payload == null)
             {
@@ -140,12 +151,21 @@ namespace IncomUtility
             }
             byte[] command = Quattro.commandToByteArray(CMD);
             command = Quattro.mergeByteArray(command, payload);
+            
+            return sendCommand(command, ref err, sleepTime);
 
-            return sendCommand(command, ref err);
+        }
+        public byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
+        {
+            return sendCommand(CMD,payload, ref err, (int)Constants.defaultSleep);
+        }
+        public byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err, int sleepTime)
+        {
+           return sendCommand(Quattro.commandToByteArray(CMD), ref err, sleepTime);
         }
         public byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err)
         {
-            return sendCommand(Quattro.commandToByteArray(CMD), ref err);
+            return sendCommand(Quattro.commandToByteArray(CMD), ref err, (int)Constants.defaultSleep);
         }
 
         private void flushIOBuffer()

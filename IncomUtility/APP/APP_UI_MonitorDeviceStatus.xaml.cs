@@ -313,17 +313,21 @@ namespace IncomUtility
                 timeToSend[5] = (byte)setTime.Minute;
                 timeToSend[6] = (byte)setTime.Second;
 
-                serial.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err);
+                serial.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err,300);
 
                 if (err == ERROR_LIST.ERROR_NONE)
                     tTxtMemo1.AppendText("Successfully wrote the datetime");
                 else
+                {
                     tTxtMemo1.AppendText("ERROR - WRITE TIME");
+                    tTxtMemo1.AppendText(Environment.NewLine);
+                    tTxtMemo1.AppendText(err.ToString());
+                }
 
                 tTxtMemo1.AppendText(Environment.NewLine);
             }));
 
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
