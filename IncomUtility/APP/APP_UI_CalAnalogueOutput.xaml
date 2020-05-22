@@ -1,0 +1,63 @@
+﻿<Window xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"  x:Class="IncomUtility.APP.APP_UI_CalAnalogueOutput"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IncomUtility.APP"
+        mc:Ignorable="d"
+        Title="Calibrate Analogue Output" Height="300" Width="400">
+    <Grid>
+        <TabControl Margin="10">
+            <TabItem Header="Zeroing">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="mA Output Zero (Target / Loopback)" Grid.ColumnSpan="5">
+                        <TextBlock Text="0.0" TextAlignment="Center"  Margin="0" FontWeight="Bold" FontSize="50" Foreground="DarkBlue" VerticalAlignment="Center"/>
+                    </GroupBox>
+                    <GroupBox Header="Enter analogue output measured by DVM (mA)" Grid.Row="1" Grid.ColumnSpan="5">
+                        <xctk:DoubleUpDown Value="0.000" Margin="100,10" VerticalContentAlignment="Center" FormatString="N3" Increment="0.1" TextAlignment="Left" FontSize="36" />
+                    </GroupBox>
+                    <Button Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Cal"/>
+                    <Button Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Cal"/>
+                    <Button Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Zero"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Span Cal">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="mA Output Span (Target / Loopback)" Grid.ColumnSpan="5">
+                        <TextBlock Text="0.0" TextAlignment="Center"  Margin="0" FontWeight="Bold" FontSize="50" Foreground="DarkBlue" VerticalAlignment="Center"/>
+                    </GroupBox>
+                    <GroupBox Header="Enter analogue output measured by DVM (mA)" Grid.Row="1" Grid.ColumnSpan="5">
+                        <xctk:DoubleUpDown Value="0.000" Margin="100,10" VerticalContentAlignment="Center" FormatString="N3" Increment="0.1" TextAlignment="Left" FontSize="36" />
+                    </GroupBox>
+                    <Button Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Span"/>
+                    <Button Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Span"/>
+                    <Button Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Span"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

@@ -18,7 +18,14 @@ namespace IncomUtility
         public static SerialPort serialPort = new SerialPort();
         public static Mutex mutex = new Mutex();
         private Quattro quattro = new Quattro();
-        ERROR_LIST ret;
+
+        public bool isPortOpen()
+        {
+            if (serialPort.IsOpen)
+                return true;
+
+            return false;
+        }
         private void writePacket(ref byte[] sendbuffer ,ref ERROR_LIST err)
         {
             
@@ -56,7 +63,7 @@ namespace IncomUtility
             else
             {
                 err = ERROR_LIST.ERROR_RECIVE_DATA_NONE;
-                readBuffer = null;
+                return  null;
             }
 
             //mutex.ReleaseMutex();
@@ -73,9 +80,10 @@ namespace IncomUtility
             }
             if (payload == null)
             {
-                ret = ERROR_LIST.ERROR_INPUT_DATA_NONE;
+                error = ERROR_LIST.ERROR_INPUT_DATA_NONE;
                 return null;
             }
+
             int retryCount = (int)Constants.retryCount;
             byte[] u8TXbuffer = null;
             byte[] u8RXbuffer = null;
@@ -85,18 +93,20 @@ namespace IncomUtility
                 flushIOBuffer(); 
 
                 u8TXbuffer = quattro.buildCMDPacket((byte)PACKET_CONF.COMM_SYSTEM_MFG_PC,
-                    (byte)PACKET_CONF.COMM_SYSTEM_INCOM, payload, ref ret);
-
-                writePacket(ref u8TXbuffer, ref ret);
-                if (ret != ERROR_LIST.ERROR_NONE)
+                    (byte)PACKET_CONF.COMM_SYSTEM_INCOM, payload, ref error);
+                if (error != ERROR_LIST.ERROR_NONE)
                     break;
 
-                u8RXbuffer = readPacket(ref ret);
-                if (ret != ERROR_LIST.ERROR_NONE)
+                writePacket(ref u8TXbuffer, ref error);
+                if (error != ERROR_LIST.ERROR_NONE)
                     break;
 
-                ret = quattro.validateRXPacket(ref u8RXbuffer);
-                if (ret == ERROR_LIST.ERROR_NONE)
+                u8RXbuffer = readPacket(ref error);
+                if (error != ERROR_LIST.ERROR_NONE)
+                    break;
+
+                error = quattro.validateRXPacket(ref u8RXbuffer);
+                if (error == ERROR_LIST.ERROR_NONE)
                 {
                     mutex.ReleaseMutex();
                     break;

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IncomUtility"
-        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="IncomUtility.MainWindow"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="IncomUtility.MainWindow"
         mc:Ignorable="d" 
         Loaded="Window_Loaded"  SizeChanged="Window_SizeChanged"  Closing="Window_Closing"
         Title="Incom Utility v.0.0.1" Height="600" Width="1350">
@@ -25,7 +25,7 @@
             <MenuItem Header="_View">
                 <MenuItem x:Name="tMenu_ViewBLEInfo" Header="View BLE Info" Click="tMenu_ViewBLEInfo_Click"/>
                 <MenuItem x:Name="tMenu_ViewDeviceInfo" Header="View Device Info" Click="tMenu_ViewDeviceInfo_Click"/>
-                <MenuItem x:Name="tMenu_ViewLogs" Header="View Logs"/>
+                <MenuItem x:Name="tMenu_ViewLogs" Header="View Logs" Click="tMenu_ViewLogs_Click"/>
             </MenuItem>
             <MenuItem Header="_Status" >
                 <MenuItem Header="Monitor Device Status" x:Name="tMenu_MonitorDeviceStatus" Click="tMenu_MonitorDeviceStatus_Click"/>
@@ -33,21 +33,21 @@
             </MenuItem>
             <MenuItem Header="_Setting" >
                 <MenuItem x:Name="tMenu_EditSensorData" Header="Edit Sensor Data" Click="tMenu_EditSensorData_Click"/>
-                <MenuItem Header="Edit Instrument Settings"/>
-                <MenuItem Header="Securtiy Control"/>
+                <MenuItem x:Name="tMenu_EditInstrumentSettings" Header="Edit Instrument Settings" Click="tMenu_EditInstrumentSettings_Click"/>
+                <MenuItem x:Name="tMenu_SecuritySetup" Header="Securtiy Control" Click="tMenu_SecuritySetup_Click"/>
                 <MenuItem Header="Communication" x:Name="tMenu_Communication" Click="tMenu_Communication_Click"/>
             </MenuItem>
             <MenuItem Header="_Calibrate">
-                <MenuItem Header="Gas Calibration"/>
-                <MenuItem Header="Calibrate Analogue Output"/>
-                <MenuItem Header="Calibrate Voltage Output"/>
-                <MenuItem Header="Calibrate Cell Drive"/>
+                <MenuItem x:Name="tMenu_GasCalibration" Header="Gas Calibration" Click="tMenu_GasCalibration_Click"/>
+                <MenuItem x:Name="tMenu_CalAnalougeOutput" Header="Calibrate Analogue Output" Click="tMenu_CalAnalougeOutput_Click"/>
+                <MenuItem x:Name="tMenu_CalVoltageOutput" Header="Calibrate Voltage Output" Click="tMenu_CalVoltageOutput_Click"/>
+                <MenuItem x:Name="tMenuCalCellDrive" Header="Calibrate Cell Drive" Click="tMenuCalCellDrive_Click"/>
             </MenuItem>
             <MenuItem Header="_Test">
-                <MenuItem Header="Hardware Test"/>
+                <MenuItem x:Name="tMenu_HardwareTest" Header="Hardware Test" Click="tMenu_HardwareTest_Click"/>
             </MenuItem>
             <MenuItem Header="_Debug">
-                <MenuItem Header="Comm. Log"/>
+                <MenuItem x:Name="tMenu_CommLog" Header="Comm. Log" Click="tMenu_CommLog_Click"/>
                 <MenuItem x:Name="tMenu_Debug" Header="Debug" Click="tMenu_Debug_Click"/>
             </MenuItem>
         </Menu>
@@ -83,20 +83,20 @@
         <Button x:Name="tBtn_MainClear" Content="CLEAR" Margin="0,0,0,4" Grid.Row="1" Grid.Column="2" />
 
         <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,4,95,4" Grid.RowSpan="3">
-            <Label Content="Log Interval" Margin="10,10,10,5"/>
-            <syncfusion:UpDown Margin="14,0,70,0" NumberDecimalDigits="0" ZeroColor="Black" Background="White" TextAlignment="Left" Value="1" MinValue="0"/>
+            <Label Content="Log Interval (s)" Margin="10,10,10,5"/>
+            <xctk:DecimalUpDown Margin="14,0,70,0"  DefaultValue="1" DisplayDefaultValueOnEmptyText="True"/>
             <Label Content="Firmware Version" Margin="10,10,10,5"/>
             <TextBox Margin="14,0,70,0"/>
             <Label Content="Sensor Data Version" Margin="10,10,10,5"/>
             <TextBox x:Name="tTxt_SensorDataVersion" Margin="14,0,70,0"/>
             <Label Content="Number of readings" Margin="10,10,10,5"/>
-            <syncfusion:UpDown Margin="14,0,70,0" NumberDecimalDigits="0" ZeroColor="Black" Background="White" TextAlignment="Left" Value="600" MinValue="0"/>
+            <xctk:DecimalUpDown Margin="14,0,70,0"  DefaultValue="600" DisplayDefaultValueOnEmptyText="True" />
 
             <CheckBox Content="Capture Debug Packets" Margin="10,10,10,0"/>
             <CheckBox Content="Filter invaild gas reading" Margin="10,10,10,0"/>
 
             <Button x:Name="tBtn_ResetAlarmFaults" Content="Reset Alarams &amp; Faults" Margin="10,10,10,0" Height="45" Click="tBtn_ResetAlarmFaults_Click"/>
-            
+
         </StackPanel>
         <GroupBox Grid.Row="3" Header="Chart" Grid.ColumnSpan="4" Margin="10,10,10,10"/>
     </Grid>

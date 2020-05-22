@@ -17,9 +17,9 @@ namespace IncomUtility.APP
     /// <summary>
     /// ViewLogs.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class ViewLogs : Window
+    public partial class APP_UI_ViewLogs : Window
     {
-        public ViewLogs()
+        public APP_UI_ViewLogs()
         {
             InitializeComponent();
         }

@@ -30,11 +30,20 @@ namespace IncomUtility
         private APP_UI_MonitorDeviceStatus winMonitorDeviceStatus;
         private APP_UI_Communication winCommunication;
         private APP_UI_BLEInfo winBLEInfo;
+        private APP_UI_ViewLogs winViewLogs;
         private APP_UI_DeviceInfo winDeviceInfo;
-        private APP_UI_Debug winDebug;
         private APP_UI_RawData winRawData;
         private APP_UI_SensorData winSensorData;
-        private APP_UI_InstrumentSetting winInstrumentSetting
+        private APP_UI_InstrumentSetting winInstrumentSetting;
+        private APP_UI_SecuritySetup winSecuritySetup;
+        private APP_UI_GasCalibration winGasCalibration;
+        private APP_UI_CalAnalogueOutput winCalAnalogueOutput;
+        private APP_UI_CalVoltageOutput winCalVoltageOutput;
+        private APP_UI_CalCellDrive winCalCellDrive;
+        private APP_UI_HardwareTest winHardwareTest;
+        private APP_UI_CommLog winCommLog;
+        private APP_UI_Debug winDebug;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -72,6 +81,10 @@ namespace IncomUtility
             {
                 win = new T();
                 T win2 = win;
+
+                /*
+                 * Add Closing Event to hide
+                 */             
                 win.Closing += (sender, e) =>
                 {
                     e.Cancel = true;
@@ -117,12 +130,11 @@ namespace IncomUtility
         {
             Win_Open<APP_UI_DeviceInfo>(ref winDeviceInfo);
         }
-
-        private void tMenu_Debug_Click(object sender, RoutedEventArgs e)
+        private void tMenu_ViewLogs_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_Debug>(ref winDebug);
+            Win_Open<APP_UI_ViewLogs>(ref winViewLogs);
         }
-
+  
         private void tMenu_MonitorRawData_Click(object sender, RoutedEventArgs e)
         {
             Win_Open<APP_UI_RawData>(ref winRawData);
@@ -131,6 +143,50 @@ namespace IncomUtility
         private void tMenu_EditSensorData_Click(object sender, RoutedEventArgs e)
         {
             Win_Open<APP_UI_SensorData>(ref winSensorData);
+        }
+
+        private void tMenu_EditInstrumentSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Win_Open<APP_UI_InstrumentSetting>(ref winInstrumentSetting);
+        }
+
+        private void tMenu_SecuritySetup_Click(object sender, RoutedEventArgs e)
+        {
+            Win_Open<APP_UI_SecuritySetup>(ref winSecuritySetup);
+        }
+
+        private void tMenu_GasCalibration_Click(object sender, RoutedEventArgs e)
+        {
+            Win_Open<APP_UI_GasCalibration>(ref winGasCalibration);
+        }
+
+        private void tMenu_CalAnalougeOutput_Click(object sender, RoutedEventArgs e)
+        {
+            Win_Open<APP_UI_CalAnalogueOutput>(ref winCalAnalogueOutput);
+        }
+
+        private void tMenu_CalVoltageOutput_Click(object sender, RoutedEventArgs e)
+        {
+            Win_Open<APP_UI_CalVoltageOutput>(ref winCalVoltageOutput);
+        }
+
+        private void tMenuCalCellDrive_Click(object sender, RoutedEventArgs e)
+        {
+            Win_Open<APP_UI_CalCellDrive>(ref winCalCellDrive);
+        }
+
+        private void tMenu_HardwareTest_Click(object sender, RoutedEventArgs e)
+        {
+            Win_Open<APP_UI_HardwareTest>(ref winHardwareTest);
+        }
+
+        private void tMenu_CommLog_Click(object sender, RoutedEventArgs e)
+        {
+            Win_Open<APP_UI_CommLog>(ref winCommLog);
+        }
+        private void tMenu_Debug_Click(object sender, RoutedEventArgs e)
+        {
+            Win_Open<APP_UI_Debug>(ref winDebug);
         }
 
         private void tBtn_ResetAlarmFaults_Click(object sender, RoutedEventArgs e)

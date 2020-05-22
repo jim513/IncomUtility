@@ -1,5 +1,4 @@
-﻿using Syncfusion.Windows.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Xceed.Wpf.Toolkit;
 
 namespace IncomUtility
 {
@@ -48,13 +48,6 @@ namespace IncomUtility
             makeDataGrid(warning_status_grid_data, warning_status_grid_data_list, WarningStatus);
 
             tTxtMemo1.AppendText(Environment.NewLine);
-        }
-
-        private void TimeSpanEdit_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            // Get old and new value
-            var newValue = e.NewValue;
-            var oldValue = e.OldValue;
         }
 
         private string[] InstrumentStatus = { "Fault", "Warning", "Gas Alarm 1", "Gas Alarm 2", "Inhibit", "Over-range", "BLE Status" };
@@ -122,11 +115,17 @@ namespace IncomUtility
             if (serial == null)
                 serial = new SerialPortIO();
             
+            if (!serial.isPortOpen())
+            {
+                tTxtMemo1.AppendText("Incom is not connected");
+                tTxtMemo1.AppendText(Environment.NewLine);
+                return;
+            }
             /* 
              * Read Device Status
              */
             byte[] u8RXbuffer = serial.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DEVICE_STATUS,ref err);
-            if (err != ERROR_LIST.ERROR_NONE) {
+            if (err != ERROR_LIST.ERROR_NONE ) {
                 tTxtMemo1.AppendText("ERROR - READ INCOM STATUS");
                 tTxtMemo1.AppendText(Environment.NewLine);
                 return;
@@ -164,6 +163,13 @@ namespace IncomUtility
         {
             if (serial == null)
                 serial = new SerialPortIO();
+
+            if (!serial.isPortOpen())
+            {
+                tTxtMemo1.AppendText("Incom is not connected");
+                tTxtMemo1.AppendText(Environment.NewLine);
+                return;
+            }
             /*
             *Read Switch Status
             */
@@ -174,6 +180,7 @@ namespace IncomUtility
                 tTxtMemo1.AppendText(Environment.NewLine);
                 return;
             }
+            if(u8RXbuffer ==null)
             switch (u8RXbuffer[u8RXbuffer.Length - 4])
             {
                 case 0:
@@ -225,18 +232,18 @@ namespace IncomUtility
             if (serial == null)
                 serial = new SerialPortIO();
 
+            if (!serial.isPortOpen())
+            {
+                tTxtMemo1.AppendText("Incom is not connected");
+                tTxtMemo1.AppendText(Environment.NewLine);
+                return;
+            }
             /*
              *  Read Time
              */
             byte[] u8RXbuffer = serial.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_TIME,ref err);
 
             if (err != ERROR_LIST.ERROR_NONE)
-            {
-                tTxtMemo1.AppendText("ERROR - READ TIME");
-                tTxtMemo1.AppendText(Environment.NewLine);
-                return;
-            }
-            if(u8RXbuffer == null)
             {
                 tTxtMemo1.AppendText("ERROR - READ TIME");
                 tTxtMemo1.AppendText(Environment.NewLine);
@@ -257,9 +264,10 @@ namespace IncomUtility
                     tTxtMemo1.AppendText(Environment.NewLine);
                     return;
                 }
-              
-                tDate_DatePicker.SelectedDate = new DateTime(year, month, day);
-                tTime_TimePicker.Value = new TimeSpan(hour, minute, second);
+
+                DateTime readingTime = new DateTime(year, month, day, hour, minute, second);
+                tDate_DatePicker.SelectedDate = readingTime;
+                tTime_TimePicker.Value = readingTime;
             }
             catch(IndexOutOfRangeException)
             {
@@ -271,34 +279,39 @@ namespace IncomUtility
 
         private void tBtn_SetTime_Click(object sender, RoutedEventArgs e)
         {
-            tBtn_SetTime.IsEnabled = false;
             timeLock = new Thread(setTime);
             timeLock.Start();
-            Thread.Sleep(50);
-            tBtn_SetTime.IsEnabled = true;
+            Thread.Sleep(50);     
         }
         private void setTime()
         {
             if (serial == null)
                 serial = new SerialPortIO();
 
+            if (!serial.isPortOpen())
+            {
+                tTxtMemo1.AppendText("Incom is not connected");
+                tTxtMemo1.AppendText(Environment.NewLine);
+                return;
+            }
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                tBtn_SetTime.IsEnabled = false;
                 tBtn_ReadTime.IsEnabled = false;
 
                 byte[] timeToSend = new byte[7];
 
                 DateTime setDate = tDate_DatePicker.SelectedDate.Value;
-                TimeSpan setTime = tTime_TimePicker.Value.Value;
+                DateTime setTime = (DateTime)tTime_TimePicker.Value;
 
                 int year = setDate.Year;
                 timeToSend[0] = (byte)(year >> 8);
                 timeToSend[1] = (byte)year;
                 timeToSend[2] = (byte)setDate.Month;
                 timeToSend[3] = (byte)setDate.Day;
-                timeToSend[4] = (byte)setTime.Hours;
-                timeToSend[5] = (byte)setTime.Minutes;
-                timeToSend[6] = (byte)setTime.Seconds;
+                timeToSend[4] = (byte)setTime.Hour;
+                timeToSend[5] = (byte)setTime.Minute;
+                timeToSend[6] = (byte)setTime.Second;
 
                 serial.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err);
 
@@ -310,11 +323,12 @@ namespace IncomUtility
                 tTxtMemo1.AppendText(Environment.NewLine);
             }));
 
-            Thread.Sleep(900);
+            Thread.Sleep(1000);
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 tBtn_ReadTime.IsEnabled = true;
+                tBtn_SetTime.IsEnabled = true;
             }));
 
         }

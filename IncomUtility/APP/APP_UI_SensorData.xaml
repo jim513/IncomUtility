@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IncomUtility.APP"
         mc:Ignorable="d"
-        Title="APP_UI_EditSensorData" Height="450" Width="600">
+        Title="Program Sensor Data" Height="450" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="19*"/>

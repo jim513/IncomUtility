@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IncomUtility.APP"
         mc:Ignorable="d"
-        Title="APP_UI_RawData" Height="600" Width="600">
+        Title="Monitor Raw Data" Height="600" Width="600">
     <Grid MinHeight="40" MinWidth="170">
         <Grid.RowDefinitions>
             <RowDefinition Height="44*"/>
