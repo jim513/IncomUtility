@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IncomUtility.APP"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="APP_UI_InstrumentSetting" Height="1200" Width="1300" >
+        Title="Instrument Settings" Height="1200" Width="1300" >
     <ScrollViewer>
         <Grid>
             <Grid.RowDefinitions>

@@ -18,6 +18,14 @@ namespace IncomUtility
         public static SerialPort serialPort = new SerialPort();
         public static Mutex mutex = new Mutex();
         private Quattro quattro = new Quattro();
+
+        public bool isPortOpen()
+        {
+            if (serialPort.IsOpen)
+                return true;
+
+            return false;
+        }
         private void writePacket(ref byte[] sendbuffer ,ref ERROR_LIST err)
         {
             
@@ -55,7 +63,7 @@ namespace IncomUtility
             else
             {
                 err = ERROR_LIST.ERROR_RECIVE_DATA_NONE;
-                readBuffer = null;
+                return  null;
             }
 
             //mutex.ReleaseMutex();

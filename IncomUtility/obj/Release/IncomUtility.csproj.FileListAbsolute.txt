@@ -51,3 +51,5 @@ C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\Out\IncomUtility.exe.c
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\Out\IncomUtility.exe
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\Out\IncomUtility.pdb
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\IncomUtility.csproj.Fody.CopyLocal.cache
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_SecuritySetup.g.cs
+C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Release\APP\APP_UI_SecuritySetup.baml

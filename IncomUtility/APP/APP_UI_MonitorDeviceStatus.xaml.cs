@@ -115,6 +115,12 @@ namespace IncomUtility
             if (serial == null)
                 serial = new SerialPortIO();
             
+            if (!serial.isPortOpen())
+            {
+                tTxtMemo1.AppendText("Incom is not connected");
+                tTxtMemo1.AppendText(Environment.NewLine);
+                return;
+            }
             /* 
              * Read Device Status
              */
@@ -157,6 +163,13 @@ namespace IncomUtility
         {
             if (serial == null)
                 serial = new SerialPortIO();
+
+            if (!serial.isPortOpen())
+            {
+                tTxtMemo1.AppendText("Incom is not connected");
+                tTxtMemo1.AppendText(Environment.NewLine);
+                return;
+            }
             /*
             *Read Switch Status
             */
@@ -219,6 +232,12 @@ namespace IncomUtility
             if (serial == null)
                 serial = new SerialPortIO();
 
+            if (!serial.isPortOpen())
+            {
+                tTxtMemo1.AppendText("Incom is not connected");
+                tTxtMemo1.AppendText(Environment.NewLine);
+                return;
+            }
             /*
              *  Read Time
              */
@@ -259,7 +278,7 @@ namespace IncomUtility
         }
 
         private void tBtn_SetTime_Click(object sender, RoutedEventArgs e)
-        {    
+        {
             timeLock = new Thread(setTime);
             timeLock.Start();
             Thread.Sleep(50);     
@@ -269,6 +288,12 @@ namespace IncomUtility
             if (serial == null)
                 serial = new SerialPortIO();
 
+            if (!serial.isPortOpen())
+            {
+                tTxtMemo1.AppendText("Incom is not connected");
+                tTxtMemo1.AppendText(Environment.NewLine);
+                return;
+            }
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 tBtn_SetTime.IsEnabled = false;
@@ -330,8 +355,4 @@ namespace IncomUtility
             return true;
         }
     }
-    class CurrentTime
-    { 
-    }
-
 }

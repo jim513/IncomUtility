@@ -98,6 +98,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="APP\APP_UI_CalAnalogueOutput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="APP\APP_UI_CalCellDrive.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="APP\APP_UI_CalVoltageOutput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="APP\APP_UI_CommLog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="APP\APP_UI_Communication.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -110,7 +126,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="APP\APP_UI_GasCalibration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="APP\APP_UI_HardwareTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="APP\APP_UI_InstrumentSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="APP\APP_UI_SecuritySetup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -138,6 +166,18 @@
     <Compile Include="APP\APP_UI_BLEInfo.xaml.cs">
       <DependentUpon>APP_UI_BLEInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="APP\APP_UI_CalAnalogueOutput.xaml.cs">
+      <DependentUpon>APP_UI_CalAnalogueOutput.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="APP\APP_UI_CalCellDrive.xaml.cs">
+      <DependentUpon>APP_UI_CalCellDrive.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="APP\APP_UI_CalVoltageOutput.xaml.cs">
+      <DependentUpon>APP_UI_CalVoltageOutput.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="APP\APP_UI_CommLog.xaml.cs">
+      <DependentUpon>APP_UI_CommLog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="APP\APP_UI_Communication.xaml.cs">
       <DependentUpon>APP_UI_Communication.xaml</DependentUpon>
     </Compile>
@@ -147,8 +187,17 @@
     <Compile Include="APP\APP_UI_DeviceInfo.xaml.cs">
       <DependentUpon>APP_UI_DeviceInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="APP\APP_UI_GasCalibration.xaml.cs">
+      <DependentUpon>APP_UI_GasCalibration.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="APP\APP_UI_HardwareTest.xaml.cs">
+      <DependentUpon>APP_UI_HardwareTest.xaml</DependentUpon>
+    </Compile>
     <Compile Include="APP\APP_UI_InstrumentSetting.xaml.cs">
       <DependentUpon>APP_UI_InstrumentSetting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="APP\APP_UI_SecuritySetup.xaml.cs">
+      <DependentUpon>APP_UI_SecuritySetup.xaml</DependentUpon>
     </Compile>
     <Compile Include="APP\APP_UI_SensorData.xaml.cs">
       <DependentUpon>APP_UI_SensorData.xaml</DependentUpon>

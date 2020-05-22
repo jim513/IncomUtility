@@ -25,7 +25,7 @@
             <MenuItem Header="_View">
                 <MenuItem x:Name="tMenu_ViewBLEInfo" Header="View BLE Info" Click="tMenu_ViewBLEInfo_Click"/>
                 <MenuItem x:Name="tMenu_ViewDeviceInfo" Header="View Device Info" Click="tMenu_ViewDeviceInfo_Click"/>
-                <MenuItem x:Name="tMenu_ViewLogs" Header="View Logs"/>
+                <MenuItem x:Name="tMenu_ViewLogs" Header="View Logs" Click="tMenu_ViewLogs_Click"/>
             </MenuItem>
             <MenuItem Header="_Status" >
                 <MenuItem Header="Monitor Device Status" x:Name="tMenu_MonitorDeviceStatus" Click="tMenu_MonitorDeviceStatus_Click"/>
@@ -34,20 +34,20 @@
             <MenuItem Header="_Setting" >
                 <MenuItem x:Name="tMenu_EditSensorData" Header="Edit Sensor Data" Click="tMenu_EditSensorData_Click"/>
                 <MenuItem x:Name="tMenu_EditInstrumentSettings" Header="Edit Instrument Settings" Click="tMenu_EditInstrumentSettings_Click"/>
-                <MenuItem Header="Securtiy Control"/>
+                <MenuItem x:Name="tMenu_SecuritySetup" Header="Securtiy Control" Click="tMenu_SecuritySetup_Click"/>
                 <MenuItem Header="Communication" x:Name="tMenu_Communication" Click="tMenu_Communication_Click"/>
             </MenuItem>
             <MenuItem Header="_Calibrate">
-                <MenuItem Header="Gas Calibration"/>
-                <MenuItem Header="Calibrate Analogue Output"/>
-                <MenuItem Header="Calibrate Voltage Output"/>
-                <MenuItem Header="Calibrate Cell Drive"/>
+                <MenuItem x:Name="tMenu_GasCalibration" Header="Gas Calibration" Click="tMenu_GasCalibration_Click"/>
+                <MenuItem x:Name="tMenu_CalAnalougeOutput" Header="Calibrate Analogue Output" Click="tMenu_CalAnalougeOutput_Click"/>
+                <MenuItem x:Name="tMenu_CalVoltageOutput" Header="Calibrate Voltage Output" Click="tMenu_CalVoltageOutput_Click"/>
+                <MenuItem x:Name="tMenuCalCellDrive" Header="Calibrate Cell Drive" Click="tMenuCalCellDrive_Click"/>
             </MenuItem>
             <MenuItem Header="_Test">
-                <MenuItem Header="Hardware Test"/>
+                <MenuItem x:Name="tMenu_HardwareTest" Header="Hardware Test" Click="tMenu_HardwareTest_Click"/>
             </MenuItem>
             <MenuItem Header="_Debug">
-                <MenuItem Header="Comm. Log"/>
+                <MenuItem x:Name="tMenu_CommLog" Header="Comm. Log" Click="tMenu_CommLog_Click"/>
                 <MenuItem x:Name="tMenu_Debug" Header="Debug" Click="tMenu_Debug_Click"/>
             </MenuItem>
         </Menu>
