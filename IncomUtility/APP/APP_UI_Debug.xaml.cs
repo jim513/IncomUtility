@@ -25,8 +25,8 @@ namespace IncomUtility.APP
         {
             InitializeComponent();
         }
+
         Quattro quattro = new Quattro();
-        SerialPortIO serial = new SerialPortIO();
         ERROR_LIST err;
         private string CheckInput(string InputText)
         {
@@ -50,7 +50,7 @@ namespace IncomUtility.APP
         DateTime now;
         private void tBtn_SendCMD_Click(object sender, RoutedEventArgs e)
         {
-            if (!SerialPortIO.serialPort.IsOpen)
+            if (!SerialPortIO.isPortOpen())
             {
                 tTxt_Log.AppendText("Port is not open");
                 tTxt_Log.AppendText(Environment.NewLine);
@@ -62,7 +62,13 @@ namespace IncomUtility.APP
             {
                 string s1 = CheckInput(tBtn_CMD1.Text);
                 string s2 = CheckInput(tBtn_CMD2.Text);
-               
+
+                if (s1 == null || s2 == null)
+                {
+                    tTxt_Log.AppendText("Input is not hex number");
+                    tTxt_Log.AppendText(Environment.NewLine);
+                    return;
+                }
                 CMD = Quattro.StringToByteArray(string.Concat(s1, s2));
             }
             else
@@ -72,23 +78,28 @@ namespace IncomUtility.APP
                 return;
             }
 
+            /*
+             *  Check Additional Input
+             */
             if(tBtn_Payload.Text !="")
             {
-                string s3 = tBtn_Payload.Text;
+                string addtionalCmd = tBtn_Payload.Text;
                 int value;
-                if (!int.TryParse(s3, out value))
+                if (addtionalCmd.Length % 2 == 1)
+                    addtionalCmd = string.Concat("0", addtionalCmd);
+
+                if (!int.TryParse(addtionalCmd, out value))
                 {
                     tTxt_Log.AppendText("Input is not hex number");
                     tTxt_Log.AppendText(Environment.NewLine);
                     return; 
                 }
-                if (s3.Length == 1)
-                    s3= string.Concat("0", s3);
-                CMD = Quattro.mergeByteArray(CMD, Quattro.StringToByteArray(s3));
+             
+                CMD = Quattro.mergeByteArray(CMD, Quattro.StringToByteArray(addtionalCmd));
             }
 
             now = DateTime.Now;
-            byte[] u8TXbuffer =quattro.buildCMDPacket((byte)PACKET_CONF.COMM_SYSTEM_MFG_PC, (byte)PACKET_CONF.COMM_SYSTEM_INCOM, CMD, ref err);
+            byte[] u8TXbuffer = quattro.buildCMDPacket((byte)PACKET_CONF.COMM_SYSTEM_MFG_PC, (byte)PACKET_CONF.COMM_SYSTEM_INCOM, CMD, ref err);
             tTxt_Log.AppendText(now.ToLongTimeString() + " TX : " + BitConverter.ToString(u8TXbuffer));
             tTxt_Log.AppendText(Environment.NewLine);
 

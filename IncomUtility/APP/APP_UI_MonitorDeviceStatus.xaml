@@ -67,7 +67,7 @@
 
             </Grid>
         </GroupBox>
-        <TextBox x:Name="tTxtMemo1" Grid.Column="3" Grid.RowSpan="3" Margin="10,10,10,10" Text="Memo1" AcceptsReturn="True" TextWrapping="Wrap"/>
+        <TextBox x:Name="tTxt_Memo1" Grid.Column="3" Grid.RowSpan="3" Margin="10,10,10,10" Text="Memo1" AcceptsReturn="True" TextWrapping="Wrap"/>
         <StackPanel Grid.Column="2" Margin="10.2,10,9.8,9.6"  Orientation="Vertical" Grid.RowSpan="2">
             <DataGrid x:Name="instrument_status_grid_data" AutoGenerateColumns="False" AlternationCount="2" IsReadOnly="True">
                 <DataGrid.ColumnHeaderStyle >

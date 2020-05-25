@@ -10,11 +10,11 @@ none
 false
 TRACE
 C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\App.xaml
-11-1732054259
+17765041009
 
-19-1123371088
+25-879206256
 19-1135327790
-APP\APP_UI_BLEInfo.xaml;APP\APP_UI_Communication.xaml;APP\APP_UI_Debug.xaml;APP\APP_UI_DeviceInfo.xaml;APP\APP_UI_InstrumentSetting.xaml;APP\APP_UI_SecuritySetup.xaml;APP\APP_UI_SensorData.xaml;APP\APP_UI_MonitorDeviceStatus.xaml;APP\APP_UI_RawData.xaml;APP\MainWindow.xaml;APP\APP_UI_ViewLogs.xaml;
+APP\APP_UI_BLEInfo.xaml;APP\APP_UI_CalAnalogueOutput.xaml;APP\APP_UI_CalCellDrive.xaml;APP\APP_UI_CalVoltageOutput.xaml;APP\APP_UI_CommLog.xaml;APP\APP_UI_Communication.xaml;APP\APP_UI_Debug.xaml;APP\APP_UI_DeviceInfo.xaml;APP\APP_UI_GasCalibration.xaml;APP\APP_UI_HardwareTest.xaml;APP\APP_UI_InstrumentSetting.xaml;APP\APP_UI_SecuritySetup.xaml;APP\APP_UI_SensorData.xaml;APP\APP_UI_MonitorDeviceStatus.xaml;APP\APP_UI_RawData.xaml;APP\MainWindow.xaml;APP\APP_UI_ViewLogs.xaml;
 
 False
 

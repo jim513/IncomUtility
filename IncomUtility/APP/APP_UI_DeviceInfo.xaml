@@ -119,8 +119,12 @@
                 <Button x:Name="tBtn_ReadDeviceInfo" Content="Read Device Info" MinHeight="30" Margin="0,5,10,0"/>
             </StackPanel>
         </Grid>
-        <TextBox x:Name="tTxt_ShowType" Grid.Column="2" Grid.RowSpan="2" Background="#FFAFF1AF" Margin="10"></TextBox>
-        <TextBox x:Name="tTxt_Logs" Grid.Row="2" Grid.ColumnSpan="2" Margin="10"></TextBox>
+        <TextBox x:Name="tTxt_ShowType" Grid.Column="2" Grid.RowSpan="2" Background="#FFAFF1AF" Margin="10" Text="0x00: blank&#10;0x01 : %LEL
+&#10;0x02 : mA&#10;0x03 : mg/m3&#10;0x04 : g/m3&#10;0x05 : %Vol&#10;0x06 : ppm&#10;0x07 : kppm&#10;0x08 : LEL.m&#10;0x09 : A
+&#10;0x0A : dB&#10;0x0B : dBA&#10;0x0C : ppm.m&#10;&#10;Sensor Type&#10;0x00 :ECC&#10;0x01: FL CAT&#10;0x02: IR&#10;0x03: PID
+&#10;0x04: MOS&#10;&#10;Gas Type&#10;0x00: Flammable&#10;0x01: Toxic&#10;0x02: O2&#10;0x03: VOC
+" AcceptsReturn="True"></TextBox>
+        <TextBox x:Name="tTxt_Logs" Grid.Row="2" Grid.ColumnSpan="2" Margin="10" AcceptsReturn="True"></TextBox>
 
     </Grid>
 </Window>

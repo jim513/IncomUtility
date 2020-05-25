@@ -19,23 +19,21 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
                     <Label Content="BLE Device Name" Margin="10,5,10,0"></Label>
-                    <TextBox Margin="10,0,10,0"></TextBox>
+                    <TextBox x:Name="tTxt_BLEDeviceName" Margin="10,0,10,0"></TextBox>
                     <Label Content="BLE Mac Address" Margin="10,5,10,0"></Label>
-                    <TextBox Margin="10,0,10,0"></TextBox>
+                    <TextBox x:Name="tTxt_BLEMacAddress" Margin="10,0,10,0"></TextBox>
                     <Label Content="BLE TX Power" Margin="10,5,10,0"></Label>
-                    <TextBox Margin="10,0,10,0"></TextBox>
+                    <TextBox x:Name="tTxt_BLETXPower" Margin="10,0,10,0"></TextBox>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
                     <Label Content="BLE SW Version" Margin="10,5,10,0"></Label>
-                    <TextBox Margin="10,0,10,0"></TextBox>
+                    <TextBox x:Name="tTxt_BLESWVersion" Margin="10,0,10,0"></TextBox>
                     <Label Content="BLE Instrument ID" Margin="10,5,10,0"></Label>
-                    <TextBox Margin="10,0,10,0"></TextBox>
-                    <Button Content="Refresh BLE Info" Margin="10,15,10,5" Height="45"></Button>
+                    <TextBox x:Name="tTxt_BLEInstID" Margin="10,0,10,0"></TextBox>
+                    <Button x:Name="tBtn_getBLEInfo" Content="Refresh BLE Info" Margin="10,15,10,5" Height="45" Click="tBtn_getBLEInfo_Click"></Button>
                 </StackPanel>
             </Grid>
         </GroupBox>
-        <Border Grid.Row="1" Margin="10,10,10,10" BorderThickness="1" BorderBrush="Black">
-            <TextBlock ></TextBlock>
-        </Border>
+       <TextBox Grid.Row="1" Margin="10" x:Name="tTxt_BLEInfo" AcceptsReturn="True" ></TextBox>
     </Grid>
 </Window>

@@ -14,20 +14,43 @@ namespace IncomUtility
         retryCount = 3,
         defaultSleep = 100
     };
-    public class SerialPortIO
+     public static  class SerialPortIO
     {
-        public static SerialPort serialPort = new SerialPort();
-        public static Mutex mutex = new Mutex();
-        private Quattro quattro = new Quattro();
+         public static SerialPort serialPort = new SerialPort();
+         public static Mutex mutex = new Mutex();
+         private static Quattro quattro = new Quattro();
 
-        public bool isPortOpen()
+          public static bool isPortOpen()
         {
+            if (serialPort.IsOpen)
+                return true;
+
+            string[] names= SerialPort.GetPortNames();
+            
+            if (names.Length == 0)
+                return false;
+
+            mutex.WaitOne();
+            serialPort.PortName = names[0];
+
+            try
+            {
+               serialPort.Open();
+            }
+            catch
+            {
+                mutex.ReleaseMutex();
+                MessageBox.Show("연결에 실패하였습니다");
+                return false;
+            }
+
+            mutex.ReleaseMutex();
             if (serialPort.IsOpen)
                 return true;
 
             return false;
         }
-        private void writePacket(ref byte[] sendbuffer ,ref ERROR_LIST err)
+         private static void writePacket(ref byte[] sendbuffer ,ref ERROR_LIST err)
         {
             
             if (!serialPort.IsOpen)
@@ -45,7 +68,7 @@ namespace IncomUtility
             err = ERROR_LIST.ERROR_NONE;
         }
 
-        private byte[] readPacket(ref ERROR_LIST err)
+         private static byte[] readPacket(ref ERROR_LIST err)
         {
             if (!serialPort.IsOpen)
             {
@@ -71,7 +94,7 @@ namespace IncomUtility
 
             return readBuffer;
         }
-        private byte[] sendCommand( byte[] payload, ref ERROR_LIST error ,int sleepTime)
+         private static byte[] sendCommand( byte[] payload, ref ERROR_LIST error ,int sleepTime)
         {
             if (!serialPort.IsOpen)
             {
@@ -117,7 +140,7 @@ namespace IncomUtility
             }
             return u8RXbuffer;
         }
-        public byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err,int sleepTime)
+         public static byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err,int sleepTime)
         {
             if(payload == null)
             {
@@ -129,20 +152,20 @@ namespace IncomUtility
             
             return sendCommand(command, ref err, sleepTime);
         }
-        public byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
+         public static byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
         {
             return sendCommand(CMD, payload, ref err, (int)Constants.defaultSleep);
         }
-        public byte[] sendCommand(COMM_COMMAND_LIST CMD,ref ERROR_LIST err, int sleepTime )
+         public static byte[] sendCommand(COMM_COMMAND_LIST CMD,ref ERROR_LIST err, int sleepTime )
         {
             return sendCommand(Quattro.commandToByteArray(CMD), ref err, sleepTime);
         }
-        public byte[] sendCommand(COMM_COMMAND_LIST CMD, ref ERROR_LIST err)
+         public static byte[] sendCommand(COMM_COMMAND_LIST CMD, ref ERROR_LIST err)
         {
             return sendCommand(Quattro.commandToByteArray(CMD), ref err, (int)Constants.defaultSleep);
         }
 
-        public byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err, int sleepTime)
+         public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err, int sleepTime)
         {
             if (payload == null)
             {
@@ -155,20 +178,20 @@ namespace IncomUtility
             return sendCommand(command, ref err, sleepTime);
 
         }
-        public byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
+         public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
         {
             return sendCommand(CMD,payload, ref err, (int)Constants.defaultSleep);
         }
-        public byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err, int sleepTime)
+         public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err, int sleepTime)
         {
            return sendCommand(Quattro.commandToByteArray(CMD), ref err, sleepTime);
         }
-        public byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err)
+         public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err)
         {
             return sendCommand(Quattro.commandToByteArray(CMD), ref err, (int)Constants.defaultSleep);
         }
 
-        private void flushIOBuffer()
+         private static void flushIOBuffer()
         {
             if (!serialPort.IsOpen)
                 return;

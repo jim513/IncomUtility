@@ -29,7 +29,6 @@ namespace IncomUtility
 
         Thread timeLock;
 
-        SerialPortIO serial;
         ERROR_LIST err;
         public APP_UI_MonitorDeviceStatus()
         {
@@ -47,7 +46,7 @@ namespace IncomUtility
             makeDataGrid(fault_status_grid_data, fault_status_grid_data_list, FaultStatus);
             makeDataGrid(warning_status_grid_data, warning_status_grid_data_list, WarningStatus);
 
-            tTxtMemo1.AppendText(Environment.NewLine);
+            tTxt_Memo1.AppendText(Environment.NewLine);
         }
 
         private string[] InstrumentStatus = { "Fault", "Warning", "Gas Alarm 1", "Gas Alarm 2", "Inhibit", "Over-range", "BLE Status" };
@@ -112,22 +111,19 @@ namespace IncomUtility
         }
         private void tBtn_ReadDeviceStatus_Click(object sender, RoutedEventArgs e)
         {
-            if (serial == null)
-                serial = new SerialPortIO();
-            
-            if (!serial.isPortOpen())
+            if (!SerialPortIO.isPortOpen())
             {
-                tTxtMemo1.AppendText("Incom is not connected");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("Incom is not connected");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             /* 
              * Read Device Status
              */
-            byte[] u8RXbuffer = serial.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DEVICE_STATUS,ref err);
+            byte[] u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DEVICE_STATUS,ref err);
             if (err != ERROR_LIST.ERROR_NONE ) {
-                tTxtMemo1.AppendText("ERROR - READ INCOM STATUS");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("ERROR - READ INCOM STATUS");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             updateDataGrid(u8RXbuffer, instrument_status_grid_data, instrument_status_grid_data_list, InstrumentStatus);
@@ -136,11 +132,11 @@ namespace IncomUtility
              * Read Warning Status
              */
             byte[] cmd_ReadFaultOption = { 0x01 };
-            u8RXbuffer = serial.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_FAULT_DETAILS,cmd_ReadFaultOption,ref err);
+            u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_FAULT_DETAILS,cmd_ReadFaultOption,ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
-                tTxtMemo1.AppendText("ERROR : READ WARNING DETAILS");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("ERROR : READ WARNING DETAILS");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             updateDataGrid(u8RXbuffer, warning_status_grid_data, warning_status_grid_data_list, WarningStatus);
@@ -149,11 +145,11 @@ namespace IncomUtility
              * Read Fault Status
              */
             cmd_ReadFaultOption[0] = 0x02;
-            u8RXbuffer = serial.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_FAULT_DETAILS,cmd_ReadFaultOption,ref err);
+            u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_FAULT_DETAILS,cmd_ReadFaultOption,ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
-                tTxtMemo1.AppendText("ERROR : READ FAULT DETAILS");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("ERROR : READ FAULT DETAILS");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             updateDataGrid(u8RXbuffer, fault_status_grid_data, fault_status_grid_data_list, FaultStatus);
@@ -161,23 +157,20 @@ namespace IncomUtility
 
         private void tBtn_ReadSwitchStauts_Click(object sender, RoutedEventArgs e)
         {
-            if (serial == null)
-                serial = new SerialPortIO();
-
-            if (!serial.isPortOpen())
+            if (!SerialPortIO.isPortOpen())
             {
-                tTxtMemo1.AppendText("Incom is not connected");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("Incom is not connected");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             /*
             *Read Switch Status
             */
-            byte[] u8RXbuffer = serial.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SWITCH_STATUS,ref err);
+            byte[] u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SWITCH_STATUS,ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
-                tTxtMemo1.AppendText("ERROR - READ SWITCH STATUS");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("ERROR - READ SWITCH STATUS");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             if(u8RXbuffer ==null)
@@ -204,11 +197,11 @@ namespace IncomUtility
             /*
             *Read Inhibit Switch
             */
-            u8RXbuffer = serial.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_INHIBIT_SWITCH,ref err);
+            u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_INHIBIT_SWITCH,ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
-                tTxtMemo1.AppendText("ERROR - READ INHIBIT SWITCH STATUS");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("ERROR - READ INHIBIT SWITCH STATUS");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             if (u8RXbuffer[(int)PACKET_CONF.COMM_POS_PAYLOAD + 3] < 2)
@@ -217,11 +210,11 @@ namespace IncomUtility
             /*
              * Read SInk/Source Switch
              */ 
-            u8RXbuffer = serial.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT,ref err);
+            u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT,ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
-                tTxtMemo1.AppendText("ERROR - READ ANLOGUE TYPE");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("ERROR - READ ANLOGUE TYPE");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             tCmb_SinkSourceSwitchs.SelectedIndex = u8RXbuffer[(int)PACKET_CONF.COMM_POS_PAYLOAD + 3];
@@ -229,24 +222,21 @@ namespace IncomUtility
 
         private void tBtn_ReadTime_Click(object sender, RoutedEventArgs e)
         {
-            if (serial == null)
-                serial = new SerialPortIO();
-
-            if (!serial.isPortOpen())
+            if (!SerialPortIO.isPortOpen())
             {
-                tTxtMemo1.AppendText("Incom is not connected");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("Incom is not connected");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             /*
              *  Read Time
              */
-            byte[] u8RXbuffer = serial.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_TIME,ref err);
+            byte[] u8RXbuffer = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_TIME,ref err);
 
             if (err != ERROR_LIST.ERROR_NONE)
             {
-                tTxtMemo1.AppendText("ERROR - READ TIME");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("ERROR - READ TIME");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             try
@@ -260,8 +250,8 @@ namespace IncomUtility
                 
                 if (!isTimeCheck(year, month, day, hour, minute, second))
                 {
-                    tTxtMemo1.AppendText("ERROR - READ TIME");
-                    tTxtMemo1.AppendText(Environment.NewLine);
+                    tTxt_Memo1.AppendText("ERROR - READ TIME");
+                    tTxt_Memo1.AppendText(Environment.NewLine);
                     return;
                 }
 
@@ -271,8 +261,8 @@ namespace IncomUtility
             }
             catch(IndexOutOfRangeException)
             {
-                tTxtMemo1.AppendText("ERROR - READ TIME - INDEX OUT RANGE");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("ERROR - READ TIME - INDEX OUT RANGE");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
         }
@@ -285,13 +275,10 @@ namespace IncomUtility
         }
         private void setTime()
         {
-            if (serial == null)
-                serial = new SerialPortIO();
-
-            if (!serial.isPortOpen())
+            if (!SerialPortIO.isPortOpen())
             {
-                tTxtMemo1.AppendText("Incom is not connected");
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText("Incom is not connected");
+                tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
             }
             Dispatcher.BeginInvoke(new Action(() =>
@@ -313,18 +300,18 @@ namespace IncomUtility
                 timeToSend[5] = (byte)setTime.Minute;
                 timeToSend[6] = (byte)setTime.Second;
 
-                serial.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err,300);
+                SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err,300);
 
                 if (err == ERROR_LIST.ERROR_NONE)
-                    tTxtMemo1.AppendText("Successfully wrote the datetime");
+                    tTxt_Memo1.AppendText("Successfully wrote the datetime");
                 else
                 {
-                    tTxtMemo1.AppendText("ERROR - WRITE TIME");
-                    tTxtMemo1.AppendText(Environment.NewLine);
-                    tTxtMemo1.AppendText(err.ToString());
+                    tTxt_Memo1.AppendText("ERROR - WRITE TIME");
+                    tTxt_Memo1.AppendText(Environment.NewLine);
+                    tTxt_Memo1.AppendText(err.ToString());
                 }
 
-                tTxtMemo1.AppendText(Environment.NewLine);
+                tTxt_Memo1.AppendText(Environment.NewLine);
             }));
 
             Thread.Sleep(500);

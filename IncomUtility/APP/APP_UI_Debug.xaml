@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IncomUtility.APP"
         mc:Ignorable="d"
-        Title="Debug mode" Height="400" Width="800">
+        Title="Debug mode" Height="400" Width="1000">
     <Grid>
         <Grid>
 
