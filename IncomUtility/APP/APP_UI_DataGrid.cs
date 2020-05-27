@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace IncomUtility
 {
@@ -294,6 +297,22 @@ namespace IncomUtility
             this.data15 = data15;
 
         }
+        public APP_UI_DataGrid(string data0, string data1, string data2, string data3, string data4, string data5, string data6, string data7, string data8
+          , string data9, string data10, string data11)
+        {
+            this.data0 = data0;
+            this.data1 = data1;
+            this.data2 = data2;
+            this.data3 = data3;
+            this.data4 = data4;
+            this.data5 = data5;
+            this.data6 = data6;
+            this.data7 = data7;
+            this.data8 = data8;
+            this.data9 = data9;
+            this.data10 = data10;
+            this.data11 = data11;
+        }
         public APP_UI_DataGrid(string data0, string data1, string data2, string data3, string data4, string data5, string data6, string data7, string data8)
         {
             this.data0 = data0;
@@ -306,7 +325,16 @@ namespace IncomUtility
             this.data7 = data7;
             this.data8 = data8;
         }
-
+        public APP_UI_DataGrid(string data0, string data1, string data2, string data3, string data4, string data5, string data6)
+        {
+            this.data0 = data0;
+            this.data1 = data1;
+            this.data2 = data2;
+            this.data3 = data3;
+            this.data4 = data4;
+            this.data5 = data5;
+            this.data6 = data6;
+        }
         public APP_UI_DataGrid(string data0, string data1, string data2, string data3, string data4)
         {
             this.data0 = data0;
@@ -327,5 +355,6 @@ namespace IncomUtility
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
+    
     }
 }

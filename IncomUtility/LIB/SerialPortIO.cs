@@ -40,7 +40,7 @@ namespace IncomUtility
             catch
             {
                 mutex.ReleaseMutex();
-                MessageBox.Show("연결에 실패하였습니다");
+                MessageBox.Show("Connecting was failed");
                 return false;
             }
 

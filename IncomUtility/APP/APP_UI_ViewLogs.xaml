@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel>
                 <Label Content="Select Log Table" Margin="10,10,10,0"/>
-                <ComboBox SelectedIndex="0" Margin="10,2">
+                <ComboBox x:Name="tCmb_LogsType" SelectedIndex="0" Margin="10,2" SelectionChanged="tCmb_LogsType_SelectionChanged">
                     <ComboBoxItem Content="0x01 : Alarm Log"/>
                     <ComboBoxItem Content="0x02 : Warning Log"/>
                     <ComboBoxItem Content="0x03 : Fault Log"/>
@@ -33,17 +33,131 @@
                     <ComboBoxItem Content="0x05 : Calibration History"/>
                     <ComboBoxItem Content="0x06 : Reflex Log"/>
                 </ComboBox>
-                <Button Content="Read Log Information" MinHeight="30" Margin="10,2"/>
+                <Button x:Name="tBtn_ReadLogInfo" Content="Read Log Information" MinHeight="30" Margin="10,2" Click="tBtn_ReadLogInfo_Click"/>
             </StackPanel>
-            <Button Content="Download Logs" Grid.Column="1" Margin="0,37,0,30"/>
-            <ProgressBar  Grid.Row="1" Grid.ColumnSpan="2"  MinHeight="20" BorderBrush="Black" Margin="10"/>
-            <Button Content="Stop Download" Grid.Row="1" Grid.Column="2" Margin="0,10,10,10"/>
+            <Button x:Name="tBtn_DownloadLogs" Content="Download Logs" Grid.Column="1" Margin="0,37,0,30" Click="tBtn_DownloadLogs_Click"/>
+            <ProgressBar x:Name="tPbar_LogDownBar"  Grid.Row="1" Grid.ColumnSpan="2"  MinHeight="20" BorderBrush="Gray" Margin="10"/>
+            <Button x:Name="tBtn_StopDownload" IsEnabled="False" Content="Stop Download" Grid.Row="1" Grid.Column="2" Margin="0,10,10,10" Click="tBtn_StopDownload_Click"/>
             <StackPanel Grid.RowSpan="2" Grid.Column="4" Margin="0,15,100,0">
-                <Button Content="Save to CSV" MinHeight="29" Margin="0,40,0,0" />
-                <Button Content="Clear Log Data" MinHeight="30" Margin="0,10,0,0"/>
-                <CheckBox Content="Record clear log" Margin="0,10,0,0"/>
+                <Button x:Name="tBtn_SaveToCSV" Content="Save to CSV" MinHeight="29" Margin="0,40,0,0" Click="tBtn_SaveToCSV_Click" />
+                <Button x:Name="tBtn_ClrLog" Content="Clear Log Data" MinHeight="30" Margin="0,10,0,0" Click="tBtn_ClrLog_Click"/>
+                <CheckBox x:Name="tChb_RecordClrLog" Content="Record clear log" Margin="0,10,0,0"/>
             </StackPanel>
         </Grid>
-        <DataGrid Grid.Row="1" AutoGenerateColumns="False" Margin="10,0,10,7"></DataGrid>
+        <TabControl x:Name="LogTab" Grid.Row="1" Margin="10,0,10,10" SelectedIndex="0" >
+            <TabItem Visibility="Collapsed" TabIndex="0">
+                <DataGrid x:Name="grid_LogAlarm"  AutoGenerateColumns="False"  Margin="-2">
+                    <DataGrid.ColumnHeaderStyle >
+                        <Style TargetType = "DataGridColumnHeader" >
+                            <Setter Property = "HorizontalContentAlignment" Value = "Center" />
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data0}" />
+                        <DataGridTextColumn Width="auto" Binding="{Binding data1}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data2}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data3}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data4}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data5}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data6}" CanUserSort="False"/>
+                        </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Visibility="Collapsed" TabIndex="1">
+                <DataGrid x:Name="grid_LogWarning"  AutoGenerateColumns="False" Margin="-2" >
+                    <DataGrid.ColumnHeaderStyle >
+                        <Style TargetType = "DataGridColumnHeader" >
+                            <Setter Property = "HorizontalContentAlignment" Value = "Center" />
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data0}" />
+                        <DataGridTextColumn Width="auto" Binding="{Binding data1}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data2}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data3}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data4}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data5}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data6}" CanUserSort="False"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Visibility="Collapsed" TabIndex="2">
+                <DataGrid x:Name="grid_LogFault"  AutoGenerateColumns="False"  Margin="-2">
+                    <DataGrid.ColumnHeaderStyle >
+                        <Style TargetType = "DataGridColumnHeader" >
+                            <Setter Property = "HorizontalContentAlignment" Value = "Center" />
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data0}" />
+                        <DataGridTextColumn Width="auto" Binding="{Binding data1}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data2}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data3}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data4}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data5}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data6}" CanUserSort="False"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+      
+            <TabItem Visibility="Collapsed" TabIndex="3" >
+                <DataGrid x:Name="grid_LogInfo"  AutoGenerateColumns="False"  Margin="-2">
+                    <DataGrid.ColumnHeaderStyle >
+                        <Style TargetType = "DataGridColumnHeader" >
+                            <Setter Property = "HorizontalContentAlignment" Value = "Center" />
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data0}" />
+                        <DataGridTextColumn Width="auto" Binding="{Binding data1}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data2}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data3}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data4}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data5}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data6}" CanUserSort="False"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Visibility="Collapsed" TabIndex="4">
+                <DataGrid x:Name="grid_LogCal"  AutoGenerateColumns="False" Margin="-2">
+                    <DataGrid.ColumnHeaderStyle >
+                        <Style TargetType = "DataGridColumnHeader" >
+                            <Setter Property = "HorizontalContentAlignment" Value = "Center" />
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data0}" />
+                        <DataGridTextColumn Width="auto" Binding="{Binding data1}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data2}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data3}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data4}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data5}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data6}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data7}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data8}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data9}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data10}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data11}" CanUserSort="False"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Visibility="Collapsed" TabIndex="5">
+                <DataGrid x:Name="grid_LogRelfex"  AutoGenerateColumns="False"  Margin="-2">
+                    <DataGrid.ColumnHeaderStyle >
+                        <Style TargetType = "DataGridColumnHeader" >
+                            <Setter Property = "HorizontalContentAlignment" Value = "Center" />
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data0}" />
+                        <DataGridTextColumn Width="auto" Binding="{Binding data1}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data2}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data3}" CanUserSort="False"/>
+                        <DataGridTextColumn Width="auto" Binding="{Binding data4}" CanUserSort="False"/>
+                        </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+           
+        </TabControl>
     </Grid>
 </Window>

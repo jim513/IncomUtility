@@ -69,7 +69,7 @@ namespace IncomUtility.APP
                     tTxt_Log.AppendText(Environment.NewLine);
                     return;
                 }
-                CMD = Quattro.StringToByteArray(string.Concat(s1, s2));
+                CMD = Quattro.hexStringToByteArray(string.Concat(s1, s2));
             }
             else
             {
@@ -95,7 +95,7 @@ namespace IncomUtility.APP
                     return; 
                 }
              
-                CMD = Quattro.mergeByteArray(CMD, Quattro.StringToByteArray(addtionalCmd));
+                CMD = Quattro.mergeByteArray(CMD, Quattro.hexStringToByteArray(addtionalCmd));
             }
 
             now = DateTime.Now;
@@ -116,7 +116,8 @@ namespace IncomUtility.APP
                 tTxt_Log.AppendText("Read Failed!");
                 tTxt_Log.AppendText(Environment.NewLine);
                 return;
-            }
+            }   
+            
             tTxt_Log.AppendText(now.ToLongTimeString() + " RX : " + BitConverter.ToString(u8RXbuffer));
             tTxt_Log.AppendText(Environment.NewLine);
         }
@@ -139,7 +140,7 @@ namespace IncomUtility.APP
         
             SerialPortIO.serialPort.Write(sendbuffer, 0, sendbuffer.Length);
             err = ERROR_LIST.ERROR_NONE;
-            Thread.Sleep(100);
+            Thread.Sleep(500);
         }
 
         private byte[] readPacket(ref ERROR_LIST err)
@@ -160,7 +161,7 @@ namespace IncomUtility.APP
             else
             {
                 err = ERROR_LIST.ERROR_RECIVE_DATA_NONE;
-                readBuffer = null;
+                return null;
             }
 
             SerialPortIO.mutex.ReleaseMutex();

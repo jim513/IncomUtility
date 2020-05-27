@@ -112,7 +112,9 @@ namespace IncomUtility
 
         COMM_CMD_READ_OUTPUT_DEVICE_TYPE = 0x7101,
         COMM_CMD_READ_EEPROM_VER = 0x7102,
+        COMM_CMD_READ_SENSOR_INFO = 0x7103,
 
+        COMM_CMD_READ_CONFIG = 0x7201,
         COMM_CMD_WRITE_CONFIG = 0x7202,
 
         //H/W Control
@@ -184,7 +186,7 @@ namespace IncomUtility
         //Simulation Mode   
         COMM_CMD_START_SIMULATION = 0x7B01,
         COMM_CMD_STOP_SIMULATION = 0x7B02,
-
+      
         //Debug command,
         DBG_CMD_READ_GAS_DATA = 0x8756,
 
@@ -212,9 +214,214 @@ namespace IncomUtility
         PARAM_TYPE_CUSTOM = 11,
 
         NUM_CONFIG_PARAM = 111,
-    }
+        NUM_CYLINDER_SN =20,
 
-    public enum ERROR_LIST
+        LOG_TABLE_TYPE_ALARM = 1,
+        LOG_TABLE_TYPE_WARNING = 2,
+        LOG_TABLE_TYPE_FAULT = 3,
+        LOG_TABLE_TYPE_INFO = 4,
+        LOG_TABLE_TYPE_CALIBRATION = 5,
+        LOG_TABLE_TYPE_REFLEX = 6,
+    }
+    public enum INNCOM_CONF
+    {
+        MODBUS_PARAM_SLAVE_ID = 0x0101,
+        MODBUS_PARAM_BAUDRATE = 0x0102,
+        MODBUS_PARAM_PARITY = 0x0103,
+        MODBUS_PARAM_FLOW_CONTROL = 0x0104,
+        MODBUS_PARAM_DATABITS = 0x0105,
+        MODBUS_PARAM_STOPBITS = 0x0106,
+
+        RELAY_PARAM_TRIGGER1 = 0x0201,
+        RELAY_PARAM_TRIGGER2 = 0x0202,
+        RELAY_PARAM_INIT_STATE1 = 0x0203,
+        RELAY_PARAM_INIT_STATE2 = 0x0204,
+        RELAY_PARAM_ON_DELAY_TIME = 0x0205,
+        RELAY_PARAM_OFF_DELAY_TIME = 0x0206,
+
+        MA_PARAM_FAULT_CURRENT = 0x0301,
+        MA_PARAM_WARNING_CURRENT = 0x0302,
+        MA_PARAM_OVERRANGE_CURRENT = 0x0303,
+        MA_PARAM_INHIBIT_TIMEOUT = 0x0304,
+
+        GENERAL_PARAM_LOCATION_TAG = 0x0401,
+        GENERAL_PARAM_LED_CONTROL = 0x0402,
+        GENERAL_PARAM_ALARM_OP_MODE = 0x0403,
+        GENERAL_PARAM_OP_MODE = 0x0404,
+        GENERAL_PARAM_CAL_OVERDUE = 0x0405,
+        GENERAL_PARAM_PASSCODE = 0x0406,
+
+        ALARM_PARAM_THRESHOLD1 = 0x0501,
+        ALARM_PARAM_THRESHOLD2 = 0x0502,
+        ALARM_PARAM_THRESHOLD3 = 0x0503,
+        ALARM_PARAM_TRIGGER1 = 0x0504,
+        ALARM_PARAM_TRIGGER2 = 0x0505,
+        ALARM_PARAM_TRIGGER3 = 0x0506,
+        ALARM_PARAM_LATCHING = 0x0507,
+
+        CAL_PARAM_CAL_INTERVAL = 0x0601,
+        CAL_PARAM_CAL_CONC = 0x0602,
+        CAL_PARAM_LAST_CAL_DATE = 0x0603,
+        CAL_PARAM_DAYS_SINCE_LAST_CAL = 0x0604,
+
+        GAS_PARAM_USER_GAS_NAME = 0x0701,
+        GAS_PARAM_MEASURING_RANGE = 0x0702,
+        GAS_PARAM_CORRECTION_FACTOR = 0x0703,
+        GAS_PARAM_MEASUREMENT_UNITS = 0x0704,
+        GAS_PARAM_UNIT_CONVERSION = 0x0705,
+        GAS_PARAM_DEADBAND = 0x0706,
+        GAS_PARAM_GAS_TYPE = 0x0707,
+        GAS_PARAM_TARGET_CHANNEL = 0x0708,
+        GAS_PARAM_DECIMAL_POINT = 0x0709,
+        GAS_PARAM_DISPLAY_RESOLUTION = 0x070A,
+
+        CIRCUIT_PARAM_420MA_OFFSET_SINK = 0x0801,
+        CIRCUIT_PARAM_420MA_OFFSET_SOURCE = 0x0802,
+        CIRCUIT_PARAM_420MA_SPAN_SINK = 0x0803,
+        CIRCUIT_PARAM_420MA_SPAN_SOURCE = 0x0804,
+        CIRCUIT_PARAM_420MA_LOOP_OFFSET_SINK = 0x0805,
+        CIRCUIT_PARAM_420MA_LOOP_OFFSET_SOURCE = 0x0806,
+        CIRCUIT_PARAM_420MA_LOOP_SPAN_SINK = 0x0807,
+        CIRCUIT_PARAM_420MA_LOOP_SPAN_SOURCE = 0x0808,
+        CIRCUIT_PARAM_VOLTAGE_OUT_OFFSET = 0x0809,
+        CIRCUIT_PARAM_VOLTAGE_OUT_SPAN = 0x080A,
+
+        DEV_INFO_PARAM_DEVICE_SN = 0x0901,
+        DEV_INFO_PARAM_BOARD_SN = 0x0902,
+
+        SEC_PARAM_NUM_RETRY = 0x0A01,
+        SEC_PARAM_LOGIN_LOCK_TIME = 0x0A02,
+        SEC_PARAM_OTP_CONNECTION = 0x0A03,
+        SEC_PARAM_OTP_KEY = 0x0A04,
+
+        NTC_PARAM_TEMP_COMP1 = 0x0B01,
+        NTC_PARAM_TEMP_COMP2 = 0x0B02,
+        NTC_PARAM_TEMP_COMP3 = 0x0B03,
+        NTC_PARAM_TEMP_COMP4 = 0x0B04,
+        NTC_PARAM_TEMP_COMP5 = 0x0B05,
+        NTC_PARAM_TEMP_COMP6 = 0x0B06,
+        NTC_PARAM_TEMP_COMP7 = 0x0B07,
+        NTC_PARAM_TEMP_COMP8 = 0x0B08,
+        NTC_PARAM_TEMP_COMP9 = 0x0B09,
+        NTC_PARAM_TEMP_COMP10 = 0x0B0A,
+        NTC_PARAM_TEMP_COMP11 = 0x0B0B,
+        NTC_PARAM_TEMP_COMP12 = 0x0B0C,
+
+        UL2075_ALARM_THRESHOLD1 = 0x0C01,
+        UL2075_ALARM_THRESHOLD2 = 0x0C02,
+        UL2075_ALARM_THRESHOLD3 = 0x0C03,
+        UL2075_ALARM_THRESHOLD4 = 0x0C04,
+        UL2075_ALARM_THRESHOLD5 = 0x0C05,
+        UL2075_ALARM_THRESHOLD6 = 0x0C06,
+        UL2075_ALARM_THRESHOLD7 = 0x0C07,
+        UL2075_ALARM_THRESHOLD8 = 0x0C08,
+        UL2075_ALARM_THRESHOLD9 = 0x0C09,
+        UL2075_ALARM_THRESHOLD10 = 0x0C0A,
+        UL2075_ALARM_THRESHOLD11 = 0x0C0B,
+        UL2075_ALARM_THRESHOLD12 = 0x0C0C,
+        UL2075_ALARM_THRESHOLD13 = 0x0C0D,
+        UL2075_ALARM_THRESHOLD14 = 0x0C0E,
+        UL2075_ALARM_THRESHOLD15 = 0x0C0F,
+        UL2075_ALARM_THRESHOLD16 = 0x0C10,
+        UL2075_ALARM_THRESHOLD17 = 0x0C11,
+        UL2075_ALARM_THRESHOLD18 = 0x0C12,
+        UL2075_ALARM_THRESHOLD19 = 0x0C13,
+        UL2075_ALARM_THRESHOLD20 = 0x0C14,
+        UL2075_ALARM_THRESHOLD21 = 0x0C15,
+        UL2075_ALARM_THRESHOLD22 = 0x0C16,
+        UL2075_ALARM_THRESHOLD23 = 0x0C17,
+        UL2075_ALARM_THRESHOLD24 = 0x0C18,
+        UL2075_ALARM_THRESHOLD25 = 0x0C19,
+        UL2075_ALARM_THRESHOLD26 = 0x0C1A,
+        UL2075_ALARM_THRESHOLD27 = 0x0C1B,
+        UL2075_ALARM_THRESHOLD28 = 0x0C1C,
+        UL2075_ALARM_THRESHOLD29 = 0x0C1D,
+        UL2075_ALARM_THRESHOLD30 = 0x0C1E,
+        UL2075_ALARM_THRESHOLD31 = 0x0C1F,
+        UL2075_ALARM_THRESHOLD32 = 0x0C20,
+        UL2075_ALARM_THRESHOLD33 = 0x0C21,
+        UL2075_ALARM_THRESHOLD34 = 0x0C22,
+        UL2075_ALARM_THRESHOLD35 = 0x0C23,
+        UL2075_ALARM_THRESHOLD36 = 0x0C24,
+        UL2075_ALARM_THRESHOLD37 = 0x0C25,
+        UL2075_ALARM_THRESHOLD38 = 0x0C26,
+        UL2075_ALARM_THRESHOLD39 = 0x0C27,
+        UL2075_ALARM_THRESHOLD40 = 0x0C28,
+    }
+//    public class INNCOM_STR
+//    {       
+//        //Alarm event
+//     STR_DESC_ALARM_01 = "Low alarm occurred",
+//     STR_DESC_ALARM_02 = "High alarm occurred",
+//     STR_DESC_ALARM_03 = "Low alarm clears",
+//     STR_DESC_ALARM_04 = "High alarm clears",
+//     STR_DESC_ALARM_05 = "Gas alarm 3 occurred",
+//     STR_DESC_ALARM_06 = "Gas alarm 3 clears",
+
+//        //Warning event
+//     STR_DESC_WARNING_01   = "Calibration Overdue",
+//     STR_DESC_WARNING_02   = "Temperature limit exceeded sensor specification",
+//     STR_DESC_WARNING_03   = "BLE failure (BLE version only)",
+//     STR_DESC_WARNING_04   = "Time/date not set (RTC not set)",
+//     STR_DESC_WARNING_05   = "Log memory corrupted (CRC not matched)",
+//     STR_DESC_WARNING_06   = "Certificate is corrupted",
+//     STR_DESC_WARNING_07   = "Over-range warning",
+//     STR_DESC_WARNING_08   = "Under-range warning",
+//     STR_DESC_WARNING_09= "Warning self-clears",
+
+//        //Fault event
+//     STR_DESC_FAULT_01 = "Internal communication failure",
+//     STR_DESC_FAULT_02 = "Cell failure",
+//     STR_DESC_FAULT_03 = "Cell is producing a negative reading",
+//     STR_DESC_FAULT_04 = "EEPROM is corrupted",
+//     STR_DESC_FAULT_05 = "MCU operating voltage failure",
+//     STR_DESC_FAULT_06 = "RAM read/write fault",
+//     STR_DESC_FAULT_07 = "Flash memory corrupted",
+//     STR_DESC_FAULT_08 = "Code memory failure",
+//     STR_DESC_FAULT_09 = "mA output failure",
+//     STR_DESC_FAULT_10 = "Supplied voltage failure",
+//     STR_DESC_FAULT_11 = "Internal HW Fault",
+//     STR_DESC_FAULT_12 = "Internal SW Fault",
+//     STR_DESC_FAULT_13 = "Calibration Overdue",
+//     STR_DESC_FAULT_14 = "Fault clears",
+
+//       //Information event
+//     STR_DESC_INFO_01  = "Instrument power on event",
+//     STR_DESC_INFO_02  = "Zero calibration successful",
+//     STR_DESC_INFO_03  = "Zero calibration failed",
+//     STR_DESC_INFO_04  = "Span calibration successful",
+//     STR_DESC_INFO_05  = "Span calibration failed",
+//     STR_DESC_INFO_06  = "Sensor replaced",
+//     STR_DESC_INFO_07  = "Reset alarms and faults",
+//     STR_DESC_INFO_08  = "Gas configuration changed",
+//     STR_DESC_INFO_09 = "Time/date adjusted (RTC adjusted)",
+//     STR_DESC_INFO_10  = "Log memory is full",
+//     STR_DESC_INFO_11  = "BLE connection has been established",
+//     STR_DESC_INFO_12  = "Adhoc connection has been established",
+//     STR_DESC_INFO_13  = "BLE connection is terminated",
+//     STR_DESC_INFO_14  = "Enter inhibit mode",
+//     STR_DESC_INFO_15  = "Exit inhibit mode",
+//     STR_DESC_INFO_16  = "Cleared log memory",
+
+//     STR_DESC_CAL_TYPE_01 = "Factory Zero Cal",
+//     STR_DESC_CAL_TYPE_02 = "Factory Span Cal",
+//     STR_DESC_CAL_TYPE_03 = "User Zero Cal",
+//     STR_DESC_CAL_TYPE_04 = "User Span Cal",
+//     STR_DESC_CAL_TYPE_05 = "Analogue Out Zero Cal",
+//     STR_DESC_CAL_TYPE_06 = "Analogue Out Span Cal",
+//     STR_DESC_CAL_TYPE_07 = "Voltage Out Zero Cal",
+//     STR_DESC_CAL_TYPE_08 = "Voltage Out Span Cal",
+//     STR_DESC_CAL_TYPE_09 = "Cell Drive Cal (PWM)",
+
+//     STR_DESC_LOG_TABLE_TYPE_01 = "Alarm",
+//     STR_DESC_LOG_TABLE_TYPE_02 = "Warning",
+//     STR_DESC_LOG_TABLE_TYPE_03 = "Fault",
+//     STR_DESC_LOG_TABLE_TYPE_04 = "Info",
+//     STR_DESC_LOG_TABLE_TYPE_05 = "Calibration",
+//     STR_DESC_LOG_TABLE_TYPE_06 = "Reflex",
+
+//}
+public enum ERROR_LIST
     {
         ERROR_NONE = 0,
         ERROR_PORT_NOT_OPEN = 1,
@@ -344,7 +551,19 @@ namespace IncomUtility
 
             return result;
         }
-        public static byte[] StringToByteArray(string hex)
+        public static byte[] commandToByteArray(INNCOM_CONF com)
+        {
+            int intValue = (int)com;
+            byte[] intBytes = BitConverter.GetBytes(intValue);
+            byte[] result = new byte[2];
+
+            Array.Copy(intBytes, result, 2);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(result);
+
+            return result;
+        }
+        public static byte[] hexStringToByteArray(string hex)
         {
             return Enumerable.Range(0, hex.Length)
                              .Where(x => x % 2 == 0)
