@@ -54,13 +54,6 @@ namespace IncomUtility.APP
         const int NUMBER_OF_TABLE_TYPE = 6;
         const int NUMBER_OF_CAL_TYPE = 9;
 
-        //private LogToFile alarmLog;
-        //private LogToFile faultLog;
-        //private LogToFile warningLog;
-        //private LogToFile infoLog;
-        //private LogToFile calLog;
-        //private LogToFile reflexLog;
-        //private LogToFile[] logFiles;
         private LogToFile logFiles;
         Thread LogMonitor;
         private bool LogMonitorRunning = false;
@@ -78,14 +71,6 @@ namespace IncomUtility.APP
             logWarningList = new List<APP_UI_DataGrid>();
             logReflexList = new List<APP_UI_DataGrid>();
             logInfoList = new List<APP_UI_DataGrid>();
-
-            //logFiles = new LogToFile[LOG_TABLE_TYPE.Length];
-            //alarmLog = new LogToFile("Incom_Utility_Alarm_Log", "csv");
-            //faultLog = new LogToFile("Incom_Utility_Fault_Log", "csv");
-            //warningLog = new LogToFile("Incom_Utility_Warining_Log", "csv");
-            //infoLog = new LogToFile("Incom_Utility_Info_Log", "csv");
-            //calLog = new LogToFile("Incom_Utility_Calibration_Log", "csv");
-            //reflexLog = new LogToFile("Incom_Utility_Reflex_Log", "csv");
 
             grid_LogCal.ItemsSource = logCalList;
             grid_LogAlarm.ItemsSource = logAlarmList;
@@ -174,8 +159,6 @@ namespace IncomUtility.APP
             {
                 return;
             }
-
-            DateTime currentTime = DateTime.Now;
             /*
              * Read Log Info
              */
@@ -302,7 +285,7 @@ namespace IncomUtility.APP
 
         private void tBtn_SaveToCSV_Click(object sender, RoutedEventArgs e)
         {
-            int eventType = tCmb_LogsType.SelectedIndex;
+            int eventType = tCmb_LogsType.SelectedIndex + 1;
             List<APP_UI_DataGrid> gridList;
             DataGrid grid;
             switch (eventType)
@@ -347,34 +330,80 @@ namespace IncomUtility.APP
                 return;
            
             string strHeader = "";
-            for (int i = 0;i< grid.Columns.Count; i++)
+            int columCount = grid.Columns.Count;
+            for (int i = 0; i < columCount; i++)
             {
-                if( i == grid.Columns.Count -1)
+                if (i == grid.Columns.Count - 1)
                 {
                     strHeader += grid.Columns[i].Header.ToString();
                     break;
                 }
-                strHeader += grid.Columns[i].Header.ToString() +",";
+                strHeader += grid.Columns[i].Header.ToString() + ",";
             }
             logFiles.SetDataHeader("Time," + strHeader);
 
-            //MessageBox.Show("DataGrid Items count :" + grid.Items.Count);
-            //MessageBox.Show("DataGrid Items count2 :" + gridList.Count);
-            //MessageBox.Show("DataGrid Items count3 :" + gridList.);
-            for (int i=0; i<3; i++)
+            for (int i=0; i< gridList.Count; i++)
             {
+                //var x = string.Join(",", gridList[i]);
+                //MessageBox.Show(x);
+                //string.Join(",", grid.APP_UI_DataGrid.Select(r => r.Name));
                 string strWrite = "";
-                for (int j = 0; j < grid.Columns.Count; i++)
-                {
-                    if (j == grid.Columns.Count - 1)
-                    {
-                        strWrite += gridList.ToString();
-                        break;
-                    }
-                    strWrite += gridList[i].ToString() + ", ";
-                }
-                MessageBox.Show(strWrite);
+                int count = 0;
+                if (count < columCount)
+                    strWrite += gridList[i].data0.ToString()+",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data1.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data2.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data3.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data4.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data5.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data6.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data7.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data8.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data9.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data10.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data11.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data12.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data13.ToString() + ",";
+                count++;
+                if (count < columCount)
+                    strWrite += gridList[i].data14.ToString() + ",";
+                count++; 
+                if (count < columCount)
+                    strWrite += gridList[i].data15.ToString() + ",";
+
+                strWrite.Remove(strWrite.Length - 1);
+
+                logFiles.Write(strWrite);
             }
+
+            logFiles.Unchecked();
+            MessageBox.Show("Saved CSV file");
         }
 
         private void tBtn_ClrLog_Click(object sender, RoutedEventArgs e)
