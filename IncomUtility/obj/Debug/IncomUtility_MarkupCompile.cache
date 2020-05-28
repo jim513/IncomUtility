@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\obj\Debug\
+C:\Users\Honeywell\Desktop\tt\IncomUtility\IncomUtility\obj\Debug\
 IncomUtility
 none
 false
 DEBUG;TRACE
-C:\Users\Honeywell\source\repos\IncomUtility\IncomUtility\App.xaml
+C:\Users\Honeywell\Desktop\tt\IncomUtility\IncomUtility\App.xaml
 17765041009
 
 27-1394598658
-20-920941054
+20-1869731867
 APP\APP_UI_BLEInfo.xaml;APP\APP_UI_CalAnalogueOutput.xaml;APP\APP_UI_CalCellDrive.xaml;APP\APP_UI_CalVoltageOutput.xaml;APP\APP_UI_CommLog.xaml;APP\APP_UI_Communication.xaml;APP\APP_UI_Debug.xaml;APP\APP_UI_DeviceInfo.xaml;APP\APP_UI_GasCalibration.xaml;APP\APP_UI_HardwareTest.xaml;APP\APP_UI_InstrumentSetting.xaml;APP\APP_UI_SecuritySetup.xaml;APP\APP_UI_SensorData.xaml;APP\APP_UI_MonitorDeviceStatus.xaml;APP\APP_UI_RawData.xaml;APP\MainWindow.xaml;APP\APP_UI_ViewLogs.xaml;
 
 False
