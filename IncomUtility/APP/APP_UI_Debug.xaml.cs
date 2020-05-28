@@ -69,7 +69,7 @@ namespace IncomUtility.APP
                     tTxt_Log.AppendText(Environment.NewLine);
                     return;
                 }
-                CMD = Quattro.hexStringToByteArray(string.Concat(s1, s2));
+                CMD = Utility.hexStringToByteArray(string.Concat(s1, s2));
             }
             else
             {
@@ -95,7 +95,7 @@ namespace IncomUtility.APP
                     return; 
                 }
              
-                CMD = Quattro.mergeByteArray(CMD, Quattro.hexStringToByteArray(addtionalCmd));
+                CMD = Utility.mergeByteArray(CMD, Utility.hexStringToByteArray(addtionalCmd));
             }
 
             now = DateTime.Now;

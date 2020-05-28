@@ -48,10 +48,8 @@ namespace IncomUtility
                 tTxt_BLEInfo.AppendText(Environment.NewLine);
                 return;
             }
-            int payloadLen = result[(int)PACKET_CONF.COMM_POS_LEN] * 256 + result[(int)PACKET_CONF.COMM_POS_LEN + 1];
-            byte[] BLENameArray = new byte[payloadLen-3];
-            Array.Copy(result, (int)PACKET_CONF.COMM_POS_PAYLOAD + 3, BLENameArray, 0, payloadLen - 3);
-            string BLEname = Encoding.Default.GetString(BLENameArray).Trim('\0');
+            
+            string BLEname = Encoding.Default.GetString(Quattro.getResponseValueData(result)).Trim('\0');
             
             tTxt_BLEInfo.AppendText("BLE Device Name : " + BLEname);
             tTxt_BLEInfo.AppendText(Environment.NewLine);
@@ -67,10 +65,7 @@ namespace IncomUtility
                 tTxt_BLEInfo.AppendText(Environment.NewLine);
                 return;
             }
-            payloadLen = result[(int)PACKET_CONF.COMM_POS_LEN] * 256 + result[(int)PACKET_CONF.COMM_POS_LEN + 1];
-            byte[] BLEMacArray = new byte[payloadLen-3];
-            Array.Copy(result, (int)PACKET_CONF.COMM_POS_PAYLOAD + 3, BLEMacArray, 0, payloadLen - 3);
-            string BLEMacAddr = BitConverter.ToString(BLEMacArray).Replace("-", ":");
+            string BLEMacAddr = BitConverter.ToString(Quattro.getResponseValueData(result)).Replace("-", ":");
 
             tTxt_BLEInfo.AppendText("BLE MAC Address : " + BLEMacAddr);
             tTxt_BLEInfo.AppendText(Environment.NewLine);
@@ -86,10 +81,8 @@ namespace IncomUtility
                 tTxt_BLEInfo.AppendText(Environment.NewLine);
                 return;
             }
-            payloadLen = result[(int)PACKET_CONF.COMM_POS_LEN] * 256 + result[(int)PACKET_CONF.COMM_POS_LEN + 1];
-            byte[] BLESWVersionArray = new byte[payloadLen - 3];
-            Array.Copy(result, (int)PACKET_CONF.COMM_POS_PAYLOAD + 3, BLESWVersionArray, 0, payloadLen - 3);
-            string BLESWVersion = Encoding.Default.GetString(BLESWVersionArray).Trim('\0');
+           
+            string BLESWVersion = Encoding.Default.GetString(Quattro.getResponseValueData(result)).Trim('\0');
 
             tTxt_BLEInfo.AppendText("BLE SW Version : " + BLESWVersion);
             tTxt_BLEInfo.AppendText(Environment.NewLine);
@@ -120,10 +113,7 @@ namespace IncomUtility
                 tTxt_BLEInfo.AppendText(Environment.NewLine);
                 return;
             }
-            payloadLen = result[(int)PACKET_CONF.COMM_POS_LEN] * 256 + result[(int)PACKET_CONF.COMM_POS_LEN + 1];
-            byte[] BLEInstIDArray = new byte[payloadLen - 3];
-            Array.Copy(result, (int)PACKET_CONF.COMM_POS_PAYLOAD + 3, BLEInstIDArray, 0, payloadLen - 3);
-            string BLEInstID = Encoding.Default.GetString(BLEInstIDArray).Trim('\0');
+            string BLEInstID = Encoding.Default.GetString(Quattro.getResponseValueData(result)).Trim('\0');
 
             tTxt_BLEInfo.AppendText("BLE Instrument Id : " + BLEInstID);
             tTxt_BLEInfo.AppendText(Environment.NewLine);

@@ -48,9 +48,10 @@ namespace IncomUtility
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-            int major = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 3];
-            int minor = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 4];
-            int built = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 5] * 256 + result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 6];
+            int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+            int major = result[offset];
+            int minor = result[offset + 1];
+            int built = Utility.getU16FromByteA(result, offset + 2);
             string SWVersion= major.ToString() + "." + minor.ToString() + "." + built.ToString();
 
             tTxt_Logs.AppendText("Device SW Version : " + SWVersion);
@@ -83,10 +84,8 @@ namespace IncomUtility
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-            int payloadLen = result[(int)PACKET_CONF.COMM_POS_LEN] * 256 + result[(int)PACKET_CONF.COMM_POS_LEN + 1];
-            byte[] DeviceSNArray = new byte[payloadLen - 3];
-            Array.Copy(result, (int)PACKET_CONF.COMM_POS_PAYLOAD + 3, DeviceSNArray, 0, payloadLen - 3);
-            string DeviceSN = Encoding.Default.GetString(DeviceSNArray).Trim('\0');
+           
+            string DeviceSN = Encoding.Default.GetString(Quattro.getResponseValueData(result)).Trim('\0');
 
             tTxt_Logs.AppendText("Device SN : " + DeviceSN);
             tTxt_Logs.AppendText(Environment.NewLine);
@@ -103,9 +102,10 @@ namespace IncomUtility
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-            int OutputType = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 3];
-            int Relay = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 4];
-            int BLEModule = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 5];
+            offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+            int OutputType = result[offset];
+            int Relay = result[offset + 1];
+            int BLEModule = result [offset + 2];
 
             tTxt_Logs.AppendText("Output Type : " + OutputType);
             tTxt_Logs.AppendText(Environment.NewLine);    
@@ -137,9 +137,10 @@ namespace IncomUtility
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-            int sensorType = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 3];
-            int gasType = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 4];
-            int cellID = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 5];
+            offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+            int sensorType = result[offset];
+            int gasType = result[offset + 1];
+            int cellID = result[offset + 2];
             switch (sensorType)
             {
                 case 0: tTxt_SensorType.Text = "ECC"; break;
@@ -168,7 +169,7 @@ namespace IncomUtility
             tTxt_Logs.AppendText(Environment.NewLine);
 
             /*
-           *  Read Sensor Info
+           *  Read Gas Info
            */
             byte[] channelByte = { 0x00 };
             result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_GAS_INFO,channelByte, ref err);
@@ -178,15 +179,12 @@ namespace IncomUtility
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-            int channel = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 3];
-            int measurementUnit = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 4];
-            int resolution = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 5];
-            byte[] fullScaleArray = new byte[4];
-            for( int i=0; i < 4; i++)
-                fullScaleArray[i]= result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 6 + i];
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(fullScaleArray);
-
+            offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+            int channel = result[offset];
+            int measurementUnit = result[offset + 1];
+            int resolution = result[offset + 2];
+            float fullScale = Utility.getF32FromByteA(result, offset + 3);
+          
             tTxt_Channel.Text = channel.ToString();
             switch (measurementUnit)
             {
@@ -216,7 +214,6 @@ namespace IncomUtility
                     break;
             }
 
-            float fullScale = BitConverter.ToSingle(fullScaleArray, 0);
             double DfullScale = Math.Round(fullScale, resolution);
             tTxt_FullScaleRange.Text = DfullScale.ToString() +" "+ tTxt_MeasuremetUnits.Text;
 
@@ -251,7 +248,7 @@ namespace IncomUtility
                 return;
             }
 
-            tTxt_Logs.AppendText("Cleared Latch Table : " + result[(int)PACKET_CONF.COMM_POS_PAYLOAD +2]);
+            tTxt_Logs.AppendText("Cleared Latch Table : " + (result,(int)PACKET_CONF.COMM_POS_PAYLOAD +2));
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
@@ -316,7 +313,7 @@ namespace IncomUtility
             if (serialNumber.Length < 16)
             {
                 byte[] ret = new byte[16 - serialNumber.Length];
-                serialNumber = Quattro.mergeByteArray(serialNumber, ret);
+                serialNumber = Utility.mergeByteArray(serialNumber, ret);
             }   
 
             SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_DEVICE_SN, serialNumber, ref err, 300);
@@ -330,10 +327,6 @@ namespace IncomUtility
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-
-        /*
-         * Not Completed
-         */
         private void tBtn_ReadConfiguration_Click(object sender, RoutedEventArgs e)
         {
             if (!SerialPortIO.isPortOpen())
@@ -355,67 +348,63 @@ namespace IncomUtility
                 return;
             }
 
-            int type = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 3];
+            int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+           
+            byte[] value = Quattro.getResponseValueData(result);
+            
+            int type = result[offset];
             
             byte[] IDA = new byte[2];
-            Array.Copy(result, (int)PACKET_CONF.COMM_POS_PAYLOAD + 3, IDA, 0, 2);
+            Array.Copy(value, 0, IDA, 0, 2);
             string ID = BitConverter.ToString(IDA).Replace("-", string.Empty);
 
-            int payloadLen = result[(int)PACKET_CONF.COMM_POS_LEN] * 256 + result[(int)PACKET_CONF.COMM_POS_LEN + 1];
-            byte[] value = new byte[payloadLen - 5];
-            Array.Copy(result, (int)PACKET_CONF.COMM_POS_PAYLOAD + 5, value, 0, payloadLen - 5);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(value);
+            byte[] ParamValue = new byte[value.Length - IDA.Length];
+            Array.Copy(value, IDA.Length , ParamValue, 0, value.Length - IDA.Length);
+            
             string str="";
             switch (type)
             {
                 case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_STR :
-                    str = Encoding.Default.GetString(value).Trim('\0');
+                    str = Encoding.Default.GetString(ParamValue).Trim('\0');
                     break;
                 case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_U8:
-                    str = value[0].ToString();
+                    str = (ParamValue ,0).ToString();
                     break;
                 case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_U8A:
-                    str = Encoding.Default.GetString(value).Trim('\0');
+                    str = Encoding.Default.GetString(ParamValue).Trim('\0');
                     break;
                 case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_S8:
-                    str = ((sbyte)value[0]).ToString();
+                    str = Convert.ToSByte(ParamValue[0]).ToString();
                     break;
                 case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_U32:
-                    if (value.Length <4)
+                    if (ParamValue.Length <4)
                     {
-                        byte[] temp = new byte[4-value.Length];
-                        value = Quattro.mergeByteArray(temp, value);
-                        if (BitConverter.IsLittleEndian)
-                            Array.Reverse(value);
+                        byte[] temp = new byte[4-ParamValue.Length];
+                        ParamValue = Utility.mergeByteArray(temp, ParamValue);
                     }
-                    str = BitConverter.ToUInt32(value,0).ToString();
+                    str = Utility.getU32FromByteA(ParamValue,0).ToString();
                     break;
                 case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_U16:
-                    if(value.Length == 1 )
+                    if(ParamValue.Length == 1 )
                     {
                         byte[] temp = new byte[1];
-                        value = Quattro.mergeByteArray(temp, value);
-                        if (BitConverter.IsLittleEndian)
-                            Array.Reverse(value);
+                        ParamValue = Utility.mergeByteArray(temp, ParamValue);
                     }   
-                    str = BitConverter.ToUInt16(value, 0).ToString();
+                    str = Utility.getU16FromByteA(ParamValue, 0).ToString();
                     break;
                 case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_F32:
-                    if (value.Length < 4)
+                    if (ParamValue.Length < 4)
                     {
-                        byte[] temp = new byte[4 - value.Length];
-                        value = Quattro.mergeByteArray(temp, value);
-                        if (BitConverter.IsLittleEndian)
-                            Array.Reverse(value);
+                        byte[] temp = new byte[4 - ParamValue.Length];
+                        ParamValue = Utility.mergeByteArray(temp, ParamValue);
                     }
-                    str = BitConverter.ToSingle(value,0).ToString();
+                    str = Utility.getF32FromByteA(ParamValue,0).ToString();
                     break;
                 default:
-                    str = BitConverter.ToString(value).Replace("-", string.Empty);
+                    str = BitConverter.ToString(ParamValue).Replace("-", string.Empty);
                     break;
             }
-            tTxt_Logs.AppendText("Parameter ID : 0x"+ ID + " , Value : "+str );
+            tTxt_Logs.AppendText("Parameter ID : 0x" + ID + " , Value : " + str);
             tTxt_Logs.AppendText(Environment.NewLine);
         }
     }

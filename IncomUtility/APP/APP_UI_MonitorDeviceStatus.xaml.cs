@@ -23,9 +23,9 @@ namespace IncomUtility
     /// </summary>
     public partial class APP_UI_MonitorDeviceStatus : Window
     {
-        private List<APP_UI_DataGrid> instrument_status_grid_data_list;
-        private List<APP_UI_DataGrid> fault_status_grid_data_list;
-        private List<APP_UI_DataGrid> warning_status_grid_data_list;
+        private List<UIDataGrid> instrument_status_grid_data_list;
+        private List<UIDataGrid> fault_status_grid_data_list;
+        private List<UIDataGrid> warning_status_grid_data_list;
 
         Thread timeLock;
 
@@ -34,9 +34,9 @@ namespace IncomUtility
         {
             InitializeComponent();
 
-            instrument_status_grid_data_list = new List<APP_UI_DataGrid>();
-            fault_status_grid_data_list = new List<APP_UI_DataGrid>();
-            warning_status_grid_data_list = new List<APP_UI_DataGrid>();
+            instrument_status_grid_data_list = new List<UIDataGrid>();
+            fault_status_grid_data_list = new List<UIDataGrid>();
+            warning_status_grid_data_list = new List<UIDataGrid>();
 
             instrument_status_grid_data.ItemsSource = instrument_status_grid_data_list;
             fault_status_grid_data.ItemsSource = fault_status_grid_data_list;
@@ -56,36 +56,36 @@ namespace IncomUtility
         private string[] WarningStatus = { "Calibration Overdue", " Temperature limit", "BLE failure (BLE version", "Time/date not set (RTC",
             "Log memory corrupted", "Certificate is corrupted", "Over-range warning", "Under-range warning" };
 
-        private void makeDataGrid(DataGrid grid, List<APP_UI_DataGrid> list, string[] status)
+        private void makeDataGrid(DataGrid grid, List<UIDataGrid> list, string[] status)
         {
             for (int i = 0; i < status.Length; i++)
             {
-                list.Add(new APP_UI_DataGrid(string.Format("Bit" + i + " - " + status[i]), ""));
+                list.Add(new UIDataGrid(string.Format("Bit" + i + " - " + status[i]), ""));
             }
             for (int i = status.Length; i < 16; i++)
             {
-                list.Add(new APP_UI_DataGrid("Bit" + i + " - Reserved", ""));
+                list.Add(new UIDataGrid("Bit" + i + " - Reserved", ""));
 
             }
             grid.Items.Refresh();
         }
 
-        private void makeDataGrid(DataGrid grid, List<APP_UI_DataGrid> list, string[] status, string[] value)
+        private void makeDataGrid(DataGrid grid, List<UIDataGrid> list, string[] status, string[] value)
         {
             list.Clear();
 
             for (int i = 0; i < status.Length; i++)
             {
-                list.Add(new APP_UI_DataGrid(string.Format("Bit" + i + " - " + status[i]), value[i]));
+                list.Add(new UIDataGrid(string.Format("Bit" + i + " - " + status[i]), value[i]));
             }
             for (int i = status.Length; i < 16; i++)
             {
-                list.Add(new APP_UI_DataGrid("Bit" + i + " - Reserved", value[i]));
+                list.Add(new UIDataGrid("Bit" + i + " - Reserved", value[i]));
 
             }
             grid.Items.Refresh();
         }
-        private void updateDataGrid(byte[] u8RXbuffer, DataGrid grid, List<APP_UI_DataGrid> list, string[] status)
+        private void updateDataGrid(byte[] u8RXbuffer, DataGrid grid, List<UIDataGrid> list, string[] status)
         {
             string[] value = new string[16];
             byte currentByte = u8RXbuffer[u8RXbuffer.Length - 4];

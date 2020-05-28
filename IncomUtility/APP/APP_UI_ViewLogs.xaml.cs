@@ -24,7 +24,7 @@ namespace IncomUtility.APP
         ERROR_LIST err;
 
         private const int grid_row_max = 300;
-        private List<APP_UI_DataGrid> logCalList, logAlarmList, logFaultList, logWarningList, logReflexList, logInfoList;
+        private List<UIDataGrid> logCalList, logAlarmList, logFaultList, logWarningList, logReflexList, logInfoList;
      
         private string[] logCalHeader = new string[] { "Log No.","Time","Cal Type","Conc before Cal","Conc after Cal",
               "Raw cell signal","Cal Factor before","Cal Factor after", "Target Cal gas", "Correction factor", "Cal Result","Cylinder No."};
@@ -65,12 +65,12 @@ namespace IncomUtility.APP
         }
         private void MakeLogGrid()
         {
-            logCalList = new List<APP_UI_DataGrid>();
-            logAlarmList = new List<APP_UI_DataGrid>();
-            logFaultList = new List<APP_UI_DataGrid>();
-            logWarningList = new List<APP_UI_DataGrid>();
-            logReflexList = new List<APP_UI_DataGrid>();
-            logInfoList = new List<APP_UI_DataGrid>();
+            logCalList = new List<UIDataGrid>();
+            logAlarmList = new List<UIDataGrid>();
+            logFaultList = new List<UIDataGrid>();
+            logWarningList = new List<UIDataGrid>();
+            logReflexList = new List<UIDataGrid>();
+            logInfoList = new List<UIDataGrid>();
 
             grid_LogCal.ItemsSource = logCalList;
             grid_LogAlarm.ItemsSource = logAlarmList;
@@ -86,13 +86,13 @@ namespace IncomUtility.APP
             MakeLogGridHeader(grid_LogRelfex, logReflexHeader);
             MakeLogGridHeader(grid_LogInfo, logDefaultHeader);
         }
-        private void MakeLogGridHeader(DataGrid grid, string[] data_name)
+        private void MakeLogGridHeader(System.Windows.Controls.DataGrid grid, string[] data_name)
         {
             for (int i = 0; i < data_name.Length; i++)
                 grid.Columns[i].Header = data_name[i];
         }
 
-        private void UpdateLogGrid(DataGrid grid, List<APP_UI_DataGrid> list,
+        private void UpdateLogGrid(System.Windows.Controls.DataGrid grid, List<UIDataGrid> list,
                                int index, string time, string data1, float data2, float data3, float data4, float data5, float data6, float data7, float data8,
                                string data9, string data10)
         {
@@ -101,7 +101,7 @@ namespace IncomUtility.APP
                 list.RemoveAt(0);
             }
 
-            list.Add(new APP_UI_DataGrid(string.Format("{0:#,0}",index), time,  data1, string.Format("{0:#,0.000}", data2),
+            list.Add(new UIDataGrid(string.Format("{0:#,0}",index), time,  data1, string.Format("{0:#,0.000}", data2),
                                         string.Format("{0:#,0}", data3), string.Format("{0:#,0.000}", data4),
                                         string.Format("{0:#,0.000}", data5), string.Format("{0:#,0.000}", data6),
                                         string.Format("{0:#,0}", data7), string.Format("{0:#,0}", data8),
@@ -114,13 +114,13 @@ namespace IncomUtility.APP
                 grid.ScrollIntoView(grid.Items[grid.Items.Count - 1]);
             }
         }
-        private void UpdateLogGrid(DataGrid grid, List<APP_UI_DataGrid> list, int index, string time, string data1, byte data2, float data3, float data4, string data5)
+        private void UpdateLogGrid(System.Windows.Controls.DataGrid grid, List<UIDataGrid> list, int index, string time, string data1, byte data2, float data3, float data4, string data5)
         {
             if (grid.Items.Count >= grid_row_max)
             {
                 list.RemoveAt(0);
             }
-            list.Add(new APP_UI_DataGrid(string.Format("{0:#,0}", index), time, data1, string.Format("{0:#,0}", data2),
+            list.Add(new UIDataGrid(string.Format("{0:#,0}", index), time, data1, string.Format("{0:#,0}", data2),
                                                 string.Format("{0:#,0}", data3), string.Format("{0:#,0.000}", data4),
                                                  data5));
             grid.Items.Refresh();
@@ -130,13 +130,13 @@ namespace IncomUtility.APP
                 grid.ScrollIntoView(grid.Items[grid.Items.Count - 1]);
             }
         }
-        private void UpdateLogGrid(DataGrid grid, List<APP_UI_DataGrid> list, int index,  string data1, string data2, float data3, float data4)
+        private void UpdateLogGrid(System.Windows.Controls.DataGrid grid, List<UIDataGrid> list, int index,  string data1, string data2, float data3, float data4)
         {
             if (grid.Items.Count >= grid_row_max)
             {
                 list.RemoveAt(0);
             }
-            list.Add(new APP_UI_DataGrid(string.Format("{0:#,0}", index), data1,  data2,
+            list.Add(new UIDataGrid(string.Format("{0:#,0}", index), data1,  data2,
                                                 string.Format("{0:#,0.000}", data3), string.Format("{0:#,0.000}", data4)));
             grid.Items.Refresh();
 
@@ -179,6 +179,40 @@ namespace IncomUtility.APP
                 return;
             }
 
+            DataGrid grid;
+            List<UIDataGrid> gridList;
+            switch (eventType[0])
+            {
+                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_CALIBRATION:
+                    grid = grid_LogCal;
+                    gridList = logCalList;
+                    break;
+                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_ALARM:
+                    grid = grid_LogAlarm;
+                    gridList = logAlarmList;
+                    break;
+                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_FAULT:
+                    grid = grid_LogFault;
+                    gridList = logFaultList;
+                    break;
+                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_WARNING:
+                    grid = grid_LogWarning;
+                    gridList = logWarningList;
+                    break;
+                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_REFLEX:
+                    grid = grid_LogRelfex;
+                    gridList = logReflexList;
+                    break;
+                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_INFO:
+                    grid = grid_LogInfo;
+                    gridList = logInfoList;
+                    break;
+                default:
+                    return;
+            }
+
+            gridList.Clear();
+            grid.Items.Refresh();
             tBtn_DownloadLogs.IsEnabled = false;
             tBtn_StopDownload.IsEnabled = true;
 
@@ -187,6 +221,7 @@ namespace IncomUtility.APP
             LogMonitorRunning = true;
 
             LogMonitor = new Thread(() => DownloadLog(eventType[0], numLogdata));
+
             LogMonitor.Start();
 
         }
@@ -272,8 +307,8 @@ namespace IncomUtility.APP
                 return;
             }
             int pos = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
-            int savedCount = result[pos] * 256 + result[pos + 1];
-            int maxCount = result[pos + 2] * 256 + result[pos + 3];
+            int savedCount = Utility.getU16FromByteA(result, pos);
+            int maxCount = Utility.getU16FromByteA(result, pos + 2);
             int size = result[pos + 4];
             string str = "Log Type : " + eventType[0].ToString() + ", Number of log : " + savedCount;
             str += " , Total number of log : " + maxCount + " , Size of log : " + size + " Bytes";
@@ -286,7 +321,7 @@ namespace IncomUtility.APP
         private void tBtn_SaveToCSV_Click(object sender, RoutedEventArgs e)
         {
             int eventType = tCmb_LogsType.SelectedIndex + 1;
-            List<APP_UI_DataGrid> gridList;
+            List<UIDataGrid> gridList;
             DataGrid grid;
             switch (eventType)
             {
@@ -344,9 +379,6 @@ namespace IncomUtility.APP
 
             for (int i=0; i< gridList.Count; i++)
             {
-                //var x = string.Join(",", gridList[i]);
-                //MessageBox.Show(x);
-                //string.Join(",", grid.APP_UI_DataGrid.Select(r => r.Name));
                 string strWrite = "";
                 int count = 0;
                 if (count < columCount)
@@ -442,68 +474,28 @@ namespace IncomUtility.APP
 
         void UpdateLogCal(byte[] logData, int index)
         {
-            ushort u16TimeStampYear;
-            byte u8TimeStampMon, u8TimeStampDay, u8TimeStampHou, u8TimeStampMin, u8TimeStampSec;
-            
-            byte u8CalibrationType;
-            float f32GasReadingBeforeCal;
-            float f32GasReadingAfterCal;
-            float f32RawSignalBeforeCal;
-            float f32CalFactorBeforeCal;
-            float f32CalFactorAfterCal;
-            float f32TargetGasConcentration;
-            float f32CorrectionFactor;
-            byte u8CalibrationResults;
-            byte[] au8CylinderNo;
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(logData);
-                int offset = (int)INNCOM_COMMAND_LIST.NUM_CYLINDER_SN;
+            int offset = 0;
 
-                u16TimeStampYear = BitConverter.ToUInt16(logData, offset + 35);
-                u8TimeStampMon = logData[offset + 34];
-                u8TimeStampDay = logData[offset + 33];
-                u8TimeStampHou = logData[offset + 32];
-                u8TimeStampMin = logData[offset + 31];
-                u8TimeStampSec = logData[offset + 30];
+            ushort u16TimeStampYear = Utility.getU16FromByteA(logData, offset);
+            byte u8TimeStampMon = logData[offset + 2];
+            byte u8TimeStampDay = logData[offset + 3];
+            byte u8TimeStampHou = logData[offset + 4];
+            byte u8TimeStampMin = logData[offset + 5];
+            byte u8TimeStampSec = logData[offset + 6];
 
-                u8CalibrationType = logData[offset + 29];
-                f32GasReadingBeforeCal = BitConverter.ToSingle(logData, offset + 25);
-                f32GasReadingAfterCal = BitConverter.ToSingle(logData, offset + 21);
-                f32RawSignalBeforeCal = BitConverter.ToSingle(logData, offset + 17);
-                f32CalFactorBeforeCal = BitConverter.ToSingle(logData, offset + 13);
-                f32CalFactorAfterCal = BitConverter.ToSingle(logData, offset + 9);
-                f32TargetGasConcentration = BitConverter.ToSingle(logData, offset + 5);
-                f32CorrectionFactor = BitConverter.ToSingle(logData, offset + 1);
-                u8CalibrationResults = logData[offset];
-                au8CylinderNo = new byte[(int)INNCOM_COMMAND_LIST.NUM_CYLINDER_SN];
-                for (int i = offset - 1; i >= 0; i--)
-                    au8CylinderNo[i] = logData[offset - 1 - i];
-            }
-            else
-            {
-                int offset = 0;
+            byte u8CalibrationType = logData[offset + 7];
+            float f32GasReadingBeforeCal = Utility.getF32FromByteA(logData, offset + 8);
+            float f32GasReadingAfterCal = Utility.getF32FromByteA(logData, offset + 12);
+            float f32RawSignalBeforeCal = Utility.getF32FromByteA(logData, offset + 12);
+            float f32CalFactorBeforeCal = Utility.getF32FromByteA(logData, offset + 16);
+            float f32CalFactorAfterCal = Utility.getF32FromByteA(logData, offset + 20);
+            float f32TargetGasConcentration = Utility.getF32FromByteA(logData, offset + 24);
+            float f32CorrectionFactor = Utility.getF32FromByteA(logData, offset + 28);
+            byte u8CalibrationResults = logData[offset + 32];
+            byte[] au8CylinderNo = new byte[(int)INNCOM_COMMAND_LIST.NUM_CYLINDER_SN];
+            for (int i = 0; i < logData.Length - offset - 33; i++)
+                au8CylinderNo[i] = logData[offset + 33 + i];
 
-                u16TimeStampYear = BitConverter.ToUInt16(logData, offset);
-                u8TimeStampMon = logData[offset + 2];
-                u8TimeStampDay = logData[offset + 3];
-                u8TimeStampHou = logData[offset + 4];
-                u8TimeStampMin = logData[offset + 5];
-                u8TimeStampSec = logData[offset + 6];
-
-                u8CalibrationType = logData[offset + 7];
-                f32GasReadingBeforeCal = BitConverter.ToSingle(logData, offset + 8);
-                f32GasReadingAfterCal = BitConverter.ToSingle(logData, offset + 12);
-                f32RawSignalBeforeCal = BitConverter.ToSingle(logData, offset + 12);
-                f32CalFactorBeforeCal = BitConverter.ToSingle(logData, offset + 16);
-                f32CalFactorAfterCal = BitConverter.ToSingle(logData, offset + 20);
-                f32TargetGasConcentration = BitConverter.ToSingle(logData, offset + 24);
-                f32CorrectionFactor = BitConverter.ToSingle(logData, offset + 28);
-                u8CalibrationResults = logData[offset + 32];
-                au8CylinderNo = new byte[(int)INNCOM_COMMAND_LIST.NUM_CYLINDER_SN];
-                for (int i = 0; i < logData.Length - offset - 33; i++)
-                    au8CylinderNo[i] = logData[offset + 33 + i];
-            }
             string time_str = u16TimeStampYear.ToString() + '/' + u8TimeStampMon.ToString("D2") + '/' + u8TimeStampDay.ToString("D2") + ' ';
             time_str += u8TimeStampHou.ToString("D2") + ':' + u8TimeStampMin.ToString("D2") + ':' + u8TimeStampSec.ToString("D2");
 
@@ -523,49 +515,22 @@ namespace IncomUtility.APP
         }
         private void UpdateLogEvent(byte[] logData, int index)
         {
-            ushort u16TimeStampYear;
-            byte u8TimeStampMon, u8TimeStampDay, u8TimeStampHou, u8TimeStampMin, u8TimeStampSec;
+            System.Windows.Controls.DataGrid grid;
+            List<UIDataGrid> list;
 
-            byte u8EventType;
-            byte u8EventId ;
-            float f32GasReading;
-            float f32EventData ;
+            int offset = 0;
 
-            DataGrid grid;
-            List<APP_UI_DataGrid> list;
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(logData);
-                int offset = 0;
+            ushort u16TimeStampYear = Utility.getU16FromByteA(logData, offset);
+            byte u8TimeStampMon = logData[offset + 2];
+            byte u8TimeStampDay = logData[offset + 3];
+            byte u8TimeStampHou = logData[offset + 4];
+            byte u8TimeStampMin = logData[offset + 5];
+            byte u8TimeStampSec = logData[offset + 6];
 
-                u16TimeStampYear = BitConverter.ToUInt16(logData, offset+15);
-                u8TimeStampMon = logData[offset + 14];
-                u8TimeStampDay = logData[offset + 13];
-                u8TimeStampHou = logData[offset + 12];
-                u8TimeStampMin = logData[offset + 11];
-                u8TimeStampSec = logData[offset + 10];
-
-                u8EventType = logData[offset + 9];
-                u8EventId = logData[offset + 8];
-                f32GasReading = BitConverter.ToSingle(logData, offset + 4);
-                f32EventData = BitConverter.ToSingle(logData, offset);
-            }
-            else
-            {
-                int offset = 0;
-
-                u16TimeStampYear = BitConverter.ToUInt16(logData, offset);
-                u8TimeStampMon = logData[offset + 2];
-                u8TimeStampDay = logData[offset + 3];
-                u8TimeStampHou = logData[offset + 4];
-                u8TimeStampMin = logData[offset + 5];
-                u8TimeStampSec = logData[offset + 6];
-
-                u8EventType = logData[offset + 7];
-                u8EventId = logData[offset + 8];
-                f32GasReading = BitConverter.ToSingle(logData, offset + 9);
-                f32EventData = BitConverter.ToSingle(logData, offset + 13);
-            }
+            byte u8EventType = logData[offset + 7];
+            byte u8EventId = logData[offset + 8];
+            float f32GasReading = Utility.getF32FromByteA(logData, offset + 9);
+            float f32EventData = Utility.getF32FromByteA(logData, offset + 13);
 
             string time_str = u16TimeStampYear.ToString() + '/' + u8TimeStampMon.ToString("D2") + '/' + u8TimeStampDay.ToString("D2") + ' ';
             time_str += u8TimeStampHou.ToString("D2") + ':' + u8TimeStampMin.ToString("D2") + ':' + u8TimeStampSec.ToString("D2");
@@ -603,7 +568,7 @@ namespace IncomUtility.APP
                     break;
                 default:
                     return;
-            }      
+            }
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 UpdateLogGrid(grid, list, index + 1, time_str, event_str, u8EventId, f32GasReading, f32EventData, type_str);
@@ -612,23 +577,11 @@ namespace IncomUtility.APP
         }
         void UpdateLogReflex(byte[] logData, int index)
         {
-            float f32Adc1;
-            float f32Adc2;
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(logData);
-                int offset = 0;
-                
-                f32Adc1 = BitConverter.ToSingle(logData, offset + 4);
-                f32Adc2 = BitConverter.ToSingle(logData, offset); ;
-            }
-            else
-            {
-                int offset = 0;
+            int offset = 0;
 
-                f32Adc1 = BitConverter.ToSingle(logData, offset + 4);
-                f32Adc2 = BitConverter.ToSingle(logData, offset); ;
-            }
+            float f32Adc1 = Utility.getF32FromByteA(logData ,offset);
+            float f32Adc2 = Utility.getF32FromByteA(logData, offset + 4);
+
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 UpdateLogGrid(grid_LogRelfex, logReflexList, index + 1, "tReflex Log", "-", f32Adc1, f32Adc2);

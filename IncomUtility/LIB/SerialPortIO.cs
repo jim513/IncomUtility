@@ -148,7 +148,7 @@ namespace IncomUtility
                 return null;
             }
             byte[]command = Quattro.commandToByteArray(CMD);
-            command = Quattro.mergeByteArray(command, payload);
+            command = Utility.mergeByteArray(command, payload);
             
             return sendCommand(command, ref err, sleepTime);
         }
@@ -173,7 +173,7 @@ namespace IncomUtility
                 return null;
             }
             byte[] command = Quattro.commandToByteArray(CMD);
-            command = Quattro.mergeByteArray(command, payload);
+            command = Utility.mergeByteArray(command, payload);
             
             return sendCommand(command, ref err, sleepTime);
 

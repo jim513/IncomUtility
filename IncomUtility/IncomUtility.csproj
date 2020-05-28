@@ -160,6 +160,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="API\Quattro.cs" />
+    <Compile Include="API\Utility.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -206,7 +207,7 @@
     <Compile Include="APP\APP_UI_MonitorDeviceStatus.xaml.cs">
       <DependentUpon>APP_UI_MonitorDeviceStatus.xaml</DependentUpon>
     </Compile>
-    <Compile Include="APP\APP_UI_DataGrid.cs" />
+    <Compile Include="LIB\UIDataGrid.cs" />
     <Compile Include="APP\APP_UI_RawData.xaml.cs">
       <DependentUpon>APP_UI_RawData.xaml</DependentUpon>
     </Compile>

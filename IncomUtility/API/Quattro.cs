@@ -42,6 +42,9 @@ namespace IncomUtility
         COMM_CRC_SZ =2,
         COMM_EOF_SZ =1,
 
+        COMM_COMM_SZ =2,
+        COMM_RESULT_SZ =1,
+        COMM_RESPONSE_SZ= COMM_COMM_SZ+COMM_RESULT_SZ,
         
         COMM_AFTER_PAYLOAD_OVERHEAD = COMM_CRC_SZ + COMM_EOF_SZ,
         COMM_LEN_OVERHEAD = COMM_SOF_SZ +  COMM_VER_SZ + COMM_SRC_SZ + COMM_DEST_SZ +COMM_SEQ_SZ 
@@ -438,9 +441,9 @@ public enum ERROR_LIST
     }
     class Quattro : CRC16
     {
-        public byte[] buildCMDPacket(byte src, byte dest, byte[] payload ,ref ERROR_LIST ret)
+        public byte[] buildCMDPacket(byte src, byte dest, byte[] payload, ref ERROR_LIST ret)
         {
-            if ( payload == null)
+            if (payload == null)
             {
                 ret = ERROR_LIST.ERROR_INPUT_DATA_NONE;
                 return null;
@@ -468,7 +471,7 @@ public enum ERROR_LIST
                 CMD[(int)PACKET_CONF.COMM_POS_PAYLOAD + i] = payload[i];
 
             //Calcurate CRC
-            UInt16 calcurateCRC = UpdateCRC16( CMD, (uint)totalPackageLength - (int)PACKET_CONF.COMM_AFTER_PAYLOAD_OVERHEAD);
+            UInt16 calcurateCRC = UpdateCRC16(CMD, (uint)totalPackageLength - (int)PACKET_CONF.COMM_AFTER_PAYLOAD_OVERHEAD);
 
             CMD[totalPackageLength - 3] = (byte)((calcurateCRC >> 8) & 0x00FF);
             CMD[totalPackageLength - 2] = (byte)((calcurateCRC) & 0x00FF);
@@ -479,7 +482,7 @@ public enum ERROR_LIST
             return CMD;
         }
 
-      
+
         public ERROR_LIST validateRXPacket(ref byte[] data)
         {
             if (data == null)
@@ -497,7 +500,7 @@ public enum ERROR_LIST
                  */
                 if (data[(int)PACKET_CONF.COMM_POS_SOF] != (byte)PACKET_CONF.COMM_SOF)
                     return ERROR_LIST.ERROR_SOF_WRONG;
-                
+
                 /*
                  * Check End Mark
                  */
@@ -563,18 +566,19 @@ public enum ERROR_LIST
 
             return result;
         }
-        public static byte[] hexStringToByteArray(string hex)
+        public static byte[] getResponseValueData(byte[] data)
         {
-            return Enumerable.Range(0, hex.Length)
-                             .Where(x => x % 2 == 0)
-                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-                             .ToArray();
-        }
-        public static byte[] mergeByteArray(byte[] a , byte[] b)
-        {
-            return a.Concat(b).ToArray();
-        }
-   
-    }
+            int datalen = data[(int)PACKET_CONF.COMM_POS_LEN] * 256 + data[(int)PACKET_CONF.COMM_POS_LEN + 1] - (int)PACKET_CONF.COMM_RESPONSE_SZ;
+            if (datalen == 0)
+            {               
+                byte[] err = { 0x00 };
+                return err;
+            }
+            byte[] value = new byte[datalen];
+            Array.Copy(data, (int)PACKET_CONF.COMM_POS_PAYLOAD +(int)PACKET_CONF.COMM_RESPONSE_SZ, value, 0, datalen);
 
+            return value;
+        }
+ 
+    }
 }
