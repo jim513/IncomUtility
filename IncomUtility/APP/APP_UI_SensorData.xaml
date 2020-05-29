@@ -11,10 +11,10 @@
             <RowDefinition Height="19*"/>
             <RowDefinition Height="41*"/>
         </Grid.RowDefinitions>
-        <Button Content="Write Sensor Data to Device" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Width="130" Height="40" MinHeight="30" MinWidth="170"/>
-        <Button Content="Read Sensor Data from Device" HorizontalAlignment="Left" Margin="190,24,0,0" VerticalAlignment="Top" Width="170" Height="40"/>
-        <ProgressBar HorizontalAlignment="Left" Height="30"  BorderBrush="Black" Margin="10,75,0,0" VerticalAlignment="Top" Width="300" MinHeight="30" MinWidth="350"/>
-        <TextBox Grid.Row="1" Margin="10"/>
+        <Button x:Name="tBtn_WriteSensorData" Content="Write Sensor Data to Device" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Width="130" Height="40" MinHeight="30" MinWidth="170" Click="tBtn_WriteSensorData_Click"/>
+        <Button x:Name="tBtn_ReadSensorData" Content="Read Sensor Data from Device" HorizontalAlignment="Left" Margin="190,24,0,0" VerticalAlignment="Top" Width="170" Height="40" Click="tBtn_ReadSensorData_Click"/>
+        <ProgressBar x:Name="tPbar_DataDownBar" HorizontalAlignment="Left" Height="30"  BorderBrush="Black" Margin="10,75,0,0" VerticalAlignment="Top" Width="300" MinHeight="30" MinWidth="350"/>
+        <TextBox x:Name="tTxt_Logs" Grid.Row="1" Margin="10"/>
 
     </Grid>
 </Window>

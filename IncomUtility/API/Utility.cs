@@ -46,7 +46,17 @@ namespace IncomUtility
             if (offset > data.Length || offset < 0)
                 return -1;
 
-            return data[offset] >> 24 | data[offset + 1] >> 16 | data[offset + 2] >> 8 | data[offset + 3];
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(data);
+                offset = data.Length - offset - 4;
+                int ret = BitConverter.ToInt32(data, offset);
+                Array.Reverse(data);
+                return ret;
+            }
+            else
+                return BitConverter.ToInt32(data, offset);
+
 
         }
         public static uint getU32FromByteA(byte[] data, int offset)
@@ -56,8 +66,16 @@ namespace IncomUtility
             if (offset > data.Length || offset < 0)
                 return 0;
 
-            int result = data[offset] >> 24 | data[offset + 1] >> 16 | data[offset + 2] >> 8 | data[offset + 3];
-            return Convert.ToUInt32(result);
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(data);
+                offset = data.Length - offset - 4;
+                uint ret = BitConverter.ToUInt32(data, offset);
+                Array.Reverse(data);
+                return ret;
+            }
+            else
+                return BitConverter.ToUInt32(data, offset);
         }
 
         public static short getS16FromByteA(byte[] data, int offset)
