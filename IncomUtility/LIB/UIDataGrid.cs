@@ -343,7 +343,7 @@ namespace IncomUtility
             this.data3 = data3;
             this.data4 = data4;
         }
-        public UIDataGrid( string data1, string data2)
+        public UIDataGrid(string data1, string data2)
         {
             this.data1 = data1;
             this.data2 = data2;
@@ -355,6 +355,64 @@ namespace IncomUtility
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-    
+
+        public static string getDataToStr(UIDataGrid grid, int columCount)
+        {
+            string strWrite = "";
+
+            int count = 0;
+            if (count < columCount)
+                strWrite += grid.data0.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data1.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data2.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data3.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data4.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data5.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data6.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data7.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data8.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data9.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data10.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data11.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data12.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data13.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data14.ToString() + ",";
+            count++;
+            if (count < columCount)
+                strWrite += grid.data15.ToString() + ",";
+
+            strWrite.Remove(strWrite.Length - 1);
+
+
+            return strWrite;
+        }
     }
 }

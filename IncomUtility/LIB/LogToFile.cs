@@ -19,11 +19,14 @@ namespace IncomUtility
         private StreamWriter FileWriter;
         private System.Windows.Forms.FolderBrowserDialog LogBrowserDialog;
         private string open_file_path;
-        private string data_header;
+        private string data_header1;
+        private string data_header2;
 
         public LogToFile(string file_name_prefix, string file_extension)
         {
             log_file_name = "\\" + file_name_prefix + "_{0:yyyy-MM-dd-HHmmss}_{1:000}." + file_extension;
+            data_header1 = "";
+            data_header2 = "";
         }
 
         private void New()
@@ -33,7 +36,10 @@ namespace IncomUtility
             log_fs = File.Open(open_file_path, FileMode.Append, FileAccess.Write, FileShare.None);
 
             FileWriter = new StreamWriter(log_fs);
-            FileWriter.WriteLine(data_header);
+            if (data_header1 != "")
+                FileWriter.WriteLine(data_header1);
+            if (data_header2 != "")
+                FileWriter.WriteLine(data_header2);
             FileWriter.Close();
         }
 
@@ -71,9 +77,13 @@ namespace IncomUtility
 
         public void SetDataHeader(string header)
         {
-            data_header = header;
+            data_header1 = header;
         }
-
+        public void SetDataHeader(string header1, string header2)
+        {
+            data_header1 = header1;
+            data_header2 = header2;
+        }
         public void GetCountMax(TextBox input_max_textbox)
         {
             try

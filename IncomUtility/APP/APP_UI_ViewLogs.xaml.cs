@@ -86,13 +86,13 @@ namespace IncomUtility.APP
             MakeLogGridHeader(grid_LogRelfex, logReflexHeader);
             MakeLogGridHeader(grid_LogInfo, logDefaultHeader);
         }
-        private void MakeLogGridHeader(System.Windows.Controls.DataGrid grid, string[] data_name)
+        private void MakeLogGridHeader(DataGrid grid, string[] data_name)
         {
             for (int i = 0; i < data_name.Length; i++)
                 grid.Columns[i].Header = data_name[i];
         }
 
-        private void UpdateLogGrid(System.Windows.Controls.DataGrid grid, List<UIDataGrid> list,
+        private void UpdateLogGrid(DataGrid grid, List<UIDataGrid> list,
                                int index, string time, string data1, float data2, float data3, float data4, float data5, float data6, float data7, float data8,
                                string data9, string data10)
         {
@@ -101,10 +101,10 @@ namespace IncomUtility.APP
                 list.RemoveAt(0);
             }
 
-            list.Add(new UIDataGrid(string.Format("{0:#,0}",index), time,  data1, string.Format("{0:#,0.000}", data2),
-                                        string.Format("{0:#,0}", data3), string.Format("{0:#,0.000}", data4),
-                                        string.Format("{0:#,0.000}", data5), string.Format("{0:#,0.000}", data6),
-                                        string.Format("{0:#,0}", data7), string.Format("{0:#,0}", data8),
+            list.Add(new UIDataGrid(string.Format("{0}",index), time,  data1, string.Format("{0:f2}", data2),
+                                        string.Format("{0:f1}", data3), string.Format("{0:f2}", data4),
+                                        string.Format("{0:f2}", data5), string.Format("{0:f2}", data6),
+                                        string.Format("{0:f1}", data7), string.Format("{0:f1}", data8),
                                         data9, data10
                                         ));
             grid.Items.Refresh();
@@ -114,14 +114,14 @@ namespace IncomUtility.APP
                 grid.ScrollIntoView(grid.Items[grid.Items.Count - 1]);
             }
         }
-        private void UpdateLogGrid(System.Windows.Controls.DataGrid grid, List<UIDataGrid> list, int index, string time, string data1, byte data2, float data3, float data4, string data5)
+        private void UpdateLogGrid(DataGrid grid, List<UIDataGrid> list, int index, string time, string data1, byte data2, float data3, float data4, string data5)
         {
             if (grid.Items.Count >= grid_row_max)
             {
                 list.RemoveAt(0);
             }
-            list.Add(new UIDataGrid(string.Format("{0:#,0}", index), time, data1, string.Format("{0:#,0}", data2),
-                                                string.Format("{0:#,0}", data3), string.Format("{0:#,0.000}", data4),
+            list.Add(new UIDataGrid(string.Format("{0}", index), time, data1, string.Format("{0}", data2),
+                                                string.Format("{0:f1}", data3), string.Format("{0:f3}", data4),
                                                  data5));
             grid.Items.Refresh();
 
@@ -130,14 +130,14 @@ namespace IncomUtility.APP
                 grid.ScrollIntoView(grid.Items[grid.Items.Count - 1]);
             }
         }
-        private void UpdateLogGrid(System.Windows.Controls.DataGrid grid, List<UIDataGrid> list, int index,  string data1, string data2, float data3, float data4)
+        private void UpdateLogGrid(DataGrid grid, List<UIDataGrid> list, int index,  string data1, string data2, float data3, float data4)
         {
             if (grid.Items.Count >= grid_row_max)
             {
                 list.RemoveAt(0);
             }
-            list.Add(new UIDataGrid(string.Format("{0:#,0}", index), data1,  data2,
-                                                string.Format("{0:#,0.000}", data3), string.Format("{0:#,0.000}", data4)));
+            list.Add(new UIDataGrid(string.Format("{0}", index), data1,  data2,
+                                                string.Format("{0:f3}", data3), string.Format("{0:f3}", data4)));
             grid.Items.Refresh();
 
             if (grid.Items.Count > 0)
@@ -183,27 +183,27 @@ namespace IncomUtility.APP
             List<UIDataGrid> gridList;
             switch (eventType[0])
             {
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_CALIBRATION:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_CALIBRATION:
                     grid = grid_LogCal;
                     gridList = logCalList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_ALARM:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_ALARM:
                     grid = grid_LogAlarm;
                     gridList = logAlarmList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_FAULT:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_FAULT:
                     grid = grid_LogFault;
                     gridList = logFaultList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_WARNING:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_WARNING:
                     grid = grid_LogWarning;
                     gridList = logWarningList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_REFLEX:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_REFLEX:
                     grid = grid_LogRelfex;
                     gridList = logReflexList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_INFO:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_INFO:
                     grid = grid_LogInfo;
                     gridList = logInfoList;
                     break;
@@ -261,22 +261,22 @@ namespace IncomUtility.APP
 
                 switch (eventType)
                 {
-                    case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_CALIBRATION:
+                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_CALIBRATION:
                         UpdateLogCal(logData, index);
                         break;
-                    case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_ALARM:
+                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_ALARM:
                         UpdateLogEvent(logData, index);
                         break;
-                    case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_FAULT:
+                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_FAULT:
                         UpdateLogEvent(logData, index);
                         break;
-                    case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_WARNING:
+                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_WARNING:
                         UpdateLogEvent(logData, index);
                         break;
-                    case(int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_REFLEX:
+                    case(int)INNCOM_CONF.LOG_TABLE_TYPE_REFLEX:
                         UpdateLogReflex(logData, index);
                         break;
-                    case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_INFO:
+                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_INFO:
                         UpdateLogEvent(logData, index);
                         break;
                 }
@@ -325,32 +325,32 @@ namespace IncomUtility.APP
             DataGrid grid;
             switch (eventType)
             {
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_CALIBRATION:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_CALIBRATION:
                     logFiles = new LogToFile("Incom_Utility_Calibration_Log", "csv");
                     grid = grid_LogCal;
                     gridList = logCalList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_ALARM:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_ALARM:
                     logFiles = new LogToFile("Incom_Utility_Alarm_Log", "csv");
                     grid = grid_LogAlarm;
                     gridList = logAlarmList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_FAULT:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_FAULT:
                     logFiles = new LogToFile("Incom_Utility_Fault_Log", "csv");
                     grid = grid_LogFault;
                     gridList = logFaultList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_WARNING:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_WARNING:
                     logFiles = new LogToFile("Incom_Utility_Warining_Log", "csv");
                     grid = grid_LogWarning;
                     gridList = logWarningList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_REFLEX:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_REFLEX:
                     logFiles = new LogToFile("Incom_Utility_Reflex_Log", "csv");
                     grid = grid_LogRelfex;
                     gridList = logReflexList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_INFO:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_INFO:
                     logFiles = new LogToFile("Incom_Utility_Info_Log", "csv");
                     grid = grid_LogInfo;
                     gridList = logInfoList;
@@ -375,62 +375,11 @@ namespace IncomUtility.APP
                 }
                 strHeader += grid.Columns[i].Header.ToString() + ",";
             }
-            logFiles.SetDataHeader("Time," + strHeader);
+            logFiles.SetDataHeader(strHeader);
 
-            for (int i=0; i< gridList.Count; i++)
+            for (int i = 0; i < gridList.Count; i++)
             {
-                string strWrite = "";
-                int count = 0;
-                if (count < columCount)
-                    strWrite += gridList[i].data0.ToString()+",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data1.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data2.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data3.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data4.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data5.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data6.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data7.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data8.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data9.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data10.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data11.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data12.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data13.ToString() + ",";
-                count++;
-                if (count < columCount)
-                    strWrite += gridList[i].data14.ToString() + ",";
-                count++; 
-                if (count < columCount)
-                    strWrite += gridList[i].data15.ToString() + ",";
-
-                strWrite.Remove(strWrite.Length - 1);
-
+                string strWrite = UIDataGrid.getDataToStr(gridList[i], columCount);
                 logFiles.Write(strWrite);
             }
 
@@ -492,7 +441,7 @@ namespace IncomUtility.APP
             float f32TargetGasConcentration = Utility.getF32FromByteA(logData, offset + 24);
             float f32CorrectionFactor = Utility.getF32FromByteA(logData, offset + 28);
             byte u8CalibrationResults = logData[offset + 32];
-            byte[] au8CylinderNo = new byte[(int)INNCOM_COMMAND_LIST.NUM_CYLINDER_SN];
+            byte[] au8CylinderNo = new byte[(int)INNCOM_CONF.NUM_CYLINDER_SN];
             for (int i = 0; i < logData.Length - offset - 33; i++)
                 au8CylinderNo[i] = logData[offset + 33 + i];
 
@@ -542,25 +491,25 @@ namespace IncomUtility.APP
             string type_str = "Unknown - " + u8EventId.ToString();
             switch (u8EventType)
             {
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_ALARM:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_ALARM:
                     if (u8EventId > 0 && u8EventId <= NUMBER_OF_ALARM)
                         type_str = ALARM_TYPE[u8EventId];
                     grid = grid_LogAlarm;
                     list = logAlarmList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_FAULT:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_FAULT:
                     if (u8EventId > 0 && u8EventId <= NUMBER_OF_FAULT)
                         type_str = FAULT_TPYE[u8EventId];
                     grid = grid_LogFault;
                     list = logFaultList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_WARNING:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_WARNING:
                     if (u8EventId > 0 && u8EventId <= NUMBER_OF_WARNING)
                         type_str = WARNING_TYPE[u8EventId];
                     grid = grid_LogWarning;
                     list = logWarningList;
                     break;
-                case (int)INNCOM_COMMAND_LIST.LOG_TABLE_TYPE_INFO:
+                case (int)INNCOM_CONF.LOG_TABLE_TYPE_INFO:
                     if (u8EventId > 0 && u8EventId <= NUMBER_OF_INFO)
                         type_str = INFO_TYPE[u8EventId];
                     grid = grid_LogInfo;

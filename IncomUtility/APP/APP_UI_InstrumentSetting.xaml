@@ -104,12 +104,12 @@
                         <Label Content="Calibration Conc" Grid.Row="1"/>
                         <Label Content="Last Cal.Date" Grid.Row="2"/>
                         <Label Content="Days Passed since last cal." Grid.Row="3"/>
-                        <CheckBox Content="Update Cal date Elapsed Cal Days" Grid.Row="4" Margin="5" Grid.ColumnSpan="2"/>
-                        <xctk:DecimalUpDown Value="180" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DoubleUpDown Value="1.0" Grid.Row="1" Grid.Column="1" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
-                        <DatePicker SelectedDate="2016/06/21" Grid.Row="2" Grid.Column="1" Margin="0,2"/>
-                        <xctk:DecimalUpDown Value="0" Grid.Row="3" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
-                        <Button Content="Read Cal Param" Grid.Row="5"   Height="20" Margin="5"  />
+                        <CheckBox x:Name="tChb_UpdateCal" Content="Update Cal date Elapsed Cal Days" Grid.Row="4" Margin="5" Grid.ColumnSpan="2"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_CalInterval" Value="180" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown x:Name="tUpdown_CalCon" Value="1.0" Grid.Row="1" Grid.Column="1" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
+                        <DatePicker x:Name="tDate_LastCalDate" SelectedDate="2016/06/21" Grid.Row="2" Grid.Column="1" Margin="0,2"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_DayPassed" Value="0" Grid.Row="3" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
+                        <Button x:Name="tBtn_ReadCal" Content="Read Cal Param" Grid.Row="5"   Height="20" Margin="5" Click="tBtn_ReadCal_Click"  />
                         <Button Content="Write Cal Param" Grid.Row="5"   Height="20" Margin="5" Grid.Column="1"/>
                     </Grid>
                 </GroupBox>
@@ -569,30 +569,30 @@
                         <Label Content="Alarm Trigger2" Grid.Row="4" />
                         <Label Content="Alarm Trigger3" Grid.Row="5" />
                         <Label Content="Alarm Latching" Grid.Row="6" />
-                        <xctk:DoubleUpDown Grid.Column="1" Value="20.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DoubleUpDown Grid.Column="1" Grid.Row="1" Value="40.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DoubleUpDown Grid.Column="1" Grid.Row="2" Value="60.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
-                        <ComboBox SelectedIndex="0"  Grid.Row="3" Grid.Column="1" Margin="0,2">
+                        <xctk:DoubleUpDown x:Name="tUpdown_AlarmThreshold1" Grid.Column="1" Value="20.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown x:Name="tUpdown_AlarmThreshold2" Grid.Column="1" Grid.Row="1" Value="40.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown x:Name="tUpdown_AlarmThreshold3" Grid.Column="1" Grid.Row="2" Value="60.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left"/>
+                        <ComboBox x:Name="tCmb_AlarmTrigger1" SelectedIndex="0"  Grid.Row="3" Grid.Column="1" Margin="0,2">
                             <ComboBoxItem Content="0 : Rising"/>
                             <ComboBoxItem Content="1 : Falling"/>
                             <ComboBoxItem Content="2 : Disabled"/>
                         </ComboBox>
-                        <ComboBox SelectedIndex="0"  Grid.Row="4" Grid.Column="1" Margin="0,2">
+                        <ComboBox x:Name="tCmb_AlarmTrigger2" SelectedIndex="0"  Grid.Row="4" Grid.Column="1" Margin="0,2">
                             <ComboBoxItem Content="0 : Rising"/>
                             <ComboBoxItem Content="1 : Falling"/>
                             <ComboBoxItem Content="2 : Disabled"/>
                         </ComboBox>
-                        <ComboBox SelectedIndex="2"  Grid.Row="5" Grid.Column="1" Margin="0,2">
+                        <ComboBox x:Name="tCmb_AlarmTrigger3" SelectedIndex="2"  Grid.Row="5" Grid.Column="1" Margin="0,2">
                             <ComboBoxItem Content="0 : Rising"/>
                             <ComboBoxItem Content="1 : Falling"/>
                             <ComboBoxItem Content="2 : Disabled"/>
                         </ComboBox>
-                        <ComboBox SelectedIndex="0"  Grid.Row="6" Grid.Column="1" Margin="0,2">
+                        <ComboBox x:Name="tCmb_AlarmLacting" SelectedIndex="0"  Grid.Row="6" Grid.Column="1" Margin="0,2">
                             <ComboBoxItem Content="0 : Non-Latching"/>
                             <ComboBoxItem Content="1 : Latching"/>
                         </ComboBox>
-                        <Button Content="Read Modbus" Grid.Row="7"   Height="20" Margin="5"  />
-                        <Button Content="Write Modbus" Grid.Row="7"   Height="20" Margin="5" Grid.Column="1"/>
+                        <Button x:Name="tBtn_ReadAlarms" Content="Read Alarm" Grid.Row="7"   Height="20" Margin="5" Click="tBtn_ReadAlarms_Click"  />
+                        <Button x:Name="tBtn_WriteAlarms" Content="Write Alarm" Grid.Row="7"   Height="20" Margin="5" Grid.Column="1"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Security" Margin="5,10,10,10">

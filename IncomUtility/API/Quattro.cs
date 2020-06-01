@@ -33,22 +33,22 @@ namespace IncomUtility
         COMM_POS_PAYLOAD = 0x07,
         COMM_RESULT_OK = 1,
 
-        COMM_SOF_SZ= 1,
-        COMM_VER_SZ =1,
-        COMM_SRC_SZ =1,
-        COMM_DEST_SZ =1,
+        COMM_SOF_SZ = 1,
+        COMM_VER_SZ = 1,
+        COMM_SRC_SZ = 1,
+        COMM_DEST_SZ = 1,
         COMM_SEQ_SZ = 1,
-        COMM_LEN_SZ =2,
-        COMM_CRC_SZ =2,
-        COMM_EOF_SZ =1,
+        COMM_LEN_SZ = 2,
+        COMM_CRC_SZ = 2,
+        COMM_EOF_SZ = 1,
 
-        COMM_COMM_SZ =2,
-        COMM_RESULT_SZ =1,
-        COMM_RESPONSE_SZ= COMM_COMM_SZ+COMM_RESULT_SZ,
-        
+        COMM_COMM_SZ = 2,
+        COMM_RESULT_SZ = 1,
+        COMM_RESPONSE_SZ = COMM_COMM_SZ + COMM_RESULT_SZ,
+
         COMM_AFTER_PAYLOAD_OVERHEAD = COMM_CRC_SZ + COMM_EOF_SZ,
-        COMM_LEN_OVERHEAD = COMM_SOF_SZ +  COMM_VER_SZ + COMM_SRC_SZ + COMM_DEST_SZ +COMM_SEQ_SZ 
-            + COMM_LEN_SZ+ COMM_CRC_SZ+ COMM_EOF_SZ,
+        COMM_LEN_OVERHEAD = COMM_SOF_SZ + COMM_VER_SZ + COMM_SRC_SZ + COMM_DEST_SZ + COMM_SEQ_SZ
+            + COMM_LEN_SZ + COMM_CRC_SZ + COMM_EOF_SZ,
 
         SZ_COMM_BUFFER = 2048,
     }
@@ -189,7 +189,7 @@ namespace IncomUtility
         //Simulation Mode   
         COMM_CMD_START_SIMULATION = 0x7B01,
         COMM_CMD_STOP_SIMULATION = 0x7B02,
-      
+
         //Debug command,
         DBG_CMD_READ_GAS_DATA = 0x8756,
 
@@ -203,28 +203,6 @@ namespace IncomUtility
         CERT_INVALID = 2,
         CERT_EXPIRED = 3,
 
-        PARAM_TYPE_U8 = 0,
-        PARAM_TYPE_S8 = 1,
-        PARAM_TYPE_U16 = 2,
-        PARAM_TYPE_S16 = 3,
-        PARAM_TYPE_U32 = 4,
-        PARAM_TYPE_S32 = 5,
-        PARAM_TYPE_U64 = 6,
-        PARAM_TYPE_S64 = 7,
-        PARAM_TYPE_F32 = 8,
-        PARAM_TYPE_STR = 9,
-        PARAM_TYPE_U8A = 10,
-        PARAM_TYPE_CUSTOM = 11,
-
-        NUM_CONFIG_PARAM = 111,
-        NUM_CYLINDER_SN =20,
-
-        LOG_TABLE_TYPE_ALARM = 1,
-        LOG_TABLE_TYPE_WARNING = 2,
-        LOG_TABLE_TYPE_FAULT = 3,
-        LOG_TABLE_TYPE_INFO = 4,
-        LOG_TABLE_TYPE_CALIBRATION = 5,
-        LOG_TABLE_TYPE_REFLEX = 6,
     }
     public enum INNCOM_CONF
     {
@@ -350,81 +328,40 @@ namespace IncomUtility
         UL2075_ALARM_THRESHOLD38 = 0x0C26,
         UL2075_ALARM_THRESHOLD39 = 0x0C27,
         UL2075_ALARM_THRESHOLD40 = 0x0C28,
+
+        NUM_HISTOGRAM = 40,
+        NUM_NTC_COMP = 12,
+        NUM_LOCATION_TAG = 25,
+        NUM_BOARD_SN = 16,
+        NUM_DEVICE_SN = 16,
+        NUM_GAS_NAME = 15,
+        NUM_OTP_KEY = 32,
+        
+        PARAM_TYPE_U8 = 0,
+        PARAM_TYPE_S8 = 1,
+        PARAM_TYPE_U16 = 2,
+        PARAM_TYPE_S16 = 3,
+        PARAM_TYPE_U32 = 4,
+        PARAM_TYPE_S32 = 5,
+        PARAM_TYPE_U64 = 6,
+        PARAM_TYPE_S64 = 7,
+        PARAM_TYPE_F32 = 8,
+        PARAM_TYPE_STR = 9,
+        PARAM_TYPE_U8A = 10,
+        PARAM_TYPE_CUSTOM = 11,
+
+        NUM_CONFIG_PARAM = 111,
+        NUM_CYLINDER_SN = 20,
+
+        LOG_TABLE_TYPE_ALARM = 1,
+        LOG_TABLE_TYPE_WARNING = 2,
+        LOG_TABLE_TYPE_FAULT = 3,
+        LOG_TABLE_TYPE_INFO = 4,
+        LOG_TABLE_TYPE_CALIBRATION = 5,
+        LOG_TABLE_TYPE_REFLEX = 6,
     }
-//    public class INNCOM_STR
-//    {       
-//        //Alarm event
-//     STR_DESC_ALARM_01 = "Low alarm occurred",
-//     STR_DESC_ALARM_02 = "High alarm occurred",
-//     STR_DESC_ALARM_03 = "Low alarm clears",
-//     STR_DESC_ALARM_04 = "High alarm clears",
-//     STR_DESC_ALARM_05 = "Gas alarm 3 occurred",
-//     STR_DESC_ALARM_06 = "Gas alarm 3 clears",
 
-//        //Warning event
-//     STR_DESC_WARNING_01   = "Calibration Overdue",
-//     STR_DESC_WARNING_02   = "Temperature limit exceeded sensor specification",
-//     STR_DESC_WARNING_03   = "BLE failure (BLE version only)",
-//     STR_DESC_WARNING_04   = "Time/date not set (RTC not set)",
-//     STR_DESC_WARNING_05   = "Log memory corrupted (CRC not matched)",
-//     STR_DESC_WARNING_06   = "Certificate is corrupted",
-//     STR_DESC_WARNING_07   = "Over-range warning",
-//     STR_DESC_WARNING_08   = "Under-range warning",
-//     STR_DESC_WARNING_09= "Warning self-clears",
-
-//        //Fault event
-//     STR_DESC_FAULT_01 = "Internal communication failure",
-//     STR_DESC_FAULT_02 = "Cell failure",
-//     STR_DESC_FAULT_03 = "Cell is producing a negative reading",
-//     STR_DESC_FAULT_04 = "EEPROM is corrupted",
-//     STR_DESC_FAULT_05 = "MCU operating voltage failure",
-//     STR_DESC_FAULT_06 = "RAM read/write fault",
-//     STR_DESC_FAULT_07 = "Flash memory corrupted",
-//     STR_DESC_FAULT_08 = "Code memory failure",
-//     STR_DESC_FAULT_09 = "mA output failure",
-//     STR_DESC_FAULT_10 = "Supplied voltage failure",
-//     STR_DESC_FAULT_11 = "Internal HW Fault",
-//     STR_DESC_FAULT_12 = "Internal SW Fault",
-//     STR_DESC_FAULT_13 = "Calibration Overdue",
-//     STR_DESC_FAULT_14 = "Fault clears",
-
-//       //Information event
-//     STR_DESC_INFO_01  = "Instrument power on event",
-//     STR_DESC_INFO_02  = "Zero calibration successful",
-//     STR_DESC_INFO_03  = "Zero calibration failed",
-//     STR_DESC_INFO_04  = "Span calibration successful",
-//     STR_DESC_INFO_05  = "Span calibration failed",
-//     STR_DESC_INFO_06  = "Sensor replaced",
-//     STR_DESC_INFO_07  = "Reset alarms and faults",
-//     STR_DESC_INFO_08  = "Gas configuration changed",
-//     STR_DESC_INFO_09 = "Time/date adjusted (RTC adjusted)",
-//     STR_DESC_INFO_10  = "Log memory is full",
-//     STR_DESC_INFO_11  = "BLE connection has been established",
-//     STR_DESC_INFO_12  = "Adhoc connection has been established",
-//     STR_DESC_INFO_13  = "BLE connection is terminated",
-//     STR_DESC_INFO_14  = "Enter inhibit mode",
-//     STR_DESC_INFO_15  = "Exit inhibit mode",
-//     STR_DESC_INFO_16  = "Cleared log memory",
-
-//     STR_DESC_CAL_TYPE_01 = "Factory Zero Cal",
-//     STR_DESC_CAL_TYPE_02 = "Factory Span Cal",
-//     STR_DESC_CAL_TYPE_03 = "User Zero Cal",
-//     STR_DESC_CAL_TYPE_04 = "User Span Cal",
-//     STR_DESC_CAL_TYPE_05 = "Analogue Out Zero Cal",
-//     STR_DESC_CAL_TYPE_06 = "Analogue Out Span Cal",
-//     STR_DESC_CAL_TYPE_07 = "Voltage Out Zero Cal",
-//     STR_DESC_CAL_TYPE_08 = "Voltage Out Span Cal",
-//     STR_DESC_CAL_TYPE_09 = "Cell Drive Cal (PWM)",
-
-//     STR_DESC_LOG_TABLE_TYPE_01 = "Alarm",
-//     STR_DESC_LOG_TABLE_TYPE_02 = "Warning",
-//     STR_DESC_LOG_TABLE_TYPE_03 = "Fault",
-//     STR_DESC_LOG_TABLE_TYPE_04 = "Info",
-//     STR_DESC_LOG_TABLE_TYPE_05 = "Calibration",
-//     STR_DESC_LOG_TABLE_TYPE_06 = "Reflex",
-
-//}
-public enum ERROR_LIST
+    public enum ERROR_LIST
     {
         ERROR_NONE = 0,
         ERROR_PORT_NOT_OPEN = 1,
@@ -439,6 +376,188 @@ public enum ERROR_LIST
         ERROR_NCK = 10
 
     }
+    public class CONFIG_PARAM_TABLE_STRUCT {
+        public ushort u16_parm_index;
+        public byte u8_param_type;
+        public byte u8_length;
+
+        public CONFIG_PARAM_TABLE_STRUCT(ushort index, byte type, byte length)
+        {
+            u16_parm_index = index;
+            u8_param_type = type;
+            u8_length = length;
+        }
+    }
+
+    //CONFIG_PARAM_TABLE_STRUCT[] SenParamTable = new CONFIG_PARAM_TABLE_STRUCT 
+    //    CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MODBUS_PARAM_SLAVE_ID, 0, 1);
+    public class SenParamTable 
+    {
+        public List<CONFIG_PARAM_TABLE_STRUCT> SenParamTableList = new List<CONFIG_PARAM_TABLE_STRUCT>();
+
+        public SenParamTable()
+        {
+            InitTable();
+        }
+        private void InitTable()
+        {
+            //Modbus Settings
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MODBUS_PARAM_SLAVE_ID, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MODBUS_PARAM_BAUDRATE, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MODBUS_PARAM_PARITY, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MODBUS_PARAM_FLOW_CONTROL, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MODBUS_PARAM_DATABITS, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MODBUS_PARAM_STOPBITS, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+
+            //Relay Settings
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.RELAY_PARAM_TRIGGER1, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.RELAY_PARAM_TRIGGER2, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.RELAY_PARAM_INIT_STATE1, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.RELAY_PARAM_INIT_STATE2, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.RELAY_PARAM_ON_DELAY_TIME, (byte)INNCOM_CONF.PARAM_TYPE_U16, 2));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.RELAY_PARAM_OFF_DELAY_TIME, (byte)INNCOM_CONF.PARAM_TYPE_U16, 2));
+
+            //mA Output Settings
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MA_PARAM_FAULT_CURRENT, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MA_PARAM_WARNING_CURRENT, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MA_PARAM_OVERRANGE_CURRENT, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.MA_PARAM_INHIBIT_TIMEOUT, (byte)INNCOM_CONF.PARAM_TYPE_U16, 2));
+
+            //General,
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GENERAL_PARAM_LOCATION_TAG, (byte)INNCOM_CONF.PARAM_TYPE_STR, 25));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GENERAL_PARAM_LED_CONTROL, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GENERAL_PARAM_ALARM_OP_MODE, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GENERAL_PARAM_OP_MODE, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GENERAL_PARAM_CAL_OVERDUE, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GENERAL_PARAM_PASSCODE, (byte)INNCOM_CONF.PARAM_TYPE_U8A, 4));
+
+
+            //Gas Alarm Settings,
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.ALARM_PARAM_THRESHOLD1, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.ALARM_PARAM_THRESHOLD2, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.ALARM_PARAM_THRESHOLD3, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.ALARM_PARAM_TRIGGER1, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.ALARM_PARAM_TRIGGER2, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.ALARM_PARAM_TRIGGER3, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.ALARM_PARAM_LATCHING, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+
+            //Gas Calibration Settings,
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CAL_PARAM_CAL_INTERVAL, (byte)INNCOM_CONF.PARAM_TYPE_U16, 2));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CAL_PARAM_CAL_CONC, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CAL_PARAM_LAST_CAL_DATE, (byte)INNCOM_CONF.PARAM_TYPE_U32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CAL_PARAM_DAYS_SINCE_LAST_CAL, (byte)INNCOM_CONF.PARAM_TYPE_U16, 2));
+
+
+            //Gas Settings,
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_USER_GAS_NAME, (byte)INNCOM_CONF.PARAM_TYPE_STR, 15));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_MEASURING_RANGE, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_CORRECTION_FACTOR, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_MEASUREMENT_UNITS, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_UNIT_CONVERSION, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_DEADBAND, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_GAS_TYPE, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_TARGET_CHANNEL, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_DECIMAL_POINT, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.GAS_PARAM_DISPLAY_RESOLUTION, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+
+
+            //Circuit Calibration,
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_420MA_OFFSET_SINK, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_420MA_OFFSET_SOURCE, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_420MA_SPAN_SINK, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_420MA_SPAN_SOURCE, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_420MA_LOOP_OFFSET_SINK, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_420MA_LOOP_OFFSET_SOURCE, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_420MA_LOOP_SPAN_SINK, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_420MA_LOOP_SPAN_SOURCE, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_VOLTAGE_OUT_OFFSET, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.CIRCUIT_PARAM_VOLTAGE_OUT_SPAN, (byte)INNCOM_CONF.PARAM_TYPE_F32, 4));
+
+            //Device Information,
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.DEV_INFO_PARAM_DEVICE_SN, (byte)INNCOM_CONF.PARAM_TYPE_STR, (byte)INNCOM_CONF.NUM_DEVICE_SN));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.DEV_INFO_PARAM_BOARD_SN, (byte)INNCOM_CONF.PARAM_TYPE_STR, 16));
+
+            //Security,
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.SEC_PARAM_NUM_RETRY, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.SEC_PARAM_LOGIN_LOCK_TIME, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.SEC_PARAM_OTP_CONNECTION, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.SEC_PARAM_OTP_KEY, (byte)INNCOM_CONF.PARAM_TYPE_STR, 32));
+
+            //NTC Compensation Table,
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP1, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP2, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP3, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP4, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP5, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP6, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP7, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP8, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP9, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP10, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP11, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.NTC_PARAM_TEMP_COMP12, (byte)INNCOM_CONF.PARAM_TYPE_S8, 1));
+
+            //UL2075 histogram,
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD1, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD2, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD3, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD4, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD5, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD6, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD7, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD8, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD9, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD10, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD11, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD12, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD13, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD14, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD15, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD16, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD17, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD18, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD19, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD20, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD21, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD22, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD23, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD24, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD25, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD26, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD27, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD28, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD29, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD30, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD31, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD32, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD33, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD34, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD35, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD36, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD37, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD38, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD39, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF.UL2075_ALARM_THRESHOLD40, (byte)INNCOM_CONF.PARAM_TYPE_U8, 1));
+        }
+        public bool SearchParmCfg(ushort u16_param, ref CONFIG_PARAM_TABLE_STRUCT data)
+        {
+            bool b_found = false;
+
+            for (int u16_index = 0; u16_index < (int)INNCOM_CONF.NUM_CONFIG_PARAM; u16_index++)
+            {
+                if (SenParamTableList[u16_index].u16_parm_index == u16_param) {
+
+                    b_found = true;
+                    data = SenParamTableList[u16_index];
+                    break;
+                }
+            }
+            
+        return b_found;
+
+        }
+    };
+
     class Quattro : CRC16
     {
         public byte[] buildCMDPacket(byte src, byte dest, byte[] payload, ref ERROR_LIST ret)
@@ -483,7 +602,7 @@ public enum ERROR_LIST
         }
 
 
-        public ERROR_LIST validateRXPacket(ref byte[] data)
+        public ERROR_LIST validateRXPacket(byte[] data)
         {
             if (data == null)
                 return ERROR_LIST.ERROR_INPUT_DATA_NONE;

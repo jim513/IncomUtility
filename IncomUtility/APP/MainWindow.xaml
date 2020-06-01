@@ -51,7 +51,7 @@
                 <MenuItem x:Name="tMenu_Debug" Header="Debug" Click="tMenu_Debug_Click"/>
             </MenuItem>
         </Menu>
-        <DataGrid Grid.ColumnSpan="2" Grid.Column="2" Margin="10,10,10,10" Grid.Row="2" >
+        <DataGrid x:Name="tGrid_GasData" Grid.ColumnSpan="2" Grid.Column="2" Margin="10,10,10,10" Grid.Row="2" AutoGenerateColumns="False">
             <DataGrid.ColumnHeaderStyle >
                 <Style TargetType = "{x:Type DataGridColumnHeader}">
                     <Setter Property = "HorizontalContentAlignment" Value = "Center" />
@@ -59,41 +59,40 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Date/Time"/>
-                <DataGridTextColumn Header="Raw ADC"/>
-                <DataGridTextColumn Header="Cell Output"/>
-                <DataGridTextColumn Header="Primary Conc."/>
-                <DataGridTextColumn Header="Lin. Conc."/>
-                <DataGridTextColumn Header="Deadband"/>
-                <DataGridTextColumn Header="Display Conc."/>
-                <DataGridTextColumn Header="Raw NTC"/>
-                <DataGridTextColumn Header="Comp'd Temp"/>
-                <DataGridTextColumn Header="Fault Status"/>
-                <DataGridTextColumn Header="Warning Status"/>
-                <DataGridTextColumn Header="Alarm"/>
-                <DataGridTextColumn Header="Voltage Out"/>
-                <DataGridTextColumn Header="Voltage"/>
-                <DataGridTextColumn Header="mA Out"/>
-                <DataGridTextColumn Header="mA Loop"/>
+                <DataGridTextColumn Binding="{Binding data0}"/>
+                <DataGridTextColumn Binding="{Binding data1}"/>
+                <DataGridTextColumn Binding="{Binding data2}"/>
+                <DataGridTextColumn Binding="{Binding data3}"/>
+                <DataGridTextColumn Binding="{Binding data4}"/>
+                <DataGridTextColumn Binding="{Binding data5}"/>
+                <DataGridTextColumn Binding="{Binding data6}"/>
+                <DataGridTextColumn Binding="{Binding data7}"/>
+                <DataGridTextColumn Binding="{Binding data8}"/>
+                <DataGridTextColumn Binding="{Binding data9}"/>
+                <DataGridTextColumn Binding="{Binding data10}"/>
+                <DataGridTextColumn Binding="{Binding data11}"/>
+                <DataGridTextColumn Binding="{Binding data12}"/>
+                <DataGridTextColumn Binding="{Binding data13}"/>
+                <DataGridTextColumn Binding="{Binding data14}"/>
+                <DataGridTextColumn Binding="{Binding data15}"/>
             </DataGrid.Columns>
 
         </DataGrid>
-        <Button x:Name="tBtn_MainStart" Content="START" Margin="10,0,0,4" Grid.Row="1" Grid.Column="0" />
-        <Button x:Name="tBtn_MainStop" Content="STOP" Margin="0,0,0,4" Grid.Row="1" Grid.Column="1"/>
+        <Button x:Name="tBtn_MainStart" Content="START" Margin="10,0,0,4" Grid.Row="1" Grid.Column="0" Click="tBtn_MainStart_Click" />
+        <Button x:Name="tBtn_MainStop" Content="STOP" Margin="0,0,0,4" Grid.Row="1" Grid.Column="1" IsEnabled="False" Click="tBtn_MainStop_Click"/>
         <Button x:Name="tBtn_MainClear" Content="CLEAR" Margin="0,0,0,4" Grid.Row="1" Grid.Column="2" />
 
         <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,4,95,4" Grid.RowSpan="3">
             <Label Content="Log Interval (s)" Margin="10,10,10,5"/>
-            <xctk:DecimalUpDown Margin="14,0,70,0"  DefaultValue="1" DisplayDefaultValueOnEmptyText="True"/>
+            <xctk:DecimalUpDown x:Name="tUpdown_LogInterval" Margin="14,0,70,0"  Minimum="1" DefaultValue="1" DisplayDefaultValueOnEmptyText="True"/>
             <Label Content="Firmware Version" Margin="10,10,10,5"/>
-            <TextBox Margin="14,0,70,0"/>
+            <TextBox x:Name="tTxt_FirmVersion" Margin="14,0,70,0"/>
             <Label Content="Sensor Data Version" Margin="10,10,10,5"/>
             <TextBox x:Name="tTxt_SensorDataVersion" Margin="14,0,70,0"/>
             <Label Content="Number of readings" Margin="10,10,10,5"/>
-            <xctk:DecimalUpDown Margin="14,0,70,0"  DefaultValue="600" DisplayDefaultValueOnEmptyText="True" />
+            <xctk:DecimalUpDown x:Name="tUpdown_NumReadings" Margin="14,0,70,0" Minimum="1" DefaultValue="600" DisplayDefaultValueOnEmptyText="True" />
 
-            <CheckBox Content="Capture Debug Packets" Margin="10,10,10,0"/>
-            <CheckBox Content="Filter invaild gas reading" Margin="10,10,10,0"/>
+            <CheckBox x:Name="tChb_CaputreDebugPacket" Content="Capture Debug Packets" Margin="10,10,10,10" Checked="tChb_CaputreDebugPacket_Checked" Unchecked="tChb_CaputreDebugPacket_Checked"/>
 
             <Button x:Name="tBtn_ResetAlarmFaults" Content="Reset Alarams &amp; Faults" Margin="10,10,10,0" Height="45" Click="tBtn_ResetAlarmFaults_Click"/>
 

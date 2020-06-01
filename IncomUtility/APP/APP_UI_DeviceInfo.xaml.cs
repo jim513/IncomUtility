@@ -364,19 +364,19 @@ namespace IncomUtility
             string str="";
             switch (type)
             {
-                case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_STR :
+                case (int)INNCOM_CONF.PARAM_TYPE_STR :
                     str = Encoding.Default.GetString(ParamValue).Trim('\0');
                     break;
-                case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_U8:
+                case (int)INNCOM_CONF.PARAM_TYPE_U8:
                     str = (ParamValue ,0).ToString();
                     break;
-                case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_U8A:
+                case (int)INNCOM_CONF.PARAM_TYPE_U8A:
                     str = Encoding.Default.GetString(ParamValue).Trim('\0');
                     break;
-                case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_S8:
+                case (int)INNCOM_CONF.PARAM_TYPE_S8:
                     str = Convert.ToSByte(ParamValue[0]).ToString();
                     break;
-                case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_U32:
+                case (int)INNCOM_CONF.PARAM_TYPE_U32:
                     if (ParamValue.Length <4)
                     {
                         byte[] temp = new byte[4-ParamValue.Length];
@@ -384,7 +384,7 @@ namespace IncomUtility
                     }
                     str = Utility.getU32FromByteA(ParamValue,0).ToString();
                     break;
-                case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_U16:
+                case (int)INNCOM_CONF.PARAM_TYPE_U16:
                     if(ParamValue.Length == 1 )
                     {
                         byte[] temp = new byte[1];
@@ -392,7 +392,7 @@ namespace IncomUtility
                     }   
                     str = Utility.getU16FromByteA(ParamValue, 0).ToString();
                     break;
-                case (int)INNCOM_COMMAND_LIST.PARAM_TYPE_F32:
+                case (int)INNCOM_CONF.PARAM_TYPE_F32:
                     if (ParamValue.Length < 4)
                     {
                         byte[] temp = new byte[4 - ParamValue.Length];

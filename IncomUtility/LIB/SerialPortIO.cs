@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IncomUtility.APP;
+using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -14,8 +15,8 @@ namespace IncomUtility
         retryCount = 3,
         defaultSleep = 100
     };
-     public static  class SerialPortIO
-    {
+     public static class SerialPortIO
+    { 
          public static SerialPort serialPort = new SerialPort();
          public static Mutex mutex = new Mutex();
          private static Quattro quattro = new Quattro();
@@ -43,7 +44,6 @@ namespace IncomUtility
                 MessageBox.Show("Connecting was failed");
                 return false;
             }
-
             mutex.ReleaseMutex();
             if (serialPort.IsOpen)
                 return true;
@@ -130,9 +130,10 @@ namespace IncomUtility
                 if (error != ERROR_LIST.ERROR_NONE)
                     break;
 
-                error = quattro.validateRXPacket(ref u8RXbuffer);
+                error = quattro.validateRXPacket(u8RXbuffer);
                 if (error == ERROR_LIST.ERROR_NONE)
                 {
+                    APP_UI_CommLog.getSend(u8TXbuffer, u8RXbuffer, u8TXbuffer.Length, u8RXbuffer.Length);
                     mutex.ReleaseMutex();
                     break;
                 }
