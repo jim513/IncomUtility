@@ -132,12 +132,12 @@
                         <Label  Content="Over-range Current (mA)" Grid.Row="2" />
                         <Label Content="Inhibit Current (mA)" Grid.Row="3"  />
                         <Label Content="Inhibit Timeout (mins)" Grid.Row="4" />
-                        <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N1" Margin="0,2" HorizontalContentAlignment="Center" TextAlignment="Left"/>
-                        <xctk:DoubleUpDown Grid.Column="1" Value="3.0" Increment="0.1" FormatString="N1" Grid.Row="1" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DoubleUpDown Grid.Column="1" Value="21.0" Increment="0.1" FormatString="N1" Grid.Row="2" Margin="0,2" TextAlignment="Left" />
-                        <xctk:DoubleUpDown Grid.Column="1" Value="21.0" Increment="0.1" FormatString="N1" Grid.Row="3" IsReadOnly="True" Background="LightGray" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Grid.Column="1" Value="15" Grid.Row="4" Margin="0,2,0,0" TextAlignment="Left" />
-                        <Button Content="Read mA Output" Grid.Row="5"   Height="20" Margin="5" />
+                        <xctk:DoubleUpDown x:Name="tUpdown_FaultCurrent" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N1" Margin="0,2" HorizontalContentAlignment="Center" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown x:Name="tUpdown_WarningCurrent" Grid.Column="1" Value="3.0" Increment="0.1" FormatString="N1" Grid.Row="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DoubleUpDown x:Name="tUpdown_OverRangeCurrent" Grid.Column="1" Value="21.0" Increment="0.1" FormatString="N1" Grid.Row="2" Margin="0,2" TextAlignment="Left" />
+                        <xctk:DoubleUpDown x:Name="tUpdown_InhibitCurrent" Grid.Column="1" Value="21.0" Increment="0.1" FormatString="N1" Grid.Row="3" IsReadOnly="True" Background="LightGray" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_InhibitTimeout" Grid.Column="1" Value="15" Grid.Row="4" Margin="0,2,0,0" TextAlignment="Left" />
+                        <Button x:Name="tBtn_ReadmAOutput" Content="Read mA Output" Grid.Row="5"   Height="20" Margin="5" Click="tBtn_ReadmAOutput_Click" />
                         <Button Content="Write mA Output" Grid.Row="5"   Height="20" Margin="5" Grid.Column="1"/>
                     </Grid>
                 </GroupBox>
@@ -167,31 +167,31 @@
                         <Label Grid.Row="3" Content="Safety mode"/>
                         <Label Grid.Row="4" Content="Cal Over due indication"  />
                         <Label Grid.Row="5" Content="Passcode"/>
-                        <Button Grid.Row="6" Height="20" Content="Read General"   Margin="5"   />
+                        <Button x:Name="tBtn_ReadGeneral" Grid.Row="6" Height="20" Content="Read General"   Margin="5" Click="tBtn_ReadGeneral_Click"   />
                         <Button Content="Write Genral" Grid.Row="6" Grid.Column="1"   Margin="5" Grid.ColumnSpan="4" VerticalAlignment="Center"/>
-                        <TextBox Text="Incom_loc_01" Grid.Column="1" Grid.ColumnSpan="4" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
-                        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="1" >
+                        <TextBox x:Name="tTxt_LocationTag" Text="Incom_loc_01" Grid.Column="1" Grid.ColumnSpan="4" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="tCmb_LEDControl" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="1" >
                             <ComboBoxItem Content="0 : Normal Off" />
                             <ComboBoxItem Content="1 : Normal Flash" />
                             <ComboBoxItem Content="2 : Normal On"/>
                         </ComboBox>
-                        <ComboBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="0">
+                        <ComboBox x:Name="tCmb_AlarmOperationMode" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="0">
                             <ComboBoxItem Content="0 : Normal" />
                             <ComboBoxItem Content="1 : UL2075" />
                         </ComboBox>
-                        <ComboBox Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="0">
+                        <ComboBox x:Name="tCmb_SafetyMode" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="0">
                             <ComboBoxItem Content="0 : Normal mode"/>
                             <ComboBoxItem Content="1 : ATEX mode"/>
                         </ComboBox>
-                        <ComboBox Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="0">
+                        <ComboBox x:Name="tCmb_CalOverdue" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="0">
                             <ComboBoxItem Content="0 : Off (ignore)"/>
                             <ComboBoxItem Content="1 : Treat as warning"/>
                             <ComboBoxItem Content="2 : Treat as Fault"/>
                         </ComboBox>
-                        <xctk:DecimalUpDown Grid.Row="5" Grid.Column="1" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Grid.Row="5" Grid.Column="2" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Grid.Row="5" Grid.Column="3" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Grid.Row="5" Grid.Column="4" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_Passcode1" Grid.Row="5" Grid.Column="1" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_Passcode2" Grid.Row="5" Grid.Column="2" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_Passcode3" Grid.Row="5" Grid.Column="3" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_Passcode4" Grid.Row="5" Grid.Column="4" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Modbus" Margin="5,4,5,10" >
@@ -215,26 +215,33 @@
                         <Label Content="Flow Control" Grid.Row="3"  />
                         <Label Content="Databits" Grid.Row="4" />
                         <Label Content="Stopbits" Grid.Row="5" />
-                        <xctk:DecimalUpDown Grid.Column="1" Value="1" Margin="0,2" TextAlignment="Left"/>
-                        <ComboBox SelectedIndex="0"  Grid.Row="1" Grid.Column="1" Margin="0,2">
+                        <xctk:DecimalUpDown x:Name="tUpdown_SlaveID" Grid.Column="1" Value="1" Margin="0,2" TextAlignment="Left"/>
+                        <ComboBox x:Name="tCmb_Baudrate" SelectedIndex="0"  Grid.Row="1" Grid.Column="1" Margin="0,2">
                             <ComboBoxItem Content="9600 bps"/>
                             <ComboBoxItem Content="19200 bps"/>
                         </ComboBox>
-                        <ComboBox SelectedIndex="2"  Grid.Row="2" Grid.Column="1" Margin="0,2">
+                        <ComboBox x:Name="tCmb_Parity" SelectedIndex="2"  Grid.Row="2" Grid.Column="1" Margin="0,2">
                             <ComboBoxItem Content="0 : None"/>
                             <ComboBoxItem Content="1 : Odd"/>
                             <ComboBoxItem Content="2 : Even"/>
                         </ComboBox>
-                        <ComboBox Grid.Row="3" Grid.Column="1" SelectedIndex="0" IsEnabled="False" Foreground="Gray">
+                        <ComboBox x:Name="tCmb_FlowControl" Grid.Row="3" Grid.Column="1" SelectedIndex="0" IsEnabled="False" Foreground="Gray">
                             <ComboBoxItem Content="0 : None"/>
+                            <ComboBoxItem Content="1 : RTS/CTS"/>
+                            <ComboBoxItem Content="2 : DTR/DSR" />
+                            <ComboBoxItem Content="3 : RS485 -rts"/>
                         </ComboBox>
-                        <ComboBox Grid.Row="4" Grid.Column="1" SelectedIndex="0" IsEnabled="False" Foreground="Gray">
+                        <ComboBox x:Name="tCmb_Databits" Grid.Row="4" Grid.Column="1" SelectedIndex="0" IsEnabled="False" Foreground="Gray">
                             <ComboBoxItem Content="0 : 8bit"/>
+                            <ComboBoxItem Content="1 : 7bit"/>
+                            <ComboBoxItem Content="2 : 6bit"/>
+                            <ComboBoxItem Content="3 : 5bit"/>
                         </ComboBox>
-                        <ComboBox Grid.Row="5" Grid.Column="1" SelectedIndex="0" IsEnabled="False" Foreground="Gray">
+                        <ComboBox x:Name="tCmb_Stopbits" Grid.Row="5" Grid.Column="1" SelectedIndex="0" IsEnabled="False" Foreground="Gray">
                             <ComboBoxItem Content="0 : 1bit"/>
+                            <ComboBoxItem Content="1 : 2bits"/>
                         </ComboBox>
-                        <Button Content="Read Modbus" Grid.Row="6"   Height="20" Margin="5"  />
+                        <Button x:Name="tBtn_ReadModbus" Content="Read Modbus" Grid.Row="6"   Height="20" Margin="5" Click="tBtn_ReadModbus_Click"  />
                         <Button Content="Write Modbus" Grid.Row="6"   Height="20" Margin="5" Grid.Column="1"/>
                     </Grid>
                 </GroupBox>
@@ -268,17 +275,17 @@
                             <Label Content="Loopback span - source" Grid.Row="7" />
                             <Label Content="Votage out offset" Grid.Row="8" />
                             <Label Content="Votage out span" Grid.Row="9" />
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" TextAlignment="Left"/>
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="1" TextAlignment="Left"/>
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="2" TextAlignment="Left"/>
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="3" TextAlignment="Left"/>
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="4" TextAlignment="Left"/>
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="5" TextAlignment="Left"/>
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="6" TextAlignment="Left"/>
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="7" TextAlignment="Left"/>
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="8" TextAlignment="Left"/>
-                            <xctk:DoubleUpDown Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="9" TextAlignment="Left"/>
-                            <Button Content="Read Circuit Cal" Grid.Row="10"   Height="20" Margin="5" />
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit1" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit2" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="1" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit3"  Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="2" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit4"  Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="3" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit5" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="4" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit6" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="5" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit7" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="6" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit8" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="7" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit9" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="8" TextAlignment="Left"/>
+                            <xctk:DoubleUpDown x:Name="tUpdown_Circuit10" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="9" TextAlignment="Left"/>
+                            <Button x:Name="tBtn_ReadCircuitCal" Content="Read Circuit Cal" Grid.Row="10"   Height="20" Margin="5" Click="tBtn_ReadCircuitCal_Click" />
                             <Button Content="Write Circuit Cal" Grid.Row="10"   Height="20" Margin="5" Grid.RowSpan="2" Grid.Column="1"/>
                         </Grid>
                     </Grid>
@@ -288,7 +295,7 @@
 
             <StackPanel Grid.Column="2">
                 <GroupBox Header="NTC Compensation" Margin="10">
-                    <Grid>
+                    <Grid x:Name="tGrid_NTCCompensation">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
@@ -325,7 +332,7 @@
                         <Label Content="NTC Comp (-0oC)" Grid.Row="4" />
                         <Label Content="NTC Comp (10oC)" Grid.Row="5" />
 
-                        <xctk:IntegerUpDown Value="-25" Grid.Column="1"/>
+                        <xctk:IntegerUpDown Value="-25" Grid.Column="1" Height="26" Margin="0,0,0.2,0" Grid.RowSpan="2" VerticalAlignment="Top"/>
                         <xctk:IntegerUpDown Value="-25" Grid.Column="1" Grid.Row="1"/>
                         <xctk:IntegerUpDown Value="-20" Grid.Column="1" Grid.Row="2"/>
                         <xctk:IntegerUpDown Value="-12" Grid.Column="1" Grid.Row="3"/>
@@ -345,7 +352,7 @@
                         <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="4"/>
                         <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="5"/>
 
-                        <Button Content="Read NTC" Margin="5" Grid.Row="6" Grid.ColumnSpan="2"/>
+                        <Button x:Name="tBtn_ReadNTC" Content="Read NTC" Margin="5" Grid.Row="6" Grid.ColumnSpan="2" Click="tBtn_ReadNTC_Click"/>
                         <Button Content="Write NTC" Margin="5" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="6"/>
                     </Grid>
                 </GroupBox>

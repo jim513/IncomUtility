@@ -248,7 +248,7 @@ namespace IncomUtility
                 return;
             }
 
-            tTxt_Logs.AppendText("Cleared Latch Table : " + (result,(int)PACKET_CONF.COMM_POS_PAYLOAD +2));
+            tTxt_Logs.AppendText("Cleared Latch Table : " + result[(int)PACKET_CONF.COMM_POS_PAYLOAD +2].ToString());
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
@@ -338,7 +338,7 @@ namespace IncomUtility
             /*
              * Read Configuration
              */
-            INNCOM_CONF param = (INNCOM_CONF)tCmb_Param.SelectedItem;
+            INNCOM_CONF_LIST param = (INNCOM_CONF_LIST)tCmb_Param.SelectedItem;
 
             byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, Quattro.commandToByteArray(param), ref err ,300);
             if (err != ERROR_LIST.ERROR_NONE)

@@ -31,7 +31,6 @@ namespace IncomUtility
             if (names.Length == 0)
                 return false;
 
-            mutex.WaitOne();
             serialPort.PortName = names[0];
 
             try
@@ -40,11 +39,9 @@ namespace IncomUtility
             }
             catch
             {
-                mutex.ReleaseMutex();
                 MessageBox.Show("Connecting was failed");
                 return false;
             }
-            mutex.ReleaseMutex();
             if (serialPort.IsOpen)
                 return true;
 
@@ -63,7 +60,6 @@ namespace IncomUtility
                 err = ERROR_LIST.ERROR_INPUT_DATA_NONE;
                 return ;
             }
-            mutex.WaitOne();
             serialPort.Write(sendbuffer, 0, sendbuffer.Length);
             err = ERROR_LIST.ERROR_NONE;
         }
@@ -89,7 +85,6 @@ namespace IncomUtility
                 return  null;
             }
 
-            //mutex.ReleaseMutex();
             err = ERROR_LIST.ERROR_NONE;
 
             return readBuffer;
@@ -110,6 +105,8 @@ namespace IncomUtility
             int retryCount = (int)Constants.retryCount;
             byte[] u8TXbuffer = null;
             byte[] u8RXbuffer = null;
+
+            mutex.WaitOne();
 
             while (retryCount-- > 0)
             {
@@ -133,12 +130,15 @@ namespace IncomUtility
                 error = quattro.validateRXPacket(u8RXbuffer);
                 if (error == ERROR_LIST.ERROR_NONE)
                 {
-                    APP_UI_CommLog.getSend(u8TXbuffer, u8RXbuffer, u8TXbuffer.Length, u8RXbuffer.Length);
-                    mutex.ReleaseMutex();
+                    if(APP_UI_CommLog.packetCheck == true)
+                    {
+                        MainWindow.winCommLog.setText(u8TXbuffer,u8RXbuffer);
+                    }                        
                     break;
                 }
-                mutex.ReleaseMutex();
             }
+            mutex.ReleaseMutex();
+
             return u8RXbuffer;
         }
          public static byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err,int sleepTime)

@@ -3,19 +3,14 @@ using IncomUtility.APP;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace IncomUtility
 {
@@ -41,12 +36,13 @@ namespace IncomUtility
         private APP_UI_CalVoltageOutput winCalVoltageOutput;
         private APP_UI_CalCellDrive winCalCellDrive;
         private APP_UI_HardwareTest winHardwareTest;
-        private APP_UI_CommLog winCommLog;
+        public static APP_UI_CommLog winCommLog;
         private APP_UI_Debug winDebug;
 
         private Thread gas_monitor;
         private List<UIDataGrid> gridGasDataList;
-        LogToFile logFiles;
+        private LogToFile logFiles;
+        private MonitorChart m_chart1;
 
         private int gridRowMax;
         private int monitorPeriod;
@@ -54,12 +50,13 @@ namespace IncomUtility
         public MainWindow()
         {
             InitializeComponent();
-           
+
             orginalWidth = Width;
             originalHeight = Height;
 
             scale = new ScaleTransform();
             logFiles = new LogToFile("Incom_Gas_data", "csv");
+            m_chart1 = new MonitorChart(this, chart_1);
 
             winCommLog = new APP_UI_CommLog();
             winCommLog.Closing += (sender, e) =>
@@ -67,6 +64,7 @@ namespace IncomUtility
                 e.Cancel = true;
                 winCommLog.Hide();
             };
+            
             gas_monitor_init();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -75,6 +73,7 @@ namespace IncomUtility
             {
                 ChangeSize(ActualWidth, ActualHeight);
             }
+            gas_chart_hide();
         }
         private void ChangeSize(double width, double height)
         {
@@ -99,7 +98,7 @@ namespace IncomUtility
                 T win2 = win;
                 /*
                  * Add Closing Event to hide
-                 */             
+                 */
                 win.Closing += (sender, e) =>
                 {
                     e.Cancel = true;
@@ -119,7 +118,7 @@ namespace IncomUtility
                 SerialPortIO.serialPort.Close();
             for (int intCounter = App.Current.Windows.Count - 1; intCounter > 0; intCounter--)
             {
-                App.Current.Windows[intCounter].Closing += (send,f) =>
+                App.Current.Windows[intCounter].Closing += (send, f) =>
                 {
                     f.Cancel = false;
                 };
@@ -128,14 +127,13 @@ namespace IncomUtility
             if (gas_monitor_running)
                 gas_monitor.Abort();
 
-            winCommLog.monitorSendLog.Abort();
             logFiles.Unchecked();
         }
         private void tMenu_MonitorDeviceStatus_Click(object sender, RoutedEventArgs e)
         {
             Win_Open<APP_UI_MonitorDeviceStatus>(ref winMonitorDeviceStatus);
         }
-     
+
         private void tMenu_Communication_Click(object sender, RoutedEventArgs e)
         {
             Win_Open<APP_UI_Communication>(ref winCommunication);
@@ -154,7 +152,7 @@ namespace IncomUtility
         {
             Win_Open<APP_UI_ViewLogs>(ref winViewLogs);
         }
-  
+
         private void tMenu_MonitorRawData_Click(object sender, RoutedEventArgs e)
         {
             Win_Open<APP_UI_RawData>(ref winRawData);
@@ -212,7 +210,6 @@ namespace IncomUtility
         private void tChb_CaputreDebugPacket_Checked(object sender, RoutedEventArgs e)
         {
             APP_UI_CommLog.packetCheck = (bool)tChb_CaputreDebugPacket.IsChecked;
-            winCommLog.monitorSendLog.Start();
         }
         private void tBtn_MainStart_Click(object sender, RoutedEventArgs e)
         {
@@ -222,7 +219,7 @@ namespace IncomUtility
                 return;
 
             }
-             string strHeader1 = "";
+            string strHeader1 = "";
             /*
               *  Read Device SN
              */
@@ -233,7 +230,7 @@ namespace IncomUtility
                 return;
             }
             string DeviceSN = Encoding.Default.GetString(Quattro.getResponseValueData(result)).Trim('\0');
-            strHeader1 += "DeviceSN : "+ DeviceSN + ",";
+            strHeader1 += "DeviceSN : " + DeviceSN + ",";
 
             /*
           * Read SW Version
@@ -249,7 +246,7 @@ namespace IncomUtility
             int minor = result[offset + 1];
             int built = Utility.getU16FromByteA(result, offset + 2);
             tTxt_FirmVersion.Text = major.ToString() + "." + minor.ToString() + "." + built.ToString();
-            strHeader1 += "SW Version : " +major.ToString() + "." + minor.ToString() + "." + built.ToString()+",";
+            strHeader1 += "SW Version : " + major.ToString() + "." + minor.ToString() + "." + built.ToString() + ",";
 
             /*
             *  Read EEPROM Version
@@ -257,13 +254,13 @@ namespace IncomUtility
             result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_EEPROM_VER, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
-                MessageBox.Show("ERROR - Read EERPOM Version");;
+                MessageBox.Show("ERROR - Read EERPOM Version"); ;
                 return;
             }
             byte E2PVer = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 3];
             tTxt_SensorDataVersion.Text = E2PVer.ToString();
-            strHeader1 += "EEPROM : "+E2PVer.ToString() +",";
-      
+            strHeader1 += "EEPROM : " + E2PVer.ToString() + ",";
+
             /*
             *  Read Output Type
             */
@@ -279,7 +276,7 @@ namespace IncomUtility
             int BLEModule = result[offset + 2];
 
             if (OutputType == 0)
-               strHeader1 += "OutPut Type : mA Output,";
+                strHeader1 += "OutPut Type : mA Output,";
             else
                 strHeader1 += "OutPut Type : Modbus,";
             if (Relay == 0)
@@ -290,8 +287,10 @@ namespace IncomUtility
                 strHeader1 += "BLE : Not Fitted";
             else
                 strHeader1 += "BLE : Not Fitted";
-           
 
+            /*
+            *  Save Data to CSV file
+            */
             string filePath = logFiles.Checked();
             string strHeader2 = "";
             if (filePath != null)
@@ -306,8 +305,12 @@ namespace IncomUtility
                     }
                     strHeader2 += tGrid_GasData.Columns[i].Header.ToString() + ",";
                 }
-                logFiles.SetDataHeader(strHeader1 ,strHeader2);
+                logFiles.SetDataHeader(strHeader1, strHeader2);
             }
+
+            /*
+            *  Monitoring Start
+            */
             gas_monitor_running = true;
 
             tBtn_MainStart.IsEnabled = false;
@@ -316,8 +319,11 @@ namespace IncomUtility
             tUpdown_LogInterval.IsEnabled = false;
             monitorPeriod = (int)tUpdown_LogInterval.Value * 1000 - 300;
 
+            gas_chart_reset();
+            gas_chart_make();
+            gas_chart_show(1800);
+
             gas_monitor = new Thread(gas_monitor_run);
-           
             gas_monitor.Start();
         }
 
@@ -333,9 +339,29 @@ namespace IncomUtility
             tUpdown_LogInterval.IsEnabled = true;
 
         }
+        private void tBtn_MainClear_Click(object sender, RoutedEventArgs e)
+        {
+            gridGasDataList.Clear();
+            tGrid_GasData.Items.Refresh();
+
+            gas_chart_reset();
+            gas_chart_make();
+        }
 
         private void tBtn_ResetAlarmFaults_Click(object sender, RoutedEventArgs e)
         {
+            if (!SerialPortIO.isPortOpen())
+            {
+                MessageBox.Show("Incom is not connected");
+                return;
+            }
+            SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_ALARMS, ref err);
+            if (err != ERROR_LIST.ERROR_NONE)
+            {
+                MessageBox.Show("ERROR - Reset Alarms and Faults");
+                return;
+            }
+            MessageBox.Show("Succesfully Reset Alarms and Faults");
         }
 
         #region GAS MONITORING
@@ -361,7 +387,7 @@ namespace IncomUtility
         {
             gas_grid_make();
 
-            //gas_chart_make();
+            gas_chart_make();
         }
 
         private void gas_monitor_run()
@@ -393,7 +419,7 @@ namespace IncomUtility
                 string date_time_str = curr_Time.ToString("yyyy/MM/dd HH:mm:ss");
                 string time_str = curr_Time.ToString("HH:mm:ss");
 
-                byte[] gas_raw_data_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_GAS_DATA,ref err);
+                byte[] gas_raw_data_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_GAS_DATA, ref err);
                 if (err != ERROR_LIST.ERROR_NONE)
                     continue;
                 byte[] gas_voltage_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_OUTPUT, ref err);
@@ -425,7 +451,7 @@ namespace IncomUtility
 
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    gas_data_update(tGrid_GasData, gridGasDataList, time_str, raw_adc, cell_ouput, primary_conc, linear_conc, deadband_conc,
+                    gas_data_update(tGrid_GasData, gridGasDataList, m_chart1, time_str, raw_adc, cell_ouput, primary_conc, linear_conc, deadband_conc,
      display_conc, raw_temp, temp, fault_state, warning_state, alarm_state, target_analouge_output, measured_lop_back_current, target_output, loop_back);
                 }
                 ));
@@ -433,7 +459,7 @@ namespace IncomUtility
                                                   "{4:0.000},{5:0.000},{6},{7}," +
                                                   "{8},{9},{10},{11:0.000}," +
                                                   "{12:0.000},{13:0.000},{14:0.000}", raw_adc, cell_ouput, primary_conc, linear_conc, deadband_conc,
-                                                  display_conc, raw_temp, temp, fault_state, warning_state, alarm_state, target_analouge_output, 
+                                                  display_conc, raw_temp, temp, fault_state, warning_state, alarm_state, target_analouge_output,
                                                   measured_lop_back_current, target_output, loop_back
                                              );
                 logFiles.Write(gas_data);
@@ -487,7 +513,7 @@ namespace IncomUtility
         }
 
 
-        private void gas_data_update(DataGrid grid, List<UIDataGrid> list,
+        private void gas_data_update(DataGrid grid, List<UIDataGrid> list, MonitorChart chart1,
                                string time, int data1, float data2, float data3, float data4, float data5, float data6, int data7, float data8,
                                uint data9, uint data10, byte data11, float data12, float data13, float data14, float data15)
         {
@@ -507,6 +533,12 @@ namespace IncomUtility
                                         string.Format("{0}", data13), string.Format("{0}", data14),
                                         string.Format("{0:f4}", data15)
                                         ));
+
+            chart1.AddData(0, time, data1);
+            chart1.AddData(1, time, data2);
+            chart1.AddData(2, time, data3);
+            chart1.AddData(3, time, data4);
+
             grid.Items.Refresh();
 
             if (grid.Items.Count > 0)
@@ -515,8 +547,59 @@ namespace IncomUtility
             }
 
         }
+        private void gas_chart_make()
+        {
+            System.Drawing.Color ch1_color = System.Drawing.Color.Red;
+            System.Drawing.Color ch2_color = System.Drawing.Color.DarkOrange;
+            System.Drawing.Color ch3_color = System.Drawing.Color.Blue;
+            System.Drawing.Color ch4_color = System.Drawing.Color.Green;
+
+            m_chart1.AddSeries(gas_data_1, chart_1_legend_1, ch1_color);
+            m_chart1.AddSeries(gas_data_2, chart_1_legend_2, ch2_color);
+            m_chart1.AddSeries(gas_data_3, chart_1_legend_3, ch3_color);
+            m_chart1.AddSeries(gas_data_4, chart_1_legend_4, ch4_color);
+
+        }
+        private void gas_chart_show(int max_window)
+        {
+            m_chart1.WindowSize = max_window;
+
+            m_chart1.ShowLegend();
+        }
+
+        private void gas_chart_hide()
+        {
+            m_chart1.HideLegend();
+        }
+
+        private void gas_chart_reset()
+        {
+            m_chart1.Reset();
+        }
         #endregion
 
 
+        #region Chart control
+        private void chart_1_legend_1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            m_chart1.ToggleLegend(0);
+        }
+
+        private void chart_1_legend_2_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            m_chart1.ToggleLegend(1);
+        }
+
+        private void chart_1_legend_3_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            m_chart1.ToggleLegend(2);
+        }
+
+        private void chart_1_legend_4_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            m_chart1.ToggleLegend(3);
+
+        }
+        #endregion
     }
 }

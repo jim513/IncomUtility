@@ -10,7 +10,7 @@
     <Window.Resources>
         <ObjectDataProvider x:Key="enumValues" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:INNCOM_CONF"/>
+                <x:Type TypeName="local:INNCOM_CONF_LIST"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
