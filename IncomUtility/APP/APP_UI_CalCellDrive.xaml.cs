@@ -23,5 +23,30 @@ namespace IncomUtility.APP
         {
             InitializeComponent();
         }
+
+        private void tBtn_Increase_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_Decrease_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_StopCal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_StartCal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_AcceptCal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

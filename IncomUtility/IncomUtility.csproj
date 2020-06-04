@@ -162,7 +162,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="API\Quattro.cs" />
+    <Compile Include="API\DeviceConfiguration.cs" />
+    <Compile Include="API\QuattroProtocol.cs" />
     <Compile Include="API\Utility.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

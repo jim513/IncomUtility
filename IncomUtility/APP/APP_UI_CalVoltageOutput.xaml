@@ -23,11 +23,11 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <GroupBox Header="Enter voltage output measured by DVM (V)"  Grid.ColumnSpan="5" Grid.RowSpan="2">
-                        <xctk:DoubleUpDown Value="0.0" Margin="100,10" VerticalContentAlignment="Center" FormatString="N1" Increment="0.1" TextAlignment="Left" FontSize="36" VerticalAlignment="Center" />
+                        <xctk:DoubleUpDown x:Name="tUpdown_VoltageOutputZero" Value="0.0" Margin="100,10" VerticalContentAlignment="Center" FormatString="N1" Increment="0.1" TextAlignment="Left" FontSize="36" VerticalAlignment="Center" />
                     </GroupBox>
-                    <Button Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Cal"/>
-                    <Button Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Cal"/>
-                    <Button Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Zero"/>
+                    <Button x:Name="tBtn_StopCal" Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Cal" Click="tBtn_StopCal_Click"/>
+                    <Button x:Name="tBtn_StartCal" Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Cal" Click="tBtn_StartCal_Click"/>
+                    <Button x:Name="tBtn_AcceptZero" Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Zero" Click="tBtn_AcceptZero_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Span Cal">
@@ -45,14 +45,14 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <GroupBox Header="Enter target Conc. (%FS)" Grid.ColumnSpan="5">
-                        <xctk:DoubleUpDown Value="50.0" Margin="100,10" VerticalContentAlignment="Center" FormatString="N1" Increment="0.1" TextAlignment="Left" FontSize="36" />
+                        <xctk:DoubleUpDown x:Name="tUpdown_TargetConc" Value="50.0" Margin="100,10" VerticalContentAlignment="Center" FormatString="N1" Increment="0.1" TextAlignment="Left" FontSize="36" />
                     </GroupBox>
                     <GroupBox Header="Enter voltage output measured by DVM (V)" Grid.Row="1" Grid.ColumnSpan="5">
-                        <xctk:DoubleUpDown Value="0.000" Margin="100,10" VerticalContentAlignment="Center" FormatString="N1" Increment="0.1" TextAlignment="Left" FontSize="36" />
+                        <xctk:DoubleUpDown x:Name="tUpdown_VoltageOutputSpan" Value="0.000" Margin="100,10" VerticalContentAlignment="Center" FormatString="N1" Increment="0.1" TextAlignment="Left" FontSize="36" />
                     </GroupBox>
-                    <Button Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Span"/>
-                    <Button Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Span"/>
-                    <Button Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Span"/>
+                    <Button x:Name="tBtn_StopSpan" Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Span" Click="tBtn_StopSpan_Click"/>
+                    <Button x:Name="tBtn_StartSpan" Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Span" Click="tBtn_StartSpan_Click"/>
+                    <Button x:Name="tBtn_AcceptSpan" Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Span" Click="tBtn_AcceptSpan_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

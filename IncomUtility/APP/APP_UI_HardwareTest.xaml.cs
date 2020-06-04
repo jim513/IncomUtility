@@ -23,5 +23,100 @@ namespace IncomUtility.APP
         {
             InitializeComponent();
         }
+
+        private void tBtn_ForceCurrent_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_ReleaseCurrent_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_ForceVoltage_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_CtrlWatchdog_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_ForceLEDs_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_ReleaseLEDs_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_ForceRelays_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_ReleaseRelays_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_StartSIM_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_StopSIM_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_InhibitOutput_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_ReleaseOutput_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_EnableInternalLED_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_DisableInternalLED_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_StartSensorReplacement_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_ExitSensorReplacement_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_CancleSensorReplacement_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_EnableReflexTest_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_DisableReflexTest_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

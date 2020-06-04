@@ -34,10 +34,10 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Device Serial Number" HorizontalAlignment="Left" VerticalAlignment="Center" />
                         <Label Content="Board Serial Number" Grid.Row ="1" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                        <TextBox Grid.Column="1" Margin="0,2" Text="Incom_pcb_01" SpellCheck.IsEnabled="True" VerticalAlignment="Center" />
-                        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2" Text="Incom_pcb_01" VerticalAlignment="Center"/>
+                        <TextBox x:Name="tTxt_DeviceSerialNumber" Grid.Column="1" Margin="0,2" Text="Incom_pcb_01" SpellCheck.IsEnabled="True" VerticalAlignment="Center" />
+                        <TextBox x:Name="tTxt_BoardSerialNumber" Grid.Column="1" Grid.Row="1" Margin="0,2" Text="Incom_pcb_01" VerticalAlignment="Center"/>
                         <Button  Content="Read Device Info" Grid.Row="2"   Height="20" Margin="5" VerticalContentAlignment="Bottom"   />
-                        <Button  Content="Write Device Info" Grid.Row="2" Grid.Column="1"   Height="20" Margin="5" />
+                        <Button x:Name="tBtn_WriteDeviceInfo"  Content="Write Device Info" Grid.Row="2" Grid.Column="1"   Height="20" Margin="5" Click="tBtn_WriteDeviceInfo_Click" />
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Relay Options" Margin="10,3.4,2,3" >
@@ -61,28 +61,28 @@
                         <Label Grid.Row="2" Content="Initial State1"  />
                         <Label Grid.Row="3" Content="Initial State2"/>
                         <Label Grid.Row="4" Content="OnDelay Time"  />
-                        <Button Grid.Row="5" Content="Read Realy"   Margin="5" Grid.ColumnSpan="2"   />
-                        <ComboBox Grid.Column="1" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="0" >
+                        <Button x:Name="tBtn_ReadRelay" Grid.Row="5" Content="Read Realy"   Margin="5" Grid.ColumnSpan="2" Click="tBtn_ReadRelay_Click"   />
+                        <ComboBox x:Name="tCmb_TriggerEvent1" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="0" >
                             <ComboBoxItem Content="0 : Fault" />
                             <ComboBoxItem Content="1 : Alarm 1" />
                             <ComboBoxItem Content="2 : Alarm 2"/>
                         </ComboBox>
-                        <ComboBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="1">
+                        <ComboBox x:Name="tCmb_TriggerEvent2" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="1">
                             <ComboBoxItem Content="0 : Fault" />
                             <ComboBoxItem Content="1 : Alarm 1" />
                             <ComboBoxItem Content="2 : Alarm 2"/>
                         </ComboBox>
-                        <ComboBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="0">
+                        <ComboBox x:Name="tCmb_InitialState1" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="0">
                             <ComboBoxItem Content="0 : De-Energised (ND)"/>
                             <ComboBoxItem Content="1 : Energised (NE)"/>
                         </ComboBox>
-                        <ComboBox Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="1">
+                        <ComboBox x:Name="tCmb_InitialState2" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" Margin="0,2" SelectedIndex="1">
                             <ComboBoxItem Content="0 : De-Energised (ND)"/>
                             <ComboBoxItem Content="1 : Energised (NE)"/>
                         </ComboBox>
-                        <xctk:DecimalUpDown Grid.Row="4" Grid.Column="1" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_OnDelayTime" Grid.Row="4" Grid.Column="1" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
                         <Label Content="OffDelay Time" Grid.Row="4" Grid.Column="2" />
-                        <xctk:DecimalUpDown Grid.Row="4" Grid.Column="3" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_OffDelayTime" Grid.Row="4" Grid.Column="3" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
                         <Button Content="Write Delay" Grid.Row="5" Grid.Column="2"   Margin="5" Grid.ColumnSpan="2"/>
                     </Grid>
                 </GroupBox>
@@ -110,7 +110,7 @@
                         <DatePicker x:Name="tDate_LastCalDate" SelectedDate="2016/06/21" Grid.Row="2" Grid.Column="1" Margin="0,2"/>
                         <xctk:DecimalUpDown x:Name="tUpdown_DayPassed" Value="0" Grid.Row="3" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
                         <Button x:Name="tBtn_ReadCal" Content="Read Cal Param" Grid.Row="5"   Height="20" Margin="5" Click="tBtn_ReadCal_Click"  />
-                        <Button Content="Write Cal Param" Grid.Row="5"   Height="20" Margin="5" Grid.Column="1"/>
+                        <Button x:Name="tBtn_WriteCal" Content="Write Cal Param" Grid.Row="5"   Height="20" Margin="5" Grid.Column="1" Click="tBtn_WriteCal_Click"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="mA Output Setting" Margin="10,4,5,7">
@@ -138,7 +138,7 @@
                         <xctk:DoubleUpDown x:Name="tUpdown_InhibitCurrent" Grid.Column="1" Value="21.0" Increment="0.1" FormatString="N1" Grid.Row="3" IsReadOnly="True" Background="LightGray" Margin="0,2" TextAlignment="Left"/>
                         <xctk:DecimalUpDown x:Name="tUpdown_InhibitTimeout" Grid.Column="1" Value="15" Grid.Row="4" Margin="0,2,0,0" TextAlignment="Left" />
                         <Button x:Name="tBtn_ReadmAOutput" Content="Read mA Output" Grid.Row="5"   Height="20" Margin="5" Click="tBtn_ReadmAOutput_Click" />
-                        <Button Content="Write mA Output" Grid.Row="5"   Height="20" Margin="5" Grid.Column="1"/>
+                        <Button x:Name="tBtn_WritemAOutput" Content="Write mA Output" Grid.Row="5"   Height="20" Margin="5" Grid.Column="1" Click="tBtn_WritemAOutput_Click"/>
                     </Grid>
                 </GroupBox>
             </StackPanel>
@@ -168,7 +168,7 @@
                         <Label Grid.Row="4" Content="Cal Over due indication"  />
                         <Label Grid.Row="5" Content="Passcode"/>
                         <Button x:Name="tBtn_ReadGeneral" Grid.Row="6" Height="20" Content="Read General"   Margin="5" Click="tBtn_ReadGeneral_Click"   />
-                        <Button Content="Write Genral" Grid.Row="6" Grid.Column="1"   Margin="5" Grid.ColumnSpan="4" VerticalAlignment="Center"/>
+                        <Button x:Name="tBtn_WriteGeneral" Content="Write Genral" Grid.Row="6" Grid.Column="1"   Margin="5" Grid.ColumnSpan="4" VerticalAlignment="Center" Click="tBtn_WriteGeneral_Click"/>
                         <TextBox x:Name="tTxt_LocationTag" Text="Incom_loc_01" Grid.Column="1" Grid.ColumnSpan="4" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
                         <ComboBox x:Name="tCmb_LEDControl" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Margin="0,2" SelectedIndex="1" >
                             <ComboBoxItem Content="0 : Normal Off" />
@@ -242,7 +242,7 @@
                             <ComboBoxItem Content="1 : 2bits"/>
                         </ComboBox>
                         <Button x:Name="tBtn_ReadModbus" Content="Read Modbus" Grid.Row="6"   Height="20" Margin="5" Click="tBtn_ReadModbus_Click"  />
-                        <Button Content="Write Modbus" Grid.Row="6"   Height="20" Margin="5" Grid.Column="1"/>
+                        <Button x:Name="tBtn_WriteModbus" Content="Write Modbus" Grid.Row="6"   Height="20" Margin="5" Grid.Column="1" Click="tBtn_WriteModbus_Click"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Circuit Calibration" Height="auto" Margin="5,10,5,7">
@@ -286,7 +286,7 @@
                             <xctk:DoubleUpDown x:Name="tUpdown_Circuit9" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="8" TextAlignment="Left"/>
                             <xctk:DoubleUpDown x:Name="tUpdown_Circuit10" Grid.Column="1" Value="1.0" Increment="0.1" FormatString="N3" Margin="0,2" Grid.Row="9" TextAlignment="Left"/>
                             <Button x:Name="tBtn_ReadCircuitCal" Content="Read Circuit Cal" Grid.Row="10"   Height="20" Margin="5" Click="tBtn_ReadCircuitCal_Click" />
-                            <Button Content="Write Circuit Cal" Grid.Row="10"   Height="20" Margin="5" Grid.RowSpan="2" Grid.Column="1"/>
+                            <Button x:Name="tBtn_WriteCircuiotCal" Content="Write Circuit Cal" Grid.Row="10"   Height="20" Margin="5" Grid.RowSpan="2" Grid.Column="1" Click="tBtn_WriteCircuiotCal_Click"/>
                         </Grid>
                     </Grid>
                 </GroupBox>
@@ -332,12 +332,12 @@
                         <Label Content="NTC Comp (-0oC)" Grid.Row="4" />
                         <Label Content="NTC Comp (10oC)" Grid.Row="5" />
 
-                        <xctk:IntegerUpDown Value="-25" Grid.Column="1" Height="26" Margin="0,0,0.2,0" Grid.RowSpan="2" VerticalAlignment="Top"/>
-                        <xctk:IntegerUpDown Value="-25" Grid.Column="1" Grid.Row="1"/>
-                        <xctk:IntegerUpDown Value="-20" Grid.Column="1" Grid.Row="2"/>
-                        <xctk:IntegerUpDown Value="-12" Grid.Column="1" Grid.Row="3"/>
-                        <xctk:IntegerUpDown Value="-8" Grid.Column="1" Grid.Row="4"/>
-                        <xctk:IntegerUpDown Value="-6" Grid.Column="1" Grid.Row="5"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp1" Value="-25" Grid.Column="1" Height="26" Margin="0,0,0.2,0" Grid.RowSpan="2" VerticalAlignment="Top"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp2" Value="-25" Grid.Column="1" Grid.Row="1"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp3" Value="-20" Grid.Column="1" Grid.Row="2"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp4" Value="-12" Grid.Column="1" Grid.Row="3"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp5" Value="-8" Grid.Column="1" Grid.Row="4"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp6" Value="-6" Grid.Column="1" Grid.Row="5"/>
 
                         <Label Content="NTC Comp (20oC)" Grid.Column="2" />
                         <Label Content="NTC Comp (30oC)" Grid.Column="2" Grid.Row="1"/>
@@ -345,15 +345,15 @@
                         <Label Content="NTC Comp (50oC)" Grid.Column="2" Grid.Row="3"/>
                         <Label Content="NTC Comp (60oC)" Grid.Column="2" Grid.Row="4"/>
                         <Label Content="NTC Comp (70oC)" Grid.Column="2" Grid.Row="5"/>
-                        <xctk:IntegerUpDown Value="-5" Grid.Column="3"/>
-                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="1"/>
-                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="2"/>
-                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="3"/>
-                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="4"/>
-                        <xctk:IntegerUpDown Value="-5" Grid.Column="3" Grid.Row="5"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp7" Value="-5" Grid.Column="3"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp8" Value="-5" Grid.Column="3" Grid.Row="1"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp9" Value="-5" Grid.Column="3" Grid.Row="2"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp10" Value="-5" Grid.Column="3" Grid.Row="3"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp11" Value="-5" Grid.Column="3" Grid.Row="4"/>
+                        <xctk:IntegerUpDown x:Name="tUpdown_NTCComp12" Value="-5" Grid.Column="3" Grid.Row="5"/>
 
                         <Button x:Name="tBtn_ReadNTC" Content="Read NTC" Margin="5" Grid.Row="6" Grid.ColumnSpan="2" Click="tBtn_ReadNTC_Click"/>
-                        <Button Content="Write NTC" Margin="5" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="6"/>
+                        <Button x:Name="tBtn_WriteNTC" Content="Write NTC" Margin="5" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="6" Click="tBtn_WriteNTC_Click"/>
                     </Grid>
                 </GroupBox>
 
@@ -410,26 +410,26 @@
                         <Label Content="Count (190ppm)" Grid.Row="18"/>
                         <Label Content="Count (200ppm)" Grid.Row="19"/>
 
-                        <xctk:DecimalUpDown Value="255" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="255" Grid.Column="1" Grid.Row="1" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="255" Grid.Column="1" Grid.Row="2" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="255" Grid.Column="1" Grid.Row="3" Margin="0,2" TextAlignment="Left" />
-                        <xctk:DecimalUpDown Value="133" Grid.Column="1" Grid.Row="4" Margin="0,2" TextAlignment="Left" />
-                        <xctk:DecimalUpDown Value="115" Grid.Column="1" Grid.Row="5" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="97" Grid.Column="1" Grid.Row="6" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="80" Grid.Column="1" Grid.Row="7" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="62" Grid.Column="1" Grid.Row="8" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="45" Grid.Column="1" Grid.Row="9" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="42" Grid.Column="1" Grid.Row="10" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="39" Grid.Column="1" Grid.Row="11" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="36" Grid.Column="1" Grid.Row="12" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="33" Grid.Column="1" Grid.Row="13" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="30" Grid.Column="1" Grid.Row="14" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="28" Grid.Column="1" Grid.Row="15" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="26" Grid.Column="1" Grid.Row="16" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="24" Grid.Column="1" Grid.Row="17" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="22" Grid.Column="1" Grid.Row="18" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="20" Grid.Column="1" Grid.Row="19" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count1" Value="255" Grid.Column="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count2" Value="255" Grid.Column="1" Grid.Row="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count3" Value="255" Grid.Column="1" Grid.Row="2" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count4" Value="255" Grid.Column="1" Grid.Row="3" Margin="0,2" TextAlignment="Left" />
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count5" Value="133" Grid.Column="1" Grid.Row="4" Margin="0,2" TextAlignment="Left" />
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count6" Value="115" Grid.Column="1" Grid.Row="5" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count7" Value="97" Grid.Column="1" Grid.Row="6" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count8" Value="80" Grid.Column="1" Grid.Row="7" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count9" Value="62" Grid.Column="1" Grid.Row="8" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count10" Value="45" Grid.Column="1" Grid.Row="9" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count11" Value="42" Grid.Column="1" Grid.Row="10" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count12" Value="39" Grid.Column="1" Grid.Row="11" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count13" Value="36" Grid.Column="1" Grid.Row="12" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count14" Value="33" Grid.Column="1" Grid.Row="13" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count15" Value="30" Grid.Column="1" Grid.Row="14" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count16" Value="28" Grid.Column="1" Grid.Row="15" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count17" Value="26" Grid.Column="1" Grid.Row="16" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count18" Value="24" Grid.Column="1" Grid.Row="17" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count19" Value="22" Grid.Column="1" Grid.Row="18" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count20" Value="20" Grid.Column="1" Grid.Row="19" Margin="0,2" TextAlignment="Left"/>
 
                         <Label Content="Count (210ppm)" Grid.Column="2" />
                         <Label Content="Count (220ppm)" Grid.Column="2" Grid.Row="1" />
@@ -452,28 +452,28 @@
                         <Label Content="Count (390ppm)" Grid.Column="2" Grid.Row="18"/>
                         <Label Content="Count (400ppm)" Grid.Column="2" Grid.Row="19"/>
 
-                        <xctk:DecimalUpDown Value="19" Grid.Column="3" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="18" Grid.Column="3" Grid.Row="1" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="17" Grid.Column="3" Grid.Row="2" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="17" Grid.Column="3" Grid.Row="3" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="16" Grid.Column="3" Grid.Row="4" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="16" Grid.Column="3" Grid.Row="5" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="15" Grid.Column="3" Grid.Row="6" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="15" Grid.Column="3" Grid.Row="7" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="14" Grid.Column="3" Grid.Row="8" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="14" Grid.Column="3" Grid.Row="9" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="13" Grid.Column="3" Grid.Row="10" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="13" Grid.Column="3" Grid.Row="11" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="13" Grid.Column="3" Grid.Row="12" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="12" Grid.Column="3" Grid.Row="13" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="12" Grid.Column="3" Grid.Row="14" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="12" Grid.Column="3" Grid.Row="15" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="11" Grid.Column="3" Grid.Row="16" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="11" Grid.Column="3" Grid.Row="17" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="10" Grid.Column="3" Grid.Row="18" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Value="10" Grid.Column="3" Grid.Row="19" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count21" Value="19" Grid.Column="3" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count22" Value="18" Grid.Column="3" Grid.Row="1" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count23" Value="17" Grid.Column="3" Grid.Row="2" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count24" Value="17" Grid.Column="3" Grid.Row="3" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count25" Value="16" Grid.Column="3" Grid.Row="4" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count26" Value="16" Grid.Column="3" Grid.Row="5" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count27" Value="15" Grid.Column="3" Grid.Row="6" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count28" Value="15" Grid.Column="3" Grid.Row="7" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count29" Value="14" Grid.Column="3" Grid.Row="8" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count30" Value="14" Grid.Column="3" Grid.Row="9" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count31" Value="13" Grid.Column="3" Grid.Row="10" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count32" Value="13" Grid.Column="3" Grid.Row="11" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count33" Value="13" Grid.Column="3" Grid.Row="12" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count34" Value="12" Grid.Column="3" Grid.Row="13" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count35" Value="12" Grid.Column="3" Grid.Row="14" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count36" Value="12" Grid.Column="3" Grid.Row="15" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count37" Value="11" Grid.Column="3" Grid.Row="16" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count38" Value="11" Grid.Column="3" Grid.Row="17" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count39" Value="10" Grid.Column="3" Grid.Row="18" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_UL2075Count40" Value="10" Grid.Column="3" Grid.Row="19" Margin="0,2" TextAlignment="Left"/>
 
-                        <Button Content="Read UL2075" Grid.Row="20" Margin="5" Grid.ColumnSpan="2"/>
+                        <Button x:Name="tRead_UL2075" Content="Read UL2075" Grid.Row="20" Margin="5" Grid.ColumnSpan="2" Click="tRead_UL2075_Click"/>
                         <Button Content="Write UL2075" Grid.Column="2" Grid.Row="20" Margin="5" Grid.ColumnSpan="2"/>
                     </Grid>
                 </GroupBox>
@@ -511,10 +511,10 @@
                         <Label Content="Target channel" Grid.Row="7"/>
                         <Label Content="Decimal Points" Grid.Row="8"/>
                         <Label Content="Display resolution" Grid.Row="9"/>
-                        <TextBox Text="CO" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
-                        <xctk:DoubleUpDown Grid.Column="1" Value="100.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left" Grid.ColumnSpan="2" Grid.Row="1"/>
-                        <xctk:DoubleUpDown Grid.Column="1" Grid.Row="2" Value="1.000" Increment="0.1" FormatString="N3" Margin="0,2" TextAlignment="Left" Grid.ColumnSpan="2"/>
-                        <ComboBox SelectedIndex="1"  Grid.Row="3" Grid.Column="1" Margin="0,2" Grid.ColumnSpan="2">
+                        <TextBox x:Name="tTxt_GasName" Text="CO" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
+                        <xctk:DoubleUpDown x:Name="tUpdown_MeasuringRange" Grid.Column="1" Value="100.0" Increment="0.1" FormatString="N1" Margin="0,2" TextAlignment="Left" Grid.ColumnSpan="2" Grid.Row="1"/>
+                        <xctk:DoubleUpDown x:Name="tUpdown_CorrectionFactor" Grid.Column="1" Grid.Row="2" Value="1.000" Increment="0.1" FormatString="N3" Margin="0,2" TextAlignment="Left" Grid.ColumnSpan="2"/>
+                        <ComboBox x:Name="tCmb_MeasurementUnit" SelectedIndex="1"  Grid.Row="3" Grid.Column="1" Margin="0,2" Grid.ColumnSpan="2">
                             <ComboBoxItem Content="0x00 : blank"/>
                             <ComboBoxItem Content="0x01 : %LEL"/>
                             <ComboBoxItem Content="0x02 : mA"/>
@@ -529,28 +529,28 @@
                             <ComboBoxItem Content="0x0B : dBA"/>
                             <ComboBoxItem Content="0x0C : ppm.m"/>
                         </ComboBox>
-                        <xctk:DoubleUpDown Grid.Column="1" Grid.Row="4" Value="1.000" Increment="0.1" FormatString="N3" Margin="0,2" TextAlignment="Left"/>
-                        <Button Content="Apply" Grid.Column="2" Grid.Row="4" Margin="2" />
-                        <ComboBox Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2"  SelectedIndex="0" Margin="0,2">
+                        <xctk:DoubleUpDown x:Name="tUpdown_UnitConversion" Grid.Column="1" Grid.Row="4" Value="1.000" Increment="0.1" FormatString="N3" Margin="0,2" TextAlignment="Left"/>
+                        <Button x:Name="tBtn_GasSettingApply" Content="Apply" Grid.Column="2" Grid.Row="4" Margin="2" />
+                        <ComboBox x:Name="tCmb_Deadband" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2"  SelectedIndex="0" Margin="0,2">
                             <ComboBoxItem Content="OFF"/>
                             <ComboBoxItem Content="ON"/>
                         </ComboBox>
-                        <ComboBox Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2"  SelectedIndex="1" Margin="0,2">
+                        <ComboBox x:Name="tCmb_GasType" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2"  SelectedIndex="1" Margin="0,2">
                             <ComboBoxItem Content="0 : Custom"/>
                             <ComboBoxItem Content="1 : Methane"/>
                             <ComboBoxItem Content="2 : Propane"/>
                         </ComboBox>
-                        <xctk:DecimalUpDown Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Value="1" TextAlignment="Left"/>
-                        <ComboBox Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2"  SelectedIndex="0" Margin="0,2">
+                        <xctk:DecimalUpDown x:Name="tUpdown_TargetChannel" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Value="1" TextAlignment="Left"/>
+                        <ComboBox x:Name="tCmb_DecimalPoints" Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2"  SelectedIndex="0" Margin="0,2">
                             <ComboBoxItem Content="1"/>
                             <ComboBoxItem Content="0.1"/>
                             <ComboBoxItem Content="0.01"/>
                             <ComboBoxItem Content="0.001"/>
                         </ComboBox>
-                        <xctk:DecimalUpDown Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Value="1" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_DisplayResoultion" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Value="1" TextAlignment="Left"/>
 
-                        <Button Content="Read Modbus" Grid.Row="10"   Height="20" Margin="5"  />
-                        <Button Content="Write Modbus" Grid.Row="10"   Height="20" Margin="5" Grid.Column="1" Grid.ColumnSpan="2"/>
+                        <Button x:Name="tBtn_ReadGas" Content="Read Gas" Grid.Row="10"   Height="20" Margin="5"  />
+                        <Button x:Name="tBtn_WriteGasSetting" Content="Write Gas" Grid.Row="10"   Height="20" Margin="5" Grid.Column="1" Grid.ColumnSpan="2" Click="tBtn_WriteGasSetting_Click"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Gas Alarm Setttings" Margin="5,4,8,10" >
@@ -599,7 +599,7 @@
                             <ComboBoxItem Content="1 : Latching"/>
                         </ComboBox>
                         <Button x:Name="tBtn_ReadAlarms" Content="Read Alarm" Grid.Row="7"   Height="20" Margin="5" Click="tBtn_ReadAlarms_Click"  />
-                        <Button x:Name="tBtn_WriteAlarms" Content="Write Alarm" Grid.Row="7"   Height="20" Margin="5" Grid.Column="1"/>
+                        <Button x:Name="tBtn_WriteAlarms" Content="Write Alarm" Grid.Row="7"   Height="20" Margin="5" Grid.Column="1" Click="tBtn_WriteAlarms_Click"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Security" Margin="5,10,10,10">
@@ -619,11 +619,11 @@
                         <Label Content="Login Lock Time" Grid.Row="1"/>
                         <Label Content="OTP Connection" Grid.Row="2"/>
                         <Label Content="OTP Key" Grid.Row="3" />
-                        <xctk:DecimalUpDown Grid.Column="1" Value="5" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Grid.Column="1" Grid.Row="1" Value="5" Margin="0,2" TextAlignment="Left"/>
-                        <xctk:DecimalUpDown Grid.Column="1" Grid.Row="2" Value="5" Margin="0,2" TextAlignment="Left"/>
-                        <TextBox Grid.Column="1" Grid.Row="3" Margin="0,2" Text="Incom_loc_01" Background="LightGray" Foreground="Gray" IsReadOnly="True"/>
-                        <Button Content="Read Security" Grid.Row="4" Margin="5"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_LoginRetry" Grid.Column="1" Value="5" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_LoginLockTime" Grid.Column="1" Grid.Row="1" Value="5" Margin="0,2" TextAlignment="Left"/>
+                        <xctk:DecimalUpDown x:Name="tUpdown_OTPConnection" Grid.Column="1" Grid.Row="2" Value="5" Margin="0,2" TextAlignment="Left"/>
+                        <TextBox x:Name="tTxt_OTPKey" Grid.Column="1" Grid.Row="3" Margin="0,2" Text="Incom_loc_01" Background="LightGray" Foreground="Gray" IsReadOnly="True"/>
+                        <Button x:Name="tBtn_ReadSecurity" Content="Read Security" Grid.Row="4" Margin="5" Click="tBtn_ReadSecurity_Click"/>
                         <Button Content="Write Security" Grid.Row="4" Grid.Column="1" Margin="5"/>
                     </Grid>
                 </GroupBox>

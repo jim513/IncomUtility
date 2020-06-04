@@ -23,14 +23,14 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <GroupBox Header="mA Output Zero (Target / Loopback)" Grid.ColumnSpan="5">
-                        <TextBlock Text="0.0" TextAlignment="Center"  Margin="0" FontWeight="Bold" FontSize="50" Foreground="DarkBlue" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="tTxt_mAOutputZero" Text="0.0" TextAlignment="Center"  Margin="0" FontWeight="Bold" FontSize="50" Foreground="DarkBlue" VerticalAlignment="Center"/>
                     </GroupBox>
                     <GroupBox Header="Enter analogue output measured by DVM (mA)" Grid.Row="1" Grid.ColumnSpan="5">
-                        <xctk:DoubleUpDown Value="0.000" Margin="100,10" VerticalContentAlignment="Center" FormatString="N3" Increment="0.1" TextAlignment="Left" FontSize="36" />
+                        <xctk:DoubleUpDown x:Name="tUpdown_AnalogueOutputZero" Value="0.000" Margin="100,10" VerticalContentAlignment="Center" FormatString="N3" Increment="0.1" TextAlignment="Left" FontSize="36" />
                     </GroupBox>
-                    <Button Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Cal"/>
-                    <Button Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Cal"/>
-                    <Button Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Zero"/>
+                    <Button x:Name="tBtn_StopCal" Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Cal" Click="tBtn_StopCal_Click"/>
+                    <Button x:Name="tBtn_StartCal" Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Cal" Click="tBtn_StartCal_Click"/>
+                    <Button x:Name="tBtn_AcceptZero" Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Zero" Click="tBtn_AcceptZero_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Span Cal">
@@ -48,14 +48,14 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <GroupBox Header="mA Output Span (Target / Loopback)" Grid.ColumnSpan="5">
-                        <TextBlock Text="0.0" TextAlignment="Center"  Margin="0" FontWeight="Bold" FontSize="50" Foreground="DarkBlue" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="tTxt_mAOutputSapn" Text="0.0" TextAlignment="Center"  Margin="0" FontWeight="Bold" FontSize="50" Foreground="DarkBlue" VerticalAlignment="Center"/>
                     </GroupBox>
                     <GroupBox Header="Enter analogue output measured by DVM (mA)" Grid.Row="1" Grid.ColumnSpan="5">
-                        <xctk:DoubleUpDown Value="0.000" Margin="100,10" VerticalContentAlignment="Center" FormatString="N3" Increment="0.1" TextAlignment="Left" FontSize="36" />
+                        <xctk:DoubleUpDown x:Name="tUpdown_analogueOutputSpan" Value="0.000" Margin="100,10" VerticalContentAlignment="Center" FormatString="N3" Increment="0.1" TextAlignment="Left" FontSize="36" />
                     </GroupBox>
-                    <Button Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Span"/>
-                    <Button Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Span"/>
-                    <Button Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Span"/>
+                    <Button x:Name="tBtn__StopSapn" Grid.Column="1" Grid.Row="2" Margin="4" Content="Stop Span" Click="tBtn__StopSapn_Click"/>
+                    <Button x:Name="tBtn_StartSpan" Grid.Column="2" Grid.Row="2" Margin="4" Content="Start Span" Click="tBtn_StartSpan_Click"/>
+                    <Button x:Name="tBtn_AcceptSapn" Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Span" Click="tBtn_AcceptSapn_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

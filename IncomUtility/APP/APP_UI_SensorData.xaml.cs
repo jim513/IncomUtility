@@ -22,10 +22,10 @@ namespace IncomUtility.APP
     /// </summary>
     public partial class APP_UI_SensorData : Window
     {
-        ERROR_LIST err;
+        ERROR_LIST err = ERROR_LIST.ERROR_NONE;
         private const int FILESIZE = 1726;
 
-        private LogToFile datas;
+        private LogToFile datas = null;
     
         public APP_UI_SensorData()
         {
@@ -34,33 +34,41 @@ namespace IncomUtility.APP
 
         private void tBtn_ReadSensorData_Click(object sender, RoutedEventArgs e)
         {
-            if(!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
+            readSensorData();           
+        }
+
+        private void tBtn_WriteSensorData_Click(object sender, RoutedEventArgs e)
+        {
+            writeSensorData();        
+        }
+
+        private void readSensorData()
+        {
             /*
              * Read Data From Memory
              */
-            tBtn_WriteSensorData.IsEnabled = false ;
+            tBtn_WriteSensorData.IsEnabled = false;
             tBtn_ReadSensorData.IsEnabled = false;
 
-            int blockNum = FILESIZE / (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK;       
+            int blockNum = FILESIZE / (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK;
             int eepAddr = 0;
             int dataLen = 0;
 
             tPbar_DataDownBar.Maximum = blockNum;
             tPbar_DataDownBar.Value = 0;
-           
+
             byte[] EEP_Data = new byte[(int)INNCOM_COMMAND_LIST.SZ_EEP_MEMORY];
 
             for (int i = 0; i <= blockNum; i++)
             {
                 if (i < blockNum)
+                {
                     dataLen = (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK;
+                }
                 else
+                {
                     dataLen = FILESIZE - (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK * i;
+                }
 
                 byte[] payload = new byte[6];
                 payload[0] = (int)INNCOM_COMMAND_LIST.MEM_TYPE_EEPROM;
@@ -114,15 +122,8 @@ namespace IncomUtility.APP
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_WriteSensorData_Click(object sender, RoutedEventArgs e)
+        private void writeSensorData()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
-
             /*
              * Write Data To Memory
              */
@@ -134,13 +135,13 @@ namespace IncomUtility.APP
 
             if (fileOpenResult == false)
             {
-                tTxt_Logs.AppendText("File was not opened" );
+                tTxt_Logs.AppendText("File was not opened");
                 return;
             }
             byte[] datas = File.ReadAllBytes(BrowserDialog.FileName);
-            int FILESIZE = datas.Length; 
+            int FILESIZE = datas.Length;
 
-            tTxt_Logs.AppendText("File Size : " + FILESIZE );
+            tTxt_Logs.AppendText("File Size : " + FILESIZE);
             tTxt_Logs.AppendText(Environment.NewLine);
 
             tBtn_WriteSensorData.IsEnabled = false;
@@ -156,10 +157,14 @@ namespace IncomUtility.APP
             for (int i = 0; i <= blockNum; i++)
             {
                 if (i < blockNum)
+                {
                     dataLen = (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK;
+                }
                 else
+                {
                     dataLen = FILESIZE - (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK * i;
-                
+                }
+
                 byte[] payload = new byte[6 + dataLen];
                 payload[0] = (int)INNCOM_COMMAND_LIST.MEM_TYPE_EEPROM;
                 payload[1] = (byte)(eepAddr >> 24);
@@ -168,7 +173,7 @@ namespace IncomUtility.APP
                 payload[4] = (byte)eepAddr;
                 payload[5] = (byte)dataLen;
 
-                Array.Copy(datas, eepAddr, payload, 6 , dataLen);
+                Array.Copy(datas, eepAddr, payload, 6, dataLen);
 
                 SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_WRITE_DATA_TO_MEM, payload, ref err, 1000);
                 if (err != ERROR_LIST.ERROR_NONE)

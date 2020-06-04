@@ -32,9 +32,9 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Button Content="Force" Margin="4"/>
-                    <Button Content="Release" Margin="4" Grid.Column="1"/>
-                    <xctk:DoubleUpDown Grid.Row="1" Margin="4" Value="4.000" FormatString="N3" Increment="0.1" FontSize="22" VerticalContentAlignment="Center"/>
+                    <Button x:Name="tBtn_ForceCurrent" Content="Force" Margin="4" Click="tBtn_ForceCurrent_Click"/>
+                    <Button x:Name="tBtn_ReleaseCurrent" Content="Release" Margin="4" Grid.Column="1" Click="tBtn_ReleaseCurrent_Click"/>
+                    <xctk:DoubleUpDown x:Name="tUpdonw_ForceCurrent" Grid.Row="1" Margin="4" Value="4.000" FormatString="N3" Increment="0.1" FontSize="22" VerticalContentAlignment="Center"/>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Force Voltage" Margin="9.6,10,9.2,4" Grid.Column="1">
@@ -47,9 +47,9 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Button Content="Force" Margin="4"/>
-                    <Button Content="Release" Margin="4" Grid.Column="1"/>
-                    <xctk:DoubleUpDown Grid.Row="1" Margin="4" Value="0.0" FormatString="N1" Increment="0.1" FontSize="22" VerticalContentAlignment="Center"/>
+                    <Button x:Name="tBtn_ForceVoltage" Content="Force" Margin="4" Click="tBtn_ForceVoltage_Click"/>
+                    <Button x:Name="tBtn_ReleaseVoltage" Content="Release" Margin="4" Grid.Column="1"/>
+                    <xctk:DoubleUpDown x:Name="tUpdown_ForceVoltage" Grid.Row="1" Margin="4" Value="0.0" FormatString="N1" Increment="0.1" FontSize="22" VerticalContentAlignment="Center"/>
                     <TextBlock Margin="4" Text="%FSD" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="22" FontWeight="Bold" />
                 </Grid>
             </GroupBox>
@@ -63,8 +63,8 @@
                         <ColumnDefinition Width="25*"/>
                         <ColumnDefinition Width="12*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Ctrl Watchdog" Margin="8"/>
-                    <CheckBox Content="Watchdog Enabled" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <Button x:Name="tBtn_CtrlWatchdog" Content="Ctrl Watchdog" Margin="8" Click="tBtn_CtrlWatchdog_Click"/>
+                    <CheckBox x:Name="tChb_WatchdogEnabled" Content="Watchdog Enabled" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Forece LEDs" Margin="10,6,10.4,9.6" Grid.Column="0" Grid.Row="1" >
@@ -79,20 +79,20 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Force" Margin="4"/>
-                    <Button Content="Release" Margin="4" Grid.Column="1"/>
-                    <ComboBox VerticalContentAlignment="Center" Margin="4" Grid.Row="1" Grid.ColumnSpan="2" SelectedIndex="0">
+                    <Button x:Name="tBtn_ForceLEDs" Content="Force" Margin="4" Click="tBtn_ForceLEDs_Click"/>
+                    <Button x:Name="tBtn_ReleaseLEDs" Content="Release" Margin="4" Grid.Column="1" Click="tBtn_ReleaseLEDs_Click"/>
+                    <ComboBox x:Name="tCmb_LEDType" VerticalContentAlignment="Center" Margin="4" Grid.Row="1" Grid.ColumnSpan="2" SelectedIndex="0">
                         <ComboBoxItem Content="0x01 : RED LED"/>
                         <ComboBoxItem Content="0x02 : GREEN LED"/>
                         <ComboBoxItem Content="0x03 : BLUE LED"/>
                         <ComboBoxItem Content="0x04 : YELLOW LED"/>
                         <ComboBoxItem Content="0x05 : ALL LEDs"/>
                     </ComboBox>
-                    <ComboBox VerticalContentAlignment="Center" Margin="4" Grid.Row="2" Grid.ColumnSpan="2" SelectedIndex="0">
+                    <ComboBox x:Name="tCmb_Switch" VerticalContentAlignment="Center" Margin="4" Grid.Row="2" Grid.ColumnSpan="2" SelectedIndex="0">
                         <ComboBoxItem Content="0x00 : Off"/>
                         <ComboBoxItem Content="0x01 : On"/>
                     </ComboBox>
-                    <CheckBox Content="Coupled with Internal LEDs" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <CheckBox x:Name="tChb_InternalLEDs" Content="Coupled with Internal LEDs" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 
                 </Grid>
             </GroupBox>
@@ -107,14 +107,14 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Force" Margin="4"/>
-                    <Button Content="Release" Margin="4" Grid.Column="1"/>
-                    <ComboBox VerticalContentAlignment="Center" Margin="4" Grid.Row="1" Grid.ColumnSpan="2" SelectedIndex="0">
+                    <Button x:Name="tBtn_ForceRelays" Content="Force" Margin="4" Click="tBtn_ForceRelays_Click"/>
+                    <Button x:Name="tBtn_ReleaseRelays" Content="Release" Margin="4" Grid.Column="1" Click="tBtn_ReleaseRelays_Click"/>
+                    <ComboBox x:Name="tCmb_RelayType" VerticalContentAlignment="Center" Margin="4" Grid.Row="1" Grid.ColumnSpan="2" SelectedIndex="0">
                         <ComboBoxItem Content="Relay 1"/>
                         <ComboBoxItem Content="Relay 2"/>
                         <ComboBoxItem Content="All Relays"/>
                     </ComboBox>
-                    <ComboBox  VerticalContentAlignment="Center" Margin="4" Grid.Row="2" Grid.ColumnSpan="2" SelectedIndex="0">
+                    <ComboBox x:Name="tCmb_Energized"  VerticalContentAlignment="Center" Margin="4" Grid.Row="2" Grid.ColumnSpan="2" SelectedIndex="0">
                         <ComboBoxItem Content="De-energized"/>
                         <ComboBoxItem Content="Energized"/>
                     </ComboBox>
@@ -132,17 +132,17 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <CheckBox Content="Alarm" VerticalAlignment="Bottom" />
-                        <CheckBox Content="Warning" Grid.Row="1" VerticalAlignment="Center" />
-                        <CheckBox Content="Fault" Grid.Row="2" VerticalAlignment="Top" />
+                        <CheckBox x:Name="tChb_Alarm" Content="Alarm" VerticalAlignment="Bottom" />
+                        <CheckBox x:Name="tChb_Warning" Content="Warning" Grid.Row="1" VerticalAlignment="Center" />
+                        <CheckBox x:Name="tChb_Fault" Content="Fault" Grid.Row="2" VerticalAlignment="Top" />
                     </Grid>
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button Content="Start SIM" Grid.Column="1" Margin="5,10"/>
-                        <Button Content="Stop SIM" Grid.Column="1" Grid.Row="1" Margin="5,10"/>
+                        <Button x:Name="tBtn_StartSIM" Content="Start SIM" Grid.Column="1" Margin="5,10" Click="tBtn_StartSIM_Click"/>
+                        <Button x:Name="tBtn_StopSIM" Content="Stop SIM" Grid.Column="1" Grid.Row="1" Margin="5,10" Click="tBtn_StopSIM_Click"/>
                     </Grid>
                 </Grid>
             </GroupBox>
@@ -162,8 +162,8 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Inhibit Output" Margin="5"/>
-                    <Button Content="Release Output" Grid.Column="1" Margin="5"/>
+                    <Button x:Name="tBtn_InhibitOutput" Content="Inhibit Output" Margin="5" Click="tBtn_InhibitOutput_Click"/>
+                    <Button x:Name="tBtn_ReleaseOutput" Content="Release Output" Grid.Column="1" Margin="5" Click="tBtn_ReleaseOutput_Click"/>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Internal LEDs" Margin="10.2,5,9.6,5.2" Grid.Column="1">
@@ -172,11 +172,11 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Enable Internal LED" Margin="5"/>
-                    <Button Content="Disable Internal LED" Grid.Column="1" Margin="5"/>
+                    <Button x:Name="tBtn_EnableInternalLED" Content="Enable Internal LED" Margin="5" Click="tBtn_EnableInternalLED_Click"/>
+                    <Button x:Name="tBtn_DisableInternalLED" Content="Disable Internal LED" Grid.Column="1" Margin="5" Click="tBtn_DisableInternalLED_Click"/>
                 </Grid>
             </GroupBox>
-            <GroupBox Header="Internal LEDs" Margin="10,4.8,9.8,4.8" Grid.Row="1">
+            <GroupBox Header="Sensor Replacement" Margin="10,4.8,9.8,4.8" Grid.Row="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -186,9 +186,9 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Button Content="Start Sensor Replacement" Margin="5"/>
-                    <Button Content="Exit Sensor Replacement" Grid.Column="1" Margin="5"/>
-                    <Button Content="Cancle Sensor Replacement" Grid.Row="1" Margin="5"/>
+                    <Button x:Name="tBtn_StartSensorReplacement" Content="Start Sensor Replacement" Margin="5" Click="tBtn_StartSensorReplacement_Click"/>
+                    <Button x:Name="tBtn_ExitSensorReplacement" Content="Exit Sensor Replacement" Grid.Column="1" Margin="5" Click="tBtn_ExitSensorReplacement_Click"/>
+                    <Button x:Name="tBtn_CancleSensorReplacement" Content="Cancle Sensor Replacement" Grid.Row="1" Margin="5" Click="tBtn_CancleSensorReplacement_Click"/>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Reflex Control" Margin="10,5,9.8,30" Grid.Row="1" Grid.Column="1">
@@ -197,11 +197,11 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Enable Reflex Test" Margin="5"/>
-                    <Button Content="Disable Reflex Test" Grid.Column="1" Margin="5"/>
+                    <Button x:Name="tBtn_EnableReflexTest" Content="Enable Reflex Test" Margin="5" Click="tBtn_EnableReflexTest_Click"/>
+                    <Button x:Name="tBtn_DisableReflexTest" Content="Disable Reflex Test" Grid.Column="1" Margin="5" Click="tBtn_DisableReflexTest_Click"/>
                 </Grid>
             </GroupBox>
         </Grid>
-        <TextBox Grid.Row="2" Margin="10" Background="LightBlue"/>
+        <TextBox x:Name="tTxt_Logs" Grid.Row="2" Margin="10" Background="LightBlue"/>
     </Grid>
 </Window>

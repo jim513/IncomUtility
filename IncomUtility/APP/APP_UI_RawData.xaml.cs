@@ -17,10 +17,16 @@ namespace IncomUtility.APP
     /// <summary>
     /// APP_UI_RawData.xaml에 대한 상호 작용 논리
     /// </summary>
+    public enum ANALOGUE_OUTPUT_TYPE
+    {
+        NOT_SPECIFIED = 0,
+        SINK_MODE = 1,
+        SOURCE_MODE = 2,
+    }
     public partial class APP_UI_RawData : Window
     {
-        ERROR_LIST err;
-        DateTime now;
+        ERROR_LIST err = ERROR_LIST.ERROR_NONE;
+        DateTime now ;
         public APP_UI_RawData()
         {
             InitializeComponent();
@@ -28,12 +34,51 @@ namespace IncomUtility.APP
 
         private void tBtn_GetGasReading_Click(object sender, RoutedEventArgs e)
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
+            getGasReading();          
+        }
+
+        private void tBtn_ReadAnalogueOutput_Click(object sender, RoutedEventArgs e)
+        {
+            readAnalogueOutput();
+        }
+
+        private void tBtn_ReadCellVoltage_Click(object sender, RoutedEventArgs e)
+        {
+            readCellVoltage();           
+        }
+
+        private void tBtn_ReadRawADC_Click(object sender, RoutedEventArgs e)
+        {
+            readRawADC();           
+        }
+
+        private void tBtn_ReadRawCellSignal_Click(object sender, RoutedEventArgs e)
+        {
+            readRawCellSignal();         
+        }
+
+        private void tBtn_ReadTemperature_Click(object sender, RoutedEventArgs e)
+        {
+            readTemperature();          
+        }
+
+        private void tBtn_ReadVoltageLevel_Click(object sender, RoutedEventArgs e)
+        {
+            readVoltageLevel();         
+        }
+
+        private void tBtn_ReadVoltageOutput_Click(object sender, RoutedEventArgs e)
+        {
+            readVoltageOutput();         
+        }
+
+        private void tBtn_DebugGasReading_Click(object sender, RoutedEventArgs e)
+        {
+            debugGasReading();            
+        }
+
+        private void getGasReading()
+        {
             /*
              * Get Gas Reading
              */
@@ -56,17 +101,11 @@ namespace IncomUtility.APP
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_ReadAnalogueOutput_Click(object sender, RoutedEventArgs e)
+        private void readAnalogueOutput()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
-             * Read Analogue Output
-             */
+            * Read Analogue Output
+            */
             byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -80,12 +119,18 @@ namespace IncomUtility.APP
             float targetOutput = Utility.getF32FromByteA(result, offset + 1);
             float loopBack = Utility.getF32FromByteA(result, offset + 5);
 
-            if (mAOutputType == 1)
+            if (mAOutputType == (int)ANALOGUE_OUTPUT_TYPE.SINK_MODE)
+            {
                 tTxt_Logs.AppendText("Analogue Type : " + mAOutputType + " - sink mode");
-            else if (mAOutputType == 2)
+            }
+            else if (mAOutputType == (int)ANALOGUE_OUTPUT_TYPE.SOURCE_MODE)
+            {
                 tTxt_Logs.AppendText("Analogue Type : " + mAOutputType + " - source mode");
+            }
             else
+            {
                 tTxt_Logs.AppendText("Analogue Type : " + mAOutputType + " - Not specified");
+            }
 
             tTxt_Logs.AppendText(Environment.NewLine);
             tTxt_Logs.AppendText("Target output (mA) : " + targetOutput);
@@ -94,14 +139,8 @@ namespace IncomUtility.APP
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_ReadCellVoltage_Click(object sender, RoutedEventArgs e)
+        private void readCellVoltage()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
              * Read Cell Voltage /Current
              */
@@ -122,14 +161,8 @@ namespace IncomUtility.APP
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_ReadRawADC_Click(object sender, RoutedEventArgs e)
+        private void readRawADC()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
              * Read Raw ADC
              */
@@ -151,15 +184,9 @@ namespace IncomUtility.APP
                 tTxt_Logs.AppendText(Environment.NewLine);
             }
         }
-
-        private void tBtn_ReadRawCellSignal_Click(object sender, RoutedEventArgs e)
+        
+        private void readRawCellSignal()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
              * Read Raw Cell Signal
              */
@@ -179,17 +206,10 @@ namespace IncomUtility.APP
             tTxt_Logs.AppendText(Environment.NewLine);
             tTxt_Logs.AppendText("Cell Offset : " + cellOffset);
             tTxt_Logs.AppendText(Environment.NewLine);
-
         }
 
-        private void tBtn_ReadTemperature_Click(object sender, RoutedEventArgs e)
-        {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
+        private void readTemperature()
+        {   
             /*
              * Read Internal Temperature
              */
@@ -202,23 +222,17 @@ namespace IncomUtility.APP
             }
 
             int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
-            float temperature = Utility.getF32FromByteA(result, offset);        
+            float temperature = Utility.getF32FromByteA(result, offset);
 
-            tTxt_Logs.AppendText("Internal temp : " + temperature +"oC");
-            tTxt_Logs.AppendText(Environment.NewLine);       
+            tTxt_Logs.AppendText("Internal temp : " + temperature + "oC");
+            tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_ReadVlotageLevel_Click(object sender, RoutedEventArgs e)
+        private void readVoltageLevel()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
-             * Read Voltage Level
-             */
+            * Read Voltage Level
+            */
             byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_LEVELS, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -231,7 +245,7 @@ namespace IncomUtility.APP
             float suppliedVoltage = Utility.getF32FromByteA(result, offset);
             float operationgVotage = Utility.getF32FromByteA(result, offset + 4);
             float referenceVotage = Utility.getF32FromByteA(result, offset + 8);
-      
+
             tTxt_Logs.AppendText("24V : " + suppliedVoltage);
             tTxt_Logs.AppendText(Environment.NewLine);
             tTxt_Logs.AppendText("3.3V : " + operationgVotage);
@@ -240,14 +254,8 @@ namespace IncomUtility.APP
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_ReadVoltageOutput_Click(object sender, RoutedEventArgs e)
+        private void readVoltageOutput()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
              * Read Voltage Output
              */
@@ -262,21 +270,15 @@ namespace IncomUtility.APP
             int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
             float targetOutput = Utility.getF32FromByteA(result, offset);
             float loopBack = Utility.getF32FromByteA(result, offset + 4);
-            
+
             tTxt_Logs.AppendText("Target output (V) : " + targetOutput);
             tTxt_Logs.AppendText(Environment.NewLine);
             tTxt_Logs.AppendText("Loopback (V): " + loopBack);
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_DebugGasReading_Click(object sender, RoutedEventArgs e)
+        private void debugGasReading()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
              * Read Raw GasData
              */
@@ -307,7 +309,7 @@ namespace IncomUtility.APP
             tTxt_Logs.AppendText(Environment.NewLine);
             tTxt_Logs.AppendText("Primary Conc.: " + primaryConc.ToString("F3"));
             tTxt_Logs.AppendText(Environment.NewLine);
-            tTxt_Logs.AppendText("Linearized Conc.: " +linearConc.ToString("F3"));
+            tTxt_Logs.AppendText("Linearized Conc.: " + linearConc.ToString("F3"));
             tTxt_Logs.AppendText(Environment.NewLine);
             tTxt_Logs.AppendText("Deadbanded Conc.: " + deadband.ToString("F3"));
             tTxt_Logs.AppendText(Environment.NewLine);

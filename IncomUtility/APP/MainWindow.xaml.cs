@@ -213,12 +213,25 @@ namespace IncomUtility
         }
         private void tBtn_MainStart_Click(object sender, RoutedEventArgs e)
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                MessageBox.Show("Incom is not connected");
-                return;
+            gasMonitoringStart();
+        }
 
-            }
+        private void tBtn_MainStop_Click(object sender, RoutedEventArgs e)
+        {
+            gasMonitoringStop();
+        }
+        private void tBtn_MainClear_Click(object sender, RoutedEventArgs e)
+        {
+            windowClear();
+        }
+
+        private void tBtn_ResetAlarmFaults_Click(object sender, RoutedEventArgs e)
+        {
+            resetAlarmFaults();       
+        }
+
+        private void gasMonitoringStart()
+        {
             string strHeader1 = "";
             /*
               *  Read Device SN
@@ -229,12 +242,12 @@ namespace IncomUtility
                 MessageBox.Show("ERROR - Read Device SN");
                 return;
             }
-            string DeviceSN = Encoding.Default.GetString(Quattro.getResponseValueData(result)).Trim('\0');
+            string DeviceSN = Encoding.Default.GetString(QuattroProtocol.getResponseValueData(result)).Trim('\0');
             strHeader1 += "DeviceSN : " + DeviceSN + ",";
 
             /*
-          * Read SW Version
-          */
+            * Read SW Version
+             */
             result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_SW_VERSION, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -276,17 +289,29 @@ namespace IncomUtility
             int BLEModule = result[offset + 2];
 
             if (OutputType == 0)
+            {
                 strHeader1 += "OutPut Type : mA Output,";
+            }
             else
+            {
                 strHeader1 += "OutPut Type : Modbus,";
+            }
             if (Relay == 0)
+            {
                 strHeader1 += "Relay : Not Fitted,";
+            }
             else
+            {
                 strHeader1 += "Relay : Fitted,";
+            }
             if (BLEModule == 0)
+            {
                 strHeader1 += "BLE : Not Fitted";
+            }
             else
+            {
                 strHeader1 += "BLE : Not Fitted";
+            }
 
             /*
             *  Save Data to CSV file
@@ -327,7 +352,7 @@ namespace IncomUtility
             gas_monitor.Start();
         }
 
-        private void tBtn_MainStop_Click(object sender, RoutedEventArgs e)
+        private void gasMonitoringStop()
         {
             logFiles.Unchecked();
 
@@ -337,9 +362,9 @@ namespace IncomUtility
             tBtn_MainStop.IsEnabled = false;
             tUpdown_NumReadings.IsEnabled = true;
             tUpdown_LogInterval.IsEnabled = true;
-
         }
-        private void tBtn_MainClear_Click(object sender, RoutedEventArgs e)
+
+        private void windowClear()
         {
             gridGasDataList.Clear();
             tGrid_GasData.Items.Refresh();
@@ -348,13 +373,8 @@ namespace IncomUtility
             gas_chart_make();
         }
 
-        private void tBtn_ResetAlarmFaults_Click(object sender, RoutedEventArgs e)
+        private void resetAlarmFaults()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                MessageBox.Show("Incom is not connected");
-                return;
-            }
             SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_ALARMS, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -362,6 +382,7 @@ namespace IncomUtility
                 return;
             }
             MessageBox.Show("Succesfully Reset Alarms and Faults");
+
         }
 
         #region GAS MONITORING

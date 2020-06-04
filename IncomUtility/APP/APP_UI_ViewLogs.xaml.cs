@@ -19,51 +19,155 @@ namespace IncomUtility.APP
     /// <summary>
     /// ViewLogs.xaml에 대한 상호 작용 논리
     /// </summary>
+    public enum NUMBER_OF_TABLE
+    {   
+        NUMBER_OF_ALARM = 6,
+        NUMBER_OF_WARNING = 9,
+        NUMBER_OF_FAULT = 14,
+        NUMBER_OF_INFO = 16,
+        NUMBER_OF_TABLE_TYPE = 6,
+        NUMBER_OF_CAL_TYPE = 9,
+    }
     public partial class APP_UI_ViewLogs : Window
     {
-        ERROR_LIST err;
+        ERROR_LIST err = ERROR_LIST.ERROR_NONE;
 
         private const int grid_row_max = 300;
         private List<UIDataGrid> logCalList, logAlarmList, logFaultList, logWarningList, logReflexList, logInfoList;
      
-        private string[] logCalHeader = new string[] { "Log No.","Time","Cal Type","Conc before Cal","Conc after Cal",
-              "Raw cell signal","Cal Factor before","Cal Factor after", "Target Cal gas", "Correction factor", "Cal Result","Cylinder No."};
-        private string[] logDefaultHeader = new string[] { "Log No.", "Time", "Event type", "Event ID", "Event Data 1", "Event Data 2", "Description" };
-        private string[] logReflexHeader = new string[] { "Log No.", "Event type", "Event ID", "ADC 1", "ADC 2" };
+        private string[] logCalHeader = 
+        { 
+            "Log No.",
+            "Time",
+            "Cal Type",
+            "Conc before Cal",
+            "Conc after Cal",
+            "Raw cell signal",
+            "Cal Factor before",
+            "Cal Factor after", 
+            "Target Cal gas", 
+            "Correction factor", 
+            "Cal Result",
+            "Cylinder No."
+        };
+        private string[] logDefaultHeader = 
+        { 
+            "Log No.", 
+            "Time", 
+            "Event type", 
+            "Event ID", 
+            "Event Data 1", 
+            "Event Data 2",
+            "Description" 
+        };
+        private string[] logReflexHeader =
+        { 
+            "Log No.", 
+            "Event type", 
+            "Event ID", 
+            "ADC 1",
+            "ADC 2" 
+        };
 
-        string[] LOG_TABLE_TYPE = { "", "Alarm", "Warning", "Fault", "Info", "Calibration", "Reflex" };
-        string[] CAL_TYPE = {"", "Factory Zero Cal", "Factory Span Cal", "User Zero Cal", "User Span Cal","Analogue Out Zero Cal",
-            "Analogue Out Span Cal","Voltage Out Zero Cal", "Voltage Out Span Cal", "Cell Drive Cal (PWM)"};
-        string[] ALARM_TYPE = { "","Low alarm occurred",
-        "High alarm occurred","Low alarm clears","High alarm clears", "Gas alarm 3 occurred","Gas alarm 3 clears" };
-        string[] FAULT_TPYE = {"","Internal communication failure","Cell failure","Cell is producing a negative reading","EEPROM is corrupted",
-            "MCU operating voltage failure","RAM read/write fault", "Flash memory corrupted","Code memory failure", "mA output failure", "Supplied voltage failure",
-            "Internal HW Fault","Internal SW Fault","Calibration Overdue", "Fault clears"};
-        string[] INFO_TYPE ={"","Instrument power on event", "Zero calibration successful","Zero calibration failed", "Span calibration successful",
-            "Span calibration failed","Sensor replaced","Reset alarms and faults", "Gas configuration changed", "Time/date adjusted (RTC adjusted)", "Log memory is full",
-            "BLE connection has been established", "Adhoc connection has been established","BLE connection is terminated","Enter inhibit mode",
-            "Exit inhibit mode","Cleared log memory" };
-        string[] WARNING_TYPE ={"","Calibration Overdue","Temperature limit exceeded sensor specification","BLE failure (BLE version only)",
-            "Time/date not set (RTC not set)","Log memory corrupted (CRC not matched)","Certificate is corrupted","Over-range warning","Under-range warning",
+        private string[] LOG_TABLE_TYPE_STRINGA =
+        { 
+            "", 
+            "Alarm", 
+            "Warning",
+            "Fault", 
+            "Info", 
+            "Calibration",
+            "Reflex"
+        };
+        private string[] CAL_TYPE = 
+        {
+            "", 
+            "Factory Zero Cal",
+            "Factory Span Cal", 
+            "User Zero Cal",
+            "User Span Cal",
+            "Analogue Out Zero Cal",
+            "Analogue Out Span Cal",
+            "Voltage Out Zero Cal", 
+            "Voltage Out Span Cal", 
+            "Cell Drive Cal (PWM)"
+        };
+        private string[] ALARM_TYPE =
+        { 
+            "",
+            "Low alarm occurred",
+            "High alarm occurred",
+            "Low alarm clears",
+            "High alarm clears",
+            "Gas alarm 3 occurred",
+            "Gas alarm 3 clears" 
+        };
+        private string[] FAULT_TPYE = 
+        {
+            "",
+            "Internal communication failure",
+            "Cell failure",
+            "Cell is producing a negative reading",
+            "EEPROM is corrupted",
+            "MCU operating voltage failure",
+            "RAM read/write fault", 
+            "Flash memory corrupted",
+            "Code memory failure", 
+            "mA output failure", 
+            "Supplied voltage failure",
+            "Internal HW Fault",
+            "Internal SW Fault",
+            "Calibration Overdue", 
+            "Fault clears"
+        };
+        private string[] INFO_TYPE =
+        {
+            "",
+            "Instrument power on event", 
+            "Zero calibration successful",
+            "Zero calibration failed", 
+            "Span calibration successful",
+            "Span calibration failed",
+            "Sensor replaced",
+            "Reset alarms and faults",
+            "Gas configuration changed", 
+            "Time/date adjusted (RTC adjusted)", 
+            "Log memory is full",
+            "BLE connection has been established", 
+            "Adhoc connection has been established",
+            "BLE connection is terminated",
+            "Enter inhibit mode",
+            "Exit inhibit mode",
+            "Cleared log memory" 
+        };
+        private string[] WARNING_TYPE =
+        {
+            "",
+            "Calibration Overdue",
+            "Temperature limit exceeded sensor specification",
+            "BLE failure (BLE version only)",
+            "Time/date not set (RTC not set)",
+            "Log memory corrupted (CRC not matched)",
+            "Certificate is corrupted",
+            "Over-range warning",
+            "Under-range warning",
             "Warning self-clears"   };
 
-        const int NUMBER_OF_ALARM = 6;
-        const int NUMBER_OF_WARNING = 9;
-        const int NUMBER_OF_FAULT = 14;
-        const int NUMBER_OF_INFO = 16;
-        const int NUMBER_OF_TABLE_TYPE = 6;
-        const int NUMBER_OF_CAL_TYPE = 9;
 
-        private LogToFile logFiles;
-        Thread LogMonitor;
+        private LogToFile logFiles = null;
+
+        Thread LogMonitor = null;
+
         private bool LogMonitorRunning = false;
+
         public APP_UI_ViewLogs()
         {
             InitializeComponent();
 
-            MakeLogGrid();
+            makeLogGrid();
         }
-        private void MakeLogGrid()
+        
+        private void makeLogGrid()
         {
             logCalList = new List<UIDataGrid>();
             logAlarmList = new List<UIDataGrid>();
@@ -79,20 +183,21 @@ namespace IncomUtility.APP
             grid_LogWarning.ItemsSource = logWarningList;
             grid_LogRelfex.ItemsSource = logReflexList;
 
-            MakeLogGridHeader(grid_LogCal, logCalHeader);
-            MakeLogGridHeader(grid_LogAlarm, logDefaultHeader);
-            MakeLogGridHeader(grid_LogFault, logDefaultHeader);
-            MakeLogGridHeader(grid_LogWarning, logDefaultHeader);
-            MakeLogGridHeader(grid_LogRelfex, logReflexHeader);
-            MakeLogGridHeader(grid_LogInfo, logDefaultHeader);
+            makeLogGridHeader(grid_LogCal, logCalHeader);
+            makeLogGridHeader(grid_LogAlarm, logDefaultHeader);
+            makeLogGridHeader(grid_LogFault, logDefaultHeader);
+            makeLogGridHeader(grid_LogWarning, logDefaultHeader);
+            makeLogGridHeader(grid_LogRelfex, logReflexHeader);
+            makeLogGridHeader(grid_LogInfo, logDefaultHeader);
         }
-        private void MakeLogGridHeader(DataGrid grid, string[] data_name)
+        
+        private void makeLogGridHeader(DataGrid grid, string[] data_name)
         {
             for (int i = 0; i < data_name.Length; i++)
                 grid.Columns[i].Header = data_name[i];
         }
 
-        private void UpdateLogGrid(DataGrid grid, List<UIDataGrid> list,
+        private void updateLogGrid(DataGrid grid, List<UIDataGrid> list,
                                int index, string time, string data1, float data2, float data3, float data4, float data5, float data6, float data7, float data8,
                                string data9, string data10)
         {
@@ -114,7 +219,7 @@ namespace IncomUtility.APP
                 grid.ScrollIntoView(grid.Items[grid.Items.Count - 1]);
             }
         }
-        private void UpdateLogGrid(DataGrid grid, List<UIDataGrid> list, int index, string time, string data1, byte data2, float data3, float data4, string data5)
+        private void updateLogGrid(DataGrid grid, List<UIDataGrid> list, int index, string time, string data1, byte data2, float data3, float data4, string data5)
         {
             if (grid.Items.Count >= grid_row_max)
             {
@@ -130,7 +235,8 @@ namespace IncomUtility.APP
                 grid.ScrollIntoView(grid.Items[grid.Items.Count - 1]);
             }
         }
-        private void UpdateLogGrid(DataGrid grid, List<UIDataGrid> list, int index,  string data1, string data2, float data3, float data4)
+    
+        private void updateLogGrid(DataGrid grid, List<UIDataGrid> list, int index,  string data1, string data2, float data3, float data4)
         {
             if (grid.Items.Count >= grid_row_max)
             {
@@ -155,10 +261,31 @@ namespace IncomUtility.APP
 
         private void tBtn_DownloadLogs_Click(object sender, RoutedEventArgs e)
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                return;
-            }
+            readyToDownloadLog();          
+        }
+
+        private void tBtn_ReadLogInfo_Click(object sender, RoutedEventArgs e)
+        {
+            readLogInfo();     
+        }
+
+        private void tBtn_SaveToCSV_Click(object sender, RoutedEventArgs e)
+        {
+            saveToCSV();        
+        }
+
+        private void tBtn_ClrLog_Click(object sender, RoutedEventArgs e)
+        {
+            clearLog();
+        }
+
+        private void tBtn_StopDownload_Click(object sender, RoutedEventArgs e)
+        {
+            stopDownload();
+        }
+
+        private void readyToDownloadLog()
+        {
             /*
              * Read Log Info
              */
@@ -183,32 +310,46 @@ namespace IncomUtility.APP
             List<UIDataGrid> gridList;
             switch (eventType[0])
             {
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_CALIBRATION:
-                    grid = grid_LogCal;
-                    gridList = logCalList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_ALARM:
-                    grid = grid_LogAlarm;
-                    gridList = logAlarmList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_FAULT:
-                    grid = grid_LogFault;
-                    gridList = logFaultList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_WARNING:
-                    grid = grid_LogWarning;
-                    gridList = logWarningList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_REFLEX:
-                    grid = grid_LogRelfex;
-                    gridList = logReflexList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_INFO:
-                    grid = grid_LogInfo;
-                    gridList = logInfoList;
-                    break;
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_CALIBRATION:
+                    {
+                        grid = grid_LogCal;
+                        gridList = logCalList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_ALARM:
+                    {
+                        grid = grid_LogAlarm;
+                        gridList = logAlarmList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_FAULT:
+                    {
+                        grid = grid_LogFault;
+                        gridList = logFaultList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_WARNING:
+                    {
+                        grid = grid_LogWarning;
+                        gridList = logWarningList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_REFLEX:
+                    {
+                        grid = grid_LogRelfex;
+                        gridList = logReflexList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_INFO:
+                    {
+                        grid = grid_LogInfo;
+                        gridList = logInfoList;
+                        break;
+                    }
                 default:
-                    return;
+                    {
+                        return;
+                    }
             }
 
             gridList.Clear();
@@ -220,13 +361,12 @@ namespace IncomUtility.APP
 
             LogMonitorRunning = true;
 
-            LogMonitor = new Thread(() => DownloadLog(eventType[0], numLogdata));
+            LogMonitor = new Thread(() => downloadLog(eventType[0], numLogdata));
 
             LogMonitor.Start();
-
         }
 
-        private void DownloadLog(byte eventType, int numLogdata)
+        private void downloadLog(byte eventType, int numLogdata)
         {
             /*
              * Read Log Data
@@ -236,7 +376,9 @@ namespace IncomUtility.APP
             for (int index = 0; index < numLogdata; index++)
             {
                 if (!LogMonitorRunning)
+                {
                     return;
+                }
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
                     tPbar_LogDownBar.Value = index + 1;
@@ -261,24 +403,36 @@ namespace IncomUtility.APP
 
                 switch (eventType)
                 {
-                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_CALIBRATION:
-                        UpdateLogCal(logData, index);
-                        break;
-                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_ALARM:
-                        UpdateLogEvent(logData, index);
-                        break;
-                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_FAULT:
-                        UpdateLogEvent(logData, index);
-                        break;
-                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_WARNING:
-                        UpdateLogEvent(logData, index);
-                        break;
-                    case(int)INNCOM_CONF.LOG_TABLE_TYPE_REFLEX:
-                        UpdateLogReflex(logData, index);
-                        break;
-                    case (int)INNCOM_CONF.LOG_TABLE_TYPE_INFO:
-                        UpdateLogEvent(logData, index);
-                        break;
+                    case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_CALIBRATION:
+                        {
+                            updateLogCal(logData, index);
+                            break;
+                        }
+                    case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_ALARM:
+                        {
+                            updateLogEvent(logData, index);
+                            break;
+                        }
+                    case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_FAULT:
+                        {
+                            updateLogEvent(logData, index);
+                            break;
+                        }
+                    case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_WARNING:
+                        {
+                            updateLogEvent(logData, index);
+                            break;
+                        }
+                    case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_REFLEX:
+                        {
+                            UpdateLogReflex(logData, index);
+                            break;
+                        }
+                    case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_INFO:
+                        {
+                            updateLogEvent(logData, index);
+                            break;
+                        }
                 }
             }
 
@@ -289,81 +443,95 @@ namespace IncomUtility.APP
             }));
         }
 
-
-        private void tBtn_ReadLogInfo_Click(object sender, RoutedEventArgs e)
+        private void readLogInfo()
         {
-            if (!SerialPortIO.isPortOpen())
-                return;
-
             /*
-             * Read Log Info
-             */
+            * Read Log Info
+            */
             byte[] eventType = new byte[1];
             eventType[0] = (byte)(tCmb_LogsType.SelectedIndex + 1);
+
             byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_LOG_INFO, eventType, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Read Log Info");
                 return;
             }
+
             int pos = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+
             int savedCount = Utility.getU16FromByteA(result, pos);
             int maxCount = Utility.getU16FromByteA(result, pos + 2);
             int size = result[pos + 4];
+
             string str = "Log Type : " + eventType[0].ToString() + ", Number of log : " + savedCount;
             str += " , Total number of log : " + maxCount + " , Size of log : " + size + " Bytes";
 
             MessageBox.Show(str);
         }
 
-       
-
-        private void tBtn_SaveToCSV_Click(object sender, RoutedEventArgs e)
+        private void saveToCSV()
         {
             int eventType = tCmb_LogsType.SelectedIndex + 1;
             List<UIDataGrid> gridList;
             DataGrid grid;
             switch (eventType)
             {
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_CALIBRATION:
-                    logFiles = new LogToFile("Incom_Utility_Calibration_Log", "csv");
-                    grid = grid_LogCal;
-                    gridList = logCalList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_ALARM:
-                    logFiles = new LogToFile("Incom_Utility_Alarm_Log", "csv");
-                    grid = grid_LogAlarm;
-                    gridList = logAlarmList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_FAULT:
-                    logFiles = new LogToFile("Incom_Utility_Fault_Log", "csv");
-                    grid = grid_LogFault;
-                    gridList = logFaultList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_WARNING:
-                    logFiles = new LogToFile("Incom_Utility_Warining_Log", "csv");
-                    grid = grid_LogWarning;
-                    gridList = logWarningList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_REFLEX:
-                    logFiles = new LogToFile("Incom_Utility_Reflex_Log", "csv");
-                    grid = grid_LogRelfex;
-                    gridList = logReflexList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_INFO:
-                    logFiles = new LogToFile("Incom_Utility_Info_Log", "csv");
-                    grid = grid_LogInfo;
-                    gridList = logInfoList;
-                    break;
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_CALIBRATION:
+                    {
+                        logFiles = new LogToFile("Incom_Utility_Calibration_Log", "csv");
+                        grid = grid_LogCal;
+                        gridList = logCalList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_ALARM:
+                    {
+                        logFiles = new LogToFile("Incom_Utility_Alarm_Log", "csv");
+                        grid = grid_LogAlarm;
+                        gridList = logAlarmList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_FAULT:
+                    {
+                        logFiles = new LogToFile("Incom_Utility_Fault_Log", "csv");
+                        grid = grid_LogFault;
+                        gridList = logFaultList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_WARNING:
+                    {
+                        logFiles = new LogToFile("Incom_Utility_Warining_Log", "csv");
+                        grid = grid_LogWarning;
+                        gridList = logWarningList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_REFLEX:
+                    {
+                        logFiles = new LogToFile("Incom_Utility_Reflex_Log", "csv");
+                        grid = grid_LogRelfex;
+                        gridList = logReflexList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_INFO:
+                    {
+                        logFiles = new LogToFile("Incom_Utility_Info_Log", "csv");
+                        grid = grid_LogInfo;
+                        gridList = logInfoList;
+                        break;
+                    }
                 default:
-                    return;
+                    {
+                        return;
+                    }
             }
 
             string filePath = logFiles.Checked();
-            
+
             if (filePath == null)
+            {
                 return;
-           
+            }
+
             string strHeader = "";
             int columCount = grid.Columns.Count;
             for (int i = 0; i < columCount; i++)
@@ -387,10 +555,8 @@ namespace IncomUtility.APP
             MessageBox.Show("Saved CSV file");
         }
 
-        private void tBtn_ClrLog_Click(object sender, RoutedEventArgs e)
+        private void clearLog()
         {
-            if (!SerialPortIO.isPortOpen())
-                return;
             /*
              * Clear Log Data
              */
@@ -406,11 +572,10 @@ namespace IncomUtility.APP
                 return;
             }
 
-            MessageBox.Show("Cleared logs - " + LOG_TABLE_TYPE[payload[0]].ToString(),"Information" );
+            MessageBox.Show("Cleared logs - " + LOG_TABLE_TYPE_STRINGA[payload[0]].ToString(), "Information");
         }
 
-
-        private void tBtn_StopDownload_Click(object sender, RoutedEventArgs e)
+        private void stopDownload()
         {
             if (LogMonitorRunning)
             {
@@ -419,9 +584,10 @@ namespace IncomUtility.APP
                 tBtn_DownloadLogs.IsEnabled = true;
                 tBtn_StopDownload.IsEnabled = false;
             }
+
         }
 
-        void UpdateLogCal(byte[] logData, int index)
+        private void updateLogCal(byte[] logData, int index)
         {
             int offset = 0;
 
@@ -458,11 +624,12 @@ namespace IncomUtility.APP
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                UpdateLogGrid(grid_LogCal, logCalList, index + 1, time_str, CAL_TYPE[(int)u8CalibrationType], f32GasReadingBeforeCal, f32GasReadingAfterCal,
+                updateLogGrid(grid_LogCal, logCalList, index + 1, time_str, CAL_TYPE[(int)u8CalibrationType], f32GasReadingBeforeCal, f32GasReadingAfterCal,
                     f32RawSignalBeforeCal, f32CalFactorBeforeCal, f32CalFactorAfterCal, f32TargetGasConcentration, f32CorrectionFactor, result_str, cylinder_str);
             }));
         }
-        private void UpdateLogEvent(byte[] logData, int index)
+
+        private void updateLogEvent(byte[] logData, int index)
         {
             System.Windows.Controls.DataGrid grid;
             List<UIDataGrid> list;
@@ -485,46 +652,67 @@ namespace IncomUtility.APP
             time_str += u8TimeStampHou.ToString("D2") + ':' + u8TimeStampMin.ToString("D2") + ':' + u8TimeStampSec.ToString("D2");
 
             string event_str = "Unknown - " + u8EventType.ToString();
-            if (u8EventType > 0 && u8EventType <= NUMBER_OF_TABLE_TYPE)
-                event_str = LOG_TABLE_TYPE[u8EventType];
+            if (u8EventType > 0 && u8EventType <= (int)NUMBER_OF_TABLE.NUMBER_OF_TABLE_TYPE)
+            {
+                event_str = LOG_TABLE_TYPE_STRINGA[u8EventType];
+            }
 
             string type_str = "Unknown - " + u8EventId.ToString();
             switch (u8EventType)
             {
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_ALARM:
-                    if (u8EventId > 0 && u8EventId <= NUMBER_OF_ALARM)
-                        type_str = ALARM_TYPE[u8EventId];
-                    grid = grid_LogAlarm;
-                    list = logAlarmList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_FAULT:
-                    if (u8EventId > 0 && u8EventId <= NUMBER_OF_FAULT)
-                        type_str = FAULT_TPYE[u8EventId];
-                    grid = grid_LogFault;
-                    list = logFaultList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_WARNING:
-                    if (u8EventId > 0 && u8EventId <= NUMBER_OF_WARNING)
-                        type_str = WARNING_TYPE[u8EventId];
-                    grid = grid_LogWarning;
-                    list = logWarningList;
-                    break;
-                case (int)INNCOM_CONF.LOG_TABLE_TYPE_INFO:
-                    if (u8EventId > 0 && u8EventId <= NUMBER_OF_INFO)
-                        type_str = INFO_TYPE[u8EventId];
-                    grid = grid_LogInfo;
-                    list = logInfoList;
-                    break;
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_ALARM:
+                    {
+                        if (u8EventId > 0 && u8EventId <= (int)NUMBER_OF_TABLE.NUMBER_OF_ALARM)
+                        {
+                            type_str = ALARM_TYPE[u8EventId];
+                        }
+                        grid = grid_LogAlarm;
+                        list = logAlarmList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_FAULT:
+                    {
+                        if (u8EventId > 0 && u8EventId <= (int)NUMBER_OF_TABLE.NUMBER_OF_FAULT)
+                        {
+                            type_str = FAULT_TPYE[u8EventId];
+                        }
+                        grid = grid_LogFault;
+                        list = logFaultList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_WARNING:
+                    {
+                        if (u8EventId > 0 && u8EventId <= (int)NUMBER_OF_TABLE.NUMBER_OF_WARNING)
+                        {
+                            type_str = WARNING_TYPE[u8EventId];
+                        }
+                        grid = grid_LogWarning;
+                        list = logWarningList;
+                        break;
+                    }
+                case (int)LOG_TABLE_TYPE.LOG_TABLE_TYPE_INFO:
+                    {
+                        if (u8EventId > 0 && u8EventId <= (int)NUMBER_OF_TABLE.NUMBER_OF_INFO)
+                        {
+                            type_str = INFO_TYPE[u8EventId];
+                        }
+                        grid = grid_LogInfo;
+                        list = logInfoList;
+                        break;
+                    }
                 default:
-                    return;
+                    {
+                        return;
+                    }
             }
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                UpdateLogGrid(grid, list, index + 1, time_str, event_str, u8EventId, f32GasReading, f32EventData, type_str);
+                updateLogGrid(grid, list, index + 1, time_str, event_str, u8EventId, f32GasReading, f32EventData, type_str);
             }));
 
         }
-        void UpdateLogReflex(byte[] logData, int index)
+
+        private void UpdateLogReflex(byte[] logData, int index)
         {
             int offset = 0;
 
@@ -533,8 +721,9 @@ namespace IncomUtility.APP
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                UpdateLogGrid(grid_LogRelfex, logReflexList, index + 1, "tReflex Log", "-", f32Adc1, f32Adc2);
+                updateLogGrid(grid_LogRelfex, logReflexList, index + 1, "tReflex Log", "-", f32Adc1, f32Adc2);
             }));
         }
+
     }
 }

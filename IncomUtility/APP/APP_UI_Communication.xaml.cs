@@ -23,27 +23,21 @@ namespace IncomUtility
         public APP_UI_Communication()
         {
             InitializeComponent();
-            Loaded += new RoutedEventHandler(InitSerialPort);
+            Loaded += new RoutedEventHandler(initSerialPort);
         }
-        void InitSerialPort(object sender, EventArgs e)
+    
+        private void btnCommunicationOk_Click(object sender, RoutedEventArgs e)
         {
-            string[] ports = SerialPort.GetPortNames();
-            foreach (string port in ports)
-            {
-                cmbPort.Items.Add(port);
-            }
-            if (ports.Length > 0)
-            {
-                cmbPort.SelectedIndex = 0;
-            }
+            communucationWithSerial();         
         }
 
-        private void btnCommunicationOk_Click(object sender, RoutedEventArgs e)
+        private void communucationWithSerial()
         {
             if (cmbPort.SelectedItem == null)
                 return;
 
-            if (SerialPortIO.serialPort.IsOpen) { 
+            if (SerialPortIO.serialPort.IsOpen)
+            {
                 MessageBox.Show("이미 연결되었습니다.");
                 return;
             }
@@ -54,36 +48,60 @@ namespace IncomUtility
             SerialPortIO.serialPort.BaudRate = Convert.ToInt32(cmbBaudRate.Text);
             SerialPortIO.serialPort.DataBits = Convert.ToInt32(cmbDataBits.Text);
 
-            switch(cmbStopBits.SelectedIndex)
+            switch (cmbStopBits.SelectedIndex)
             {
                 case 0:
-                    SerialPortIO.serialPort.StopBits = StopBits.One;
-                    break;
+                    {
+                        SerialPortIO.serialPort.StopBits = StopBits.One;
+                        break;
+                    }
                 case 1:
-                    SerialPortIO.serialPort.StopBits = StopBits.OnePointFive;
-                    break;
+                    {
+                        SerialPortIO.serialPort.StopBits = StopBits.OnePointFive;
+                        break;
+                    }
                 case 2:
-                    SerialPortIO.serialPort.StopBits = StopBits.Two;
-                    break;
+                    {
+                        SerialPortIO.serialPort.StopBits = StopBits.Two;
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
             }
 
             switch (cmbParity.SelectedIndex)
             {
                 case 0:
-                    SerialPortIO.serialPort.Parity = Parity.None;
-                    break;
+                    {
+                        SerialPortIO.serialPort.Parity = Parity.None;
+                        break;
+                    }
                 case 1:
-                    SerialPortIO.serialPort.Parity = Parity.Odd;
-                    break;
+                    {
+                        SerialPortIO.serialPort.Parity = Parity.Odd;
+                        break;
+                    }
                 case 2:
-                    SerialPortIO.serialPort.Parity = Parity.Even;
-                    break;
+                    {
+                        SerialPortIO.serialPort.Parity = Parity.Even;
+                        break;
+                    }
                 case 3:
-                    SerialPortIO.serialPort.Parity = Parity.Mark;
-                    break;
+                    {
+                        SerialPortIO.serialPort.Parity = Parity.Mark;
+                        break;
+                    }
                 case 4:
-                    SerialPortIO.serialPort.Parity = Parity.Space;
-                    break;
+                    {
+                        SerialPortIO.serialPort.Parity = Parity.Space;
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
             }
             try
             {
@@ -100,5 +118,18 @@ namespace IncomUtility
 
             this.Close();
         }
+        void initSerialPort(object sender, EventArgs e)
+        {
+            string[] ports = SerialPort.GetPortNames();
+            foreach (string port in ports)
+            {
+                cmbPort.Items.Add(port);
+            }
+            if (ports.Length > 0)
+            {
+                cmbPort.SelectedIndex = 0;
+            }
+        }
+
     }
 }
