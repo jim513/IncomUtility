@@ -17,11 +17,11 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <GroupBox Header="Target Drive" Margin="10">
+        <GroupBox x:Name="tTxt_TargetDrive" Header="Target Drive" Margin="10">
             <TextBlock Text="Voltage : 3.3V" TextAlignment="Center" FontWeight="Bold" FontSize="33" Foreground="DarkBlue" VerticalAlignment="Center"/>
         </GroupBox>
         <GroupBox Header="Cell Drive Feedback" Margin="10" Grid.Row="1">
-            <TextBlock Text="3000 / 200" TextAlignment="Center" FontWeight="Bold" FontSize="33" Foreground="DarkBlue" VerticalAlignment="Center"/>
+            <TextBlock x:Name="tTxt_CellDriveFeedback" Text="3000 / 200" TextAlignment="Center" FontWeight="Bold" FontSize="33" Foreground="DarkBlue" VerticalAlignment="Center"/>
         </GroupBox>
         <GroupBox Header="Adjust PWM duty" Grid.Row="2" Margin="10">
             <Grid>
@@ -35,9 +35,9 @@
                     <ColumnDefinition Width="80*"/>
                     <ColumnDefinition Width="35*"/>
                 </Grid.ColumnDefinitions>
-                <xctk:IntegerUpDown  Grid.RowSpan="2" Margin="40,10,9.8,10" Value="1"  VerticalContentAlignment="Center"   TextAlignment="Left" FontSize="36" />
-                <Button Grid.Column="2" Content="Increase" Margin="5"/>
-                <Button Grid.Column="2"  Grid.Row="1" Content="Decrease" Margin="5"/>
+                <xctk:IntegerUpDown x:Name="tUpdown_AdjustPv"  Grid.RowSpan="2" Margin="40,10,9.8,10" Value="1"  VerticalContentAlignment="Center"   TextAlignment="Left" FontSize="36" />
+                <Button x:Name="tBtn_Increase" Grid.Column="2" Content="Increase" Margin="5" Click="tBtn_Increase_Click"/>
+                <Button x:Name="tBtn_Decrease" Grid.Column="2"  Grid.Row="1" Content="Decrease" Margin="5" Click="tBtn_Decrease_Click"/>
             </Grid>
         </GroupBox>
         <TextBox Grid.Column="1" Grid.RowSpan="2" Margin="10" Background="LightGoldenrodYellow"
@@ -50,10 +50,10 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Content="Stop Cal" Margin="10,30"/>
-            <Button Content="Start Cal" Grid.Column="1" Margin="10,30"/>
-            <Button Content="Accept Cal" Grid.Column="2" Margin="10,30"/>
+            <Button x:Name="tBtn_StopCal" Content="Stop Cal" Margin="10,30" Click="tBtn_StopCal_Click"/>
+            <Button x:Name="tBtn_StartCal" Content="Start Cal" Grid.Column="1" Margin="10,30" Click="tBtn_StartCal_Click"/>
+            <Button x:Name="tBtn_AcceptCal" Content="Accept Cal" Grid.Column="2" Margin="10,30" Click="tBtn_AcceptCal_Click"/>
         </Grid>
-        <TextBox Grid.Row="3" Grid.ColumnSpan="2" Margin="10"/>
+        <TextBox x:Name="tTxt_Logs" Grid.Row="3" Grid.ColumnSpan="2" Margin="10"/>
     </Grid>
 </Window>

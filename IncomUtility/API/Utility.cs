@@ -114,5 +114,35 @@ namespace IncomUtility
             else
                 return BitConverter.ToUInt16(data, offset);
         }
+
+
+        public static byte[] getBytesFromF32(float data)
+        {
+
+            byte[] getBytes = BitConverter.GetBytes(data);
+
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(getBytes);
+
+            return getBytes;
+        }
+        public static byte[] getBytesFromU16(ushort data)
+        {
+
+            byte[] getBytes = BitConverter.GetBytes(data);
+
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(getBytes);
+
+            return getBytes;
+        }
+        public static bool checkBitPos(byte data, int bit_pos)
+        {
+            return (data & (1 << bit_pos)) != 0;
+        }
+        public static byte setBitPos(byte data , int bit_pos)
+        {
+            return data |= (byte)(0x01 << bit_pos);
+        }
     }
 }

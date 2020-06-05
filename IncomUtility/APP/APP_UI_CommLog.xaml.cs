@@ -21,40 +21,23 @@ namespace IncomUtility.APP
     public partial class APP_UI_CommLog : Window
     {
         public static bool packetCheck = false;
-        public static byte[] u8Txbuffer = new byte[2048];
-        public static byte[] u8Rxbuffer = new byte[2048];
-        public static Mutex isSended;
-        public static int u8TxbufferLength ;
-        public static int u8RxbufferLength ;
-        public Thread monitorSendLog;
-        public static void getSend(byte[] txBuffer, byte[] rxBuffer , int txLength, int rxLength)
-        {       
-            Array.Copy(txBuffer, u8Txbuffer, txLength);
-            Array.Copy(rxBuffer, u8Rxbuffer, rxLength);
-            isSended.ReleaseMutex();
-        }
-        public void setText()
+
+        public void setText(byte [] txbuffer , byte[] rxbuffer)
         {
-            while (packetCheck)
+            DateTime now = DateTime.Now;
+
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                isSended.WaitOne();
-                byte[] txbuffer = new byte[u8TxbufferLength];
-                byte[] rxbuffer = new byte[u8RxbufferLength];
-                Array.Copy(u8Txbuffer, txbuffer, u8TxbufferLength);
-                Array.Copy(u8Rxbuffer, rxbuffer, u8RxbufferLength);
-                DateTime now = DateTime.Now;
                 tTxt_Log.AppendText(now.ToLongTimeString() + " TX : " + BitConverter.ToString(txbuffer));
                 tTxt_Log.AppendText(Environment.NewLine);
                 tTxt_Log.AppendText(now.ToLongTimeString() + " RX : " + BitConverter.ToString(rxbuffer));
                 tTxt_Log.AppendText(Environment.NewLine);
-            }
+            }));
+
         }
         public APP_UI_CommLog()
         {
             InitializeComponent();
-            isSended = new Mutex();
-            isSended.WaitOne();
-            monitorSendLog = new Thread(setText);
         }
     }
 }

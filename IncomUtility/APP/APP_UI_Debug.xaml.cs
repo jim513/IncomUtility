@@ -26,7 +26,7 @@ namespace IncomUtility.APP
             InitializeComponent();
         }
 
-        Quattro quattro = new Quattro();
+        QuattroProtocol quattro = new QuattroProtocol();
         ERROR_LIST err;
         private string CheckInput(string InputText)
         {
@@ -39,12 +39,18 @@ namespace IncomUtility.APP
                 return null;
             }
             if (InputText.Length == 1)
+            {
                 return string.Concat("0", InputText);
+            }
 
             if (value > 255 || value < 0)
+            {
                 return null;
+            }
             else
+            {
                 return InputText;
+            }
         }
 
         DateTime now;
@@ -86,7 +92,9 @@ namespace IncomUtility.APP
                 string addtionalCmd = tBtn_Payload.Text;
                 int value;
                 if (addtionalCmd.Length % 2 == 1)
+                {
                     addtionalCmd = string.Concat("0", addtionalCmd);
+                }
 
                 if (!int.TryParse(addtionalCmd, out value))
                 {
@@ -104,12 +112,14 @@ namespace IncomUtility.APP
             tTxt_Log.AppendText(Environment.NewLine);
 
             writePacket(ref u8TXbuffer, ref err);
+
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Log.AppendText("Write Failed!");
                 tTxt_Log.AppendText(Environment.NewLine);
                 return;
             }
+
             byte[] u8RXbuffer = readPacket(ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -134,9 +144,11 @@ namespace IncomUtility.APP
                 return;
             }
             SerialPortIO.mutex.WaitOne();
-            
-            while (SerialPortIO.serialPort.BytesToRead > 0)           
-                SerialPortIO.serialPort.ReadExisting();          
+
+            while (SerialPortIO.serialPort.BytesToRead > 0)
+            {
+                SerialPortIO.serialPort.ReadExisting();
+            }
         
             SerialPortIO.serialPort.Write(sendbuffer, 0, sendbuffer.Length);
             err = ERROR_LIST.ERROR_NONE;

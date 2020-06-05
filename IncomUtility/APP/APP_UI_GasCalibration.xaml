@@ -22,11 +22,11 @@
                             <ColumnDefinition Width="181*"/>
                             <ColumnDefinition Width="116*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Row="1" Grid.Column="1" SelectedIndex="0" VerticalContentAlignment="Center">
+                        <ComboBox x:Name="tCmb_CalibrationType" Grid.Row="1" Grid.Column="1" SelectedIndex="0" VerticalContentAlignment="Center">
                             <ComboBoxItem Content="0 : User Calibration"/>
                             <ComboBoxItem Content="1 : Factory Calibration"/>
                         </ComboBox>
-                        <Button Grid.Column="2" Grid.Row="3" Content="Next" Margin="10"/>
+                        <Button x:Name="tBtn_CalTypeNext" Grid.Column="2" Grid.Row="3" Content="Next" Margin="10" Click="tBtn_CalTypeNext_Click"/>
                     </Grid>
                 </GroupBox>
             </TabItem>
@@ -44,9 +44,9 @@
                             <ColumnDefinition Width="78*"/>
                             <ColumnDefinition Width="78*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="0.0" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="62" Foreground="DarkBlue" Margin="0,5.2,78,11.8" Height="83" />
-                        <Button Content="Stop Cal" Grid.Row="2" Grid.Column="2" Margin="5"/>
-                        <Button Content="Accept Zero" Grid.Row="2" Grid.Column="3" Margin="5"/>
+                        <TextBlock x:Name="tTxt_ZeroCalibration" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="0.0" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="62" Foreground="DarkBlue" Margin="0,5.2,78,11.8" Height="83" />
+                        <Button x:Name="tBtn_StopCal" Content="Stop Cal" Grid.Row="2" Grid.Column="2" Margin="5" Click="tBtn_StopCal_Click"/>
+                        <Button x:Name="tBtn_AcceptZero" Content="Accept Zero" Grid.Row="2" Grid.Column="3" Margin="5" Click="tBtn_AcceptZero_Click"/>
                     </Grid>
                 </GroupBox>
             </TabItem>
@@ -65,8 +65,8 @@
                             <ColumnDefinition Width="137*"/>
                             <ColumnDefinition Width="18*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Text="0.0" TextAlignment="Left"  FontWeight="Bold" FontSize="36" />
-                        <Button Content="Next" Grid.Row="3" Grid.Column="2" Margin="25,10,5,5" />
+                        <TextBox x:Name="tTxt_TargetSpanConc" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Text="0.0" TextAlignment="Left"  FontWeight="Bold" FontSize="36" />
+                        <Button x:Name="tTxt_SpanGasNext" Content="Next" Grid.Row="3" Grid.Column="2" Margin="25,10,5,5" Click="tTxt_SpanGasNext_Click" />
                         <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Text="Configuralbe Target Calibration Conc. : 150 ~ 350" Margin="0.6,0.009,0,0.191"/>
                     </Grid>
                 </GroupBox>
@@ -85,10 +85,10 @@
                             <ColumnDefinition Width="78*"/>
                             <ColumnDefinition Width="78*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="1" Grid.ColumnSpan="3" Text="0.0" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="62" Margin="0,10,78,12.6" Height="83" />
-                        <ProgressBar Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,5" BorderBrush="Gray"/>
-                        <Button Content="Stop" Grid.Row="2" Grid.Column="2" Margin="4.8,5.2,4.6,5"/>
-                        <Button Content="Accept" Grid.Row="2" Grid.Column="3" Margin="5.4,5.2,5,5"/>
+                        <TextBlock x:Name="tTxt_GasReading" Grid.Column="1" Grid.ColumnSpan="3" Text="0.0" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="62" Margin="0,10,78,12.6" Height="83" />
+                        <ProgressBar x:Name="tPbar_GasReading" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,5" BorderBrush="Gray"/>
+                        <Button x:Name="tBtn_SpanCalStop" Content="Stop" Grid.Row="2" Grid.Column="2" Margin="4.8,5.2,4.6,5" Click="tBtn_SpanCalStop_Click"/>
+                        <Button x:Name="tBtn_SpanCalAccept" Content="Accept" Grid.Row="2" Grid.Column="3" Margin="5.4,5.2,5,5" Click="tBtn_SpanCalAccept_Click"/>
                     </Grid>
                 </GroupBox>
             </TabItem>

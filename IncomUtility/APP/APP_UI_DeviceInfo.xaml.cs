@@ -14,13 +14,29 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace IncomUtility
-{ 
+{
     /// <summary>
     /// APP_UI_DeviceInfo.xaml에 대한 상호 작용 논리
     /// </summary>
+    public enum SENSOR_TPYE
+    {
+        ECC = 0,
+        FL_CAT = 1,
+        IR = 2,
+        PID = 3,
+        MOS = 4,
+    }
+    public enum GAS_TYPE
+    {
+        FLAMMABLE = 0,
+        TOXIC = 1,
+        O2 = 2,
+        VOC = 3,
+    }
+
     public partial class APP_UI_DeviceInfo : Window
     {
-        ERROR_LIST err;
+        ERROR_LIST err = ERROR_LIST.ERROR_NONE;
         public APP_UI_DeviceInfo()
         {
             InitializeComponent();
@@ -32,15 +48,39 @@ namespace IncomUtility
 
         private void tBtn_ReadDeviceInfo_Click(object sender, RoutedEventArgs e)
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
+            readDeviceInfo();
+        }
+
+        private void tBtn_ClearAllLatchedTable_Click(object sender, RoutedEventArgs e)
+        {
+            clearAllLatchedTable();
+        }
+
+        private void tBtn_ResetToFactory_Click(object sender, RoutedEventArgs e)
+        {
+            resetToFactory();
+        }
+
+        private void tBtn_ResetAlarmFault_Click(object sender, RoutedEventArgs e)
+        {
+            resetAlarmFault();
+        }
+
+        private void tBtn_WriteDeviceSN_Click(object sender, RoutedEventArgs e)
+        {
+            writeDeviceSN();
+        }
+
+        private void tBtn_ReadConfiguration_Click(object sender, RoutedEventArgs e)
+        {
+            readConfiguartion();      
+        }
+
+        private void readDeviceInfo()
+        {
             /*
-             * Read SW Version
-             */
+            * Read SW Version
+            */
             byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_SW_VERSION, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -48,11 +88,11 @@ namespace IncomUtility
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-            int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+            int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
             int major = result[offset];
             int minor = result[offset + 1];
             int built = Utility.getU16FromByteA(result, offset + 2);
-            string SWVersion= major.ToString() + "." + minor.ToString() + "." + built.ToString();
+            string SWVersion = major.ToString() + "." + minor.ToString() + "." + built.ToString();
 
             tTxt_Logs.AppendText("Device SW Version : " + SWVersion);
             tTxt_Logs.AppendText(Environment.NewLine);
@@ -84,8 +124,8 @@ namespace IncomUtility
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-           
-            string DeviceSN = Encoding.Default.GetString(Quattro.getResponseValueData(result)).Trim('\0');
+
+            string DeviceSN = Encoding.Default.GetString(QuattroProtocol.getResponseValueData(result)).Trim('\0');
 
             tTxt_Logs.AppendText("Device SN : " + DeviceSN);
             tTxt_Logs.AppendText(Environment.NewLine);
@@ -102,34 +142,46 @@ namespace IncomUtility
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-            offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+            offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
             int OutputType = result[offset];
             int Relay = result[offset + 1];
-            int BLEModule = result [offset + 2];
+            int BLEModule = result[offset + 2];
 
             tTxt_Logs.AppendText("Output Type : " + OutputType);
-            tTxt_Logs.AppendText(Environment.NewLine);    
+            tTxt_Logs.AppendText(Environment.NewLine);
             tTxt_Logs.AppendText("Relay Type: " + Relay);
             tTxt_Logs.AppendText(Environment.NewLine);
             tTxt_Logs.AppendText("BLE Fitted : " + BLEModule);
             tTxt_Logs.AppendText(Environment.NewLine);
-            
-            if (OutputType == 0)
-                tTxt_OutputDeviceType.Text = "mA Output";
-            else
-                tTxt_OutputDeviceType.Text = "Modbus";
-            if (Relay == 0)
-                tTxt_RealyOption.Text = "Not Fitted";
-            else
-                tTxt_RealyOption.Text = "Fitted";
-            if (BLEModule == 0)
-                tTxt_BLEModule.Text = "Not Fitted";
-            else
-                tTxt_BLEModule.Text = "Fitted";
 
-           /*
-           *  Read Sensor Info
-           */
+            if (OutputType == 0)
+            {
+                tTxt_OutputDeviceType.Text = "mA Output";
+            }
+            else
+            {
+                tTxt_OutputDeviceType.Text = "Modbus";
+            }
+            if (Relay == 0)
+            {
+                tTxt_RealyOption.Text = "Not Fitted";
+            }
+            else
+            {
+                tTxt_RealyOption.Text = "Fitted";
+            }
+            if (BLEModule == 0)
+            {
+                tTxt_BLEModule.Text = "Not Fitted";
+            }
+            else
+            {
+                tTxt_BLEModule.Text = "Fitted";
+            }
+
+            /*
+            *  Read Sensor Info
+            */
             result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SENSOR_INFO, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -137,26 +189,70 @@ namespace IncomUtility
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-            offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+            offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
             int sensorType = result[offset];
             int gasType = result[offset + 1];
             int cellID = result[offset + 2];
             switch (sensorType)
             {
-                case 0: tTxt_SensorType.Text = "ECC"; break;
-                case 1: tTxt_SensorType.Text = "FLM CAT"; break;
-                case 2: tTxt_SensorType.Text = "IR"; break;
-                case 3: tTxt_SensorType.Text = "PID"; break;
-                case 4: tTxt_SensorType.Text = "MOS"; break;
-                default: tTxt_SensorType.Text = "N/A"; break;
+                case (int)SENSOR_TPYE.ECC:
+                    {
+                        tTxt_SensorType.Text = "ECC";
+                        break;
+                    }
+                case (int)SENSOR_TPYE.FL_CAT:
+                    {
+                        tTxt_SensorType.Text = "FLM CAT";
+                        break;
+                    }
+                case (int)SENSOR_TPYE.IR:
+                    {
+                        tTxt_SensorType.Text = "IR";
+                        break;
+                    }
+                case (int)SENSOR_TPYE.PID:
+                    {
+                        tTxt_SensorType.Text = "PID";
+                        break;
+                    }
+                case (int)SENSOR_TPYE.MOS:
+                    {
+                        tTxt_SensorType.Text = "MOS";
+                        break;
+                    }
+                default:
+                    {
+                        tTxt_SensorType.Text = "N/A";
+                        break;
+                    }
             }
             switch (gasType)
             {
-                case 0: tTxt_GasType.Text = "Flammable"; break;
-                case 1:  tTxt_GasType.Text = "Toxic";  break;
-                case 2: tTxt_GasType.Text = "O2";  break;
-                case 3:  tTxt_GasType.Text = "VOC";break;
-                default: tTxt_GasType.Text = "N/A"; break;
+                case (int)GAS_TYPE.FLAMMABLE:
+                    {
+                        tTxt_GasType.Text = "Flammable";
+                        break;
+                    }
+                case (int)GAS_TYPE.TOXIC:
+                    {
+                        tTxt_GasType.Text = "Toxic";
+                        break;
+                    }
+                case (int)GAS_TYPE.O2:
+                    {
+                        tTxt_GasType.Text = "O2";
+                        break;
+                    }
+                case (int)GAS_TYPE.VOC:
+                    {
+                        tTxt_GasType.Text = "VOC";
+                        break;
+                    }
+                default:
+                    {
+                        tTxt_GasType.Text = "N/A";
+                        break;
+                    }
             }
 
             tCmb_CellID.SelectedIndex = cellID;
@@ -172,50 +268,125 @@ namespace IncomUtility
            *  Read Gas Info
            */
             byte[] channelByte = { 0x00 };
-            result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_GAS_INFO,channelByte, ref err);
+            result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_GAS_INFO, channelByte, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read Gas Information");
                 tTxt_Logs.AppendText(Environment.NewLine);
                 return;
             }
-            offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
+            offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
             int channel = result[offset];
             int measurementUnit = result[offset + 1];
             int resolution = result[offset + 2];
             float fullScale = Utility.getF32FromByteA(result, offset + 3);
-          
+
             tTxt_Channel.Text = channel.ToString();
             switch (measurementUnit)
             {
-                case 0: tTxt_MeasuremetUnits.Text = "blank"; break;
-                case 1: tTxt_MeasuremetUnits.Text = "%LEL"; break;
-                case 2: tTxt_MeasuremetUnits.Text = "mA"; break;
-                case 3: tTxt_MeasuremetUnits.Text = "mg/m3"; break;
-                case 4: tTxt_MeasuremetUnits.Text = "g/m3"; break;
-                case 5: tTxt_MeasuremetUnits.Text = "%Vol"; break;
-                case 6: tTxt_MeasuremetUnits.Text = "ppm"; break;
-                case 7: tTxt_MeasuremetUnits.Text = "kppm"; break;
-                case 8: tTxt_MeasuremetUnits.Text = "LEL.m"; break;
-                case 9: tTxt_MeasuremetUnits.Text = "A"; break;
-                case 10: tTxt_MeasuremetUnits.Text = "dB"; break;
-                case 11: tTxt_MeasuremetUnits.Text = "dBA"; break;
-                case 12: tTxt_MeasuremetUnits.Text = "ppm.m"; break;
-                default: tTxt_MeasuremetUnits.Text = ""; break;
+                case 0:
+                    {
+                        tTxt_MeasuremetUnits.Text = "blank";
+                        break;
+                    }
+                case 1:
+                    {
+                        tTxt_MeasuremetUnits.Text = "%LEL";
+                        break;
+                    }
+                case 2:
+                    {
+                        tTxt_MeasuremetUnits.Text = "mA";
+                        break;
+                    }
+                case 3:
+                    {
+                        tTxt_MeasuremetUnits.Text = "mg/m3";
+                        break;
+                    }
+                case 4:
+                    {
+                        tTxt_MeasuremetUnits.Text = "g/m3";
+                        break;
+                    }
+                case 5:
+                    {
+                        tTxt_MeasuremetUnits.Text = "%Vol";
+                        break;
+                    }
+                case 6:
+                    {
+                        tTxt_MeasuremetUnits.Text = "ppm";
+                        break;
+                    }
+                case 7:
+                    {
+                        tTxt_MeasuremetUnits.Text = "kppm";
+                        break;
+                    }
+                case 8:
+                    {
+                        tTxt_MeasuremetUnits.Text = "LEL.m";
+                        break;
+                    }
+                case 9:
+                    {
+                        tTxt_MeasuremetUnits.Text = "A";
+                        break;
+                    }
+                case 10:
+                    {
+                        tTxt_MeasuremetUnits.Text = "dB";
+                        break;
+                    }
+                case 11:
+                    {
+                        tTxt_MeasuremetUnits.Text = "dBA";
+                        break;
+                    }
+                case 12:
+                    {
+                        tTxt_MeasuremetUnits.Text = "ppm.m";
+                        break;
+                    }
+                default:
+                    {
+                        tTxt_MeasuremetUnits.Text = "";
+                        break;
+                    }
             }
             switch (resolution)
             {
-                case 0: tTxt_DecimalPlace.Text = "1 " + tTxt_MeasuremetUnits.Text; break;
-                case 1: tTxt_DecimalPlace.Text = "0.1 " + tTxt_MeasuremetUnits.Text; break;
-                case 2: tTxt_DecimalPlace.Text = "0.01 " + tTxt_MeasuremetUnits.Text; break;
-                case 3: tTxt_DecimalPlace.Text = "0.001 " + tTxt_MeasuremetUnits.Text; break;
-                default: tTxt_DecimalPlace.Text = "1 " + tTxt_MeasuremetUnits.Text;
-                    resolution = 0;
-                    break;
+                case 0:
+                    {
+                        tTxt_DecimalPlace.Text = "1 " + tTxt_MeasuremetUnits.Text;
+                        break;
+                    }
+                case 1:
+                    {
+                        tTxt_DecimalPlace.Text = "0.1 " + tTxt_MeasuremetUnits.Text;
+                        break;
+                    }
+                case 2:
+                    {
+                        tTxt_DecimalPlace.Text = "0.01 " + tTxt_MeasuremetUnits.Text;
+                        break;
+                    }
+                case 3:
+                    {
+                        tTxt_DecimalPlace.Text = "0.001 " + tTxt_MeasuremetUnits.Text;
+                        break;
+                    }
+                default:
+                    {
+                        tTxt_DecimalPlace.Text = "1 " + tTxt_MeasuremetUnits.Text;
+                        resolution = 0;
+                        break;
+                    }
             }
 
             double DfullScale = Math.Round(fullScale, resolution);
-            tTxt_FullScaleRange.Text = DfullScale.ToString() +" "+ tTxt_MeasuremetUnits.Text;
+            tTxt_FullScaleRange.Text = DfullScale.ToString() + " " + tTxt_MeasuremetUnits.Text;
 
             tTxt_Logs.AppendText("Channel : " + channel);
             tTxt_Logs.AppendText(Environment.NewLine);
@@ -227,20 +398,14 @@ namespace IncomUtility
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_ClearAllLatchedTable_Click(object sender, RoutedEventArgs e)
+        private void clearAllLatchedTable()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
              * Clear Latch tables
-             */
+            */
             byte[] payload = new byte[1];
             payload[0] = (byte)(tCmb_LatchedType.SelectedIndex + 1);
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CLR_LATCHED_TABLES,payload, ref err);
+            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CLR_LATCHED_TABLES, payload, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Clear Latch Tables");
@@ -248,21 +413,15 @@ namespace IncomUtility
                 return;
             }
 
-            tTxt_Logs.AppendText("Cleared Latch Table : " + (result,(int)PACKET_CONF.COMM_POS_PAYLOAD +2));
+            tTxt_Logs.AppendText("Cleared Latch Table : " + result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 2].ToString());
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_ResetToFactory_Click(object sender, RoutedEventArgs e)
+        private void resetToFactory()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
-             * Reset To Factory
-             */
+           * Reset To Factory
+           */
             SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_FACTORY, ref err, 500);
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -275,17 +434,11 @@ namespace IncomUtility
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_ResetAlarmFault_Click(object sender, RoutedEventArgs e)
+        private void resetAlarmFault()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
-             * Reset Alarms and Faults 
-             */
+           * Reset Alarms and Faults 
+           */
             SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_ALARMS, ref err, 1500);
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -297,15 +450,8 @@ namespace IncomUtility
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_WriteDeviceSN_Click(object sender, RoutedEventArgs e)
+        private void writeDeviceSN()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
-
             /*
              * Write Device SN
              */
@@ -314,7 +460,7 @@ namespace IncomUtility
             {
                 byte[] ret = new byte[16 - serialNumber.Length];
                 serialNumber = Utility.mergeByteArray(serialNumber, ret);
-            }   
+            }
 
             SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_DEVICE_SN, serialNumber, ref err, 300);
             if (err != ERROR_LIST.ERROR_NONE)
@@ -327,20 +473,14 @@ namespace IncomUtility
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
-        private void tBtn_ReadConfiguration_Click(object sender, RoutedEventArgs e)
+        private void readConfiguartion()
         {
-            if (!SerialPortIO.isPortOpen())
-            {
-                tTxt_Logs.AppendText("Incom is not connected");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
             /*
              * Read Configuration
              */
-            INNCOM_CONF param = (INNCOM_CONF)tCmb_Param.SelectedItem;
+            INNCOM_CONF_LIST param = (INNCOM_CONF_LIST)tCmb_Param.SelectedItem;
 
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, Quattro.commandToByteArray(param), ref err ,300);
+            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, DeviceConfiguration.configurationToByteArray(param), ref err, 300);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read Configurations");
@@ -349,60 +489,76 @@ namespace IncomUtility
             }
 
             int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
-           
-            byte[] value = Quattro.getResponseValueData(result);
-            
+
+            byte[] value = QuattroProtocol.getResponseValueData(result);
+
             int type = result[offset];
-            
+
             byte[] IDA = new byte[2];
             Array.Copy(value, 0, IDA, 0, 2);
             string ID = BitConverter.ToString(IDA).Replace("-", string.Empty);
 
             byte[] ParamValue = new byte[value.Length - IDA.Length];
-            Array.Copy(value, IDA.Length , ParamValue, 0, value.Length - IDA.Length);
-            
-            string str="";
+            Array.Copy(value, IDA.Length, ParamValue, 0, value.Length - IDA.Length);
+
+            string str = "";
             switch (type)
             {
-                case (int)INNCOM_CONF.PARAM_TYPE_STR :
-                    str = Encoding.Default.GetString(ParamValue).Trim('\0');
-                    break;
-                case (int)INNCOM_CONF.PARAM_TYPE_U8:
-                    str = (ParamValue ,0).ToString();
-                    break;
-                case (int)INNCOM_CONF.PARAM_TYPE_U8A:
-                    str = Encoding.Default.GetString(ParamValue).Trim('\0');
-                    break;
-                case (int)INNCOM_CONF.PARAM_TYPE_S8:
-                    str = Convert.ToSByte(ParamValue[0]).ToString();
-                    break;
-                case (int)INNCOM_CONF.PARAM_TYPE_U32:
-                    if (ParamValue.Length <4)
+                case (int)PARAMETER_TYPE.PARAM_TYPE_STR:
                     {
-                        byte[] temp = new byte[4-ParamValue.Length];
-                        ParamValue = Utility.mergeByteArray(temp, ParamValue);
+                        str = Encoding.Default.GetString(ParamValue).Trim('\0');
+                        break;
+                    };
+                case (int)PARAMETER_TYPE.PARAM_TYPE_U8:
+                    {
+                        str = (ParamValue, 0).ToString();
+                        break;
                     }
-                    str = Utility.getU32FromByteA(ParamValue,0).ToString();
-                    break;
-                case (int)INNCOM_CONF.PARAM_TYPE_U16:
-                    if(ParamValue.Length == 1 )
+                case (int)PARAMETER_TYPE.PARAM_TYPE_U8A:
                     {
-                        byte[] temp = new byte[1];
-                        ParamValue = Utility.mergeByteArray(temp, ParamValue);
-                    }   
-                    str = Utility.getU16FromByteA(ParamValue, 0).ToString();
-                    break;
-                case (int)INNCOM_CONF.PARAM_TYPE_F32:
-                    if (ParamValue.Length < 4)
-                    {
-                        byte[] temp = new byte[4 - ParamValue.Length];
-                        ParamValue = Utility.mergeByteArray(temp, ParamValue);
+                        str = Encoding.Default.GetString(ParamValue).Trim('\0');
+                        break;
                     }
-                    str = Utility.getF32FromByteA(ParamValue,0).ToString();
-                    break;
+                case (int)PARAMETER_TYPE.PARAM_TYPE_S8:
+                    {
+                        str = Convert.ToSByte(ParamValue[0]).ToString();
+                        break;
+                    }
+                case (int)PARAMETER_TYPE.PARAM_TYPE_U32:
+                    {
+                        if (ParamValue.Length < 4)
+                        {
+                            byte[] temp = new byte[4 - ParamValue.Length];
+                            ParamValue = Utility.mergeByteArray(temp, ParamValue);
+                        }
+                        str = Utility.getU32FromByteA(ParamValue, 0).ToString();
+                        break;
+                    }
+                case (int)PARAMETER_TYPE.PARAM_TYPE_U16:
+                    {
+                        if (ParamValue.Length == 1)
+                        {
+                            byte[] temp = new byte[1];
+                            ParamValue = Utility.mergeByteArray(temp, ParamValue);
+                        }
+                        str = Utility.getU16FromByteA(ParamValue, 0).ToString();
+                        break;
+                    }
+                case (int)PARAMETER_TYPE.PARAM_TYPE_F32:
+                    {
+                        if (ParamValue.Length < 4)
+                        {
+                            byte[] temp = new byte[4 - ParamValue.Length];
+                            ParamValue = Utility.mergeByteArray(temp, ParamValue);
+                        }
+                        str = Utility.getF32FromByteA(ParamValue, 0).ToString();
+                        break;
+                    }
                 default:
-                    str = BitConverter.ToString(ParamValue).Replace("-", string.Empty);
-                    break;
+                    {
+                        str = BitConverter.ToString(ParamValue).Replace("-", string.Empty);
+                        break;
+                    }
             }
             tTxt_Logs.AppendText("Parameter ID : 0x" + ID + " , Value : " + str);
             tTxt_Logs.AppendText(Environment.NewLine);

@@ -23,5 +23,45 @@ namespace IncomUtility.APP
         {
             InitializeComponent();
         }
+
+        private void tBtn_CheckUserCerInfo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_SendUserCertificate_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_ReadCryptCISN_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_RequestDeviceCertInfo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_CreateKeyPair_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_GetDevicePublicKey_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_TransferCertificate_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tBtn_VerifyCertificate_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
