@@ -22,6 +22,17 @@ namespace IncomUtility.APP
     /// </summary>
     public partial class APP_UI_InstrumentSetting : Window
     {
+        private struct tModbusConfig
+        {
+            public UInt16 crc;
+            public byte slaveId;
+            public byte baudRate;
+            public byte parity;
+            public byte flowControl;
+            public byte dataBit;
+            public byte stopBits;
+        };
+
         //SenParamTable paramTable = null;
         //CONFIG_PARAM_TABLE_STRUCT param = null;
         ERROR_LIST err = ERROR_LIST.ERROR_NONE;
@@ -653,6 +664,8 @@ namespace IncomUtility.APP
 
         private void readModbus()
         {
+            tModbusConfig t_modbus = new tModbusConfig();
+            
             /*
              * Read Slave ID
              */
@@ -662,8 +675,10 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Slave ID");
                 return;
             }
-            tUpdown_SlaveID.Value = value[offset];
-            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            else
+            {
+                t_modbus.slaveId = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
+            }
 
             /*
              * Read Baudrate
@@ -674,8 +689,10 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Baudrate");
                 return;
             }
-            tCmb_Baudrate.SelectedIndex = value[offset];
-            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            else
+            {
+                t_modbus.baudRate = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
+            }
 
             /*
              * Read Parity 
@@ -686,8 +703,11 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Parity");
                 return;
             }
-            tCmb_Parity.SelectedIndex = value[offset];
-            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            else
+            {
+                t_modbus.parity = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
+            }
+
 
             /*
              * Read Flow Control
@@ -698,8 +718,10 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Flow Control");
                 return;
             }
-            tCmb_FlowControl.SelectedIndex = value[offset];
-            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            else
+            {
+                t_modbus.flowControl = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
+            }
 
             /*
              * Read Data bits
@@ -710,8 +732,10 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Databits");
                 return;
             }
-            tCmb_Databits.SelectedIndex = value[offset];
-            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            else
+            {
+                t_modbus.dataBit = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
+            }
 
             /*
              * Read Stop bits
@@ -722,7 +746,18 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Stopbits");
                 return;
             }
-            tCmb_Stopbits.SelectedIndex = value[offset];
+            else
+            {
+                t_modbus.stopBits = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
+            }
+
+            tUpdown_SlaveID.Value = t_modbus.slaveId;
+            tCmb_Baudrate.SelectedIndex = t_modbus.baudRate;
+            tCmb_Parity.SelectedIndex = t_modbus.parity;
+            tCmb_FlowControl.SelectedIndex = t_modbus.flowControl;
+            tCmb_Databits.SelectedIndex = t_modbus.dataBit;
+            tCmb_Stopbits.SelectedIndex = t_modbus.stopBits;
+
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             MessageBox.Show("Read Modbus Settings");
