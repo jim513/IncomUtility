@@ -601,15 +601,16 @@ namespace IncomUtility.APP
             byte u8CalibrationType = logData[offset + 7];
             float f32GasReadingBeforeCal = Utility.getF32FromByteA(logData, offset + 8);
             float f32GasReadingAfterCal = Utility.getF32FromByteA(logData, offset + 12);
-            float f32RawSignalBeforeCal = Utility.getF32FromByteA(logData, offset + 12);
-            float f32CalFactorBeforeCal = Utility.getF32FromByteA(logData, offset + 16);
-            float f32CalFactorAfterCal = Utility.getF32FromByteA(logData, offset + 20);
-            float f32TargetGasConcentration = Utility.getF32FromByteA(logData, offset + 24);
-            float f32CorrectionFactor = Utility.getF32FromByteA(logData, offset + 28);
-            byte u8CalibrationResults = logData[offset + 32];
+            float f32RawSignalBeforeCal = Utility.getF32FromByteA(logData, offset + 16);
+            float f32CalFactorBeforeCal = Utility.getF32FromByteA(logData, offset + 20);
+            float f32CalFactorAfterCal = Utility.getF32FromByteA(logData, offset + 24);
+            float f32TargetGasConcentration = Utility.getF32FromByteA(logData, offset + 28);
+            float f32CorrectionFactor = Utility.getF32FromByteA(logData, offset + 32);
+            byte u8CalibrationResults = logData[offset + 36];
+
             byte[] au8CylinderNo = new byte[(int)INNCOM_CONF.NUM_CYLINDER_SN];
-            for (int i = 0; i < logData.Length - offset - 33; i++)
-                au8CylinderNo[i] = logData[offset + 33 + i];
+            for (int i = 0; i < logData.Length - offset - 37; i++)
+                au8CylinderNo[i] = logData[offset + 37 + i];
 
             string time_str = u16TimeStampYear.ToString() + '/' + u8TimeStampMon.ToString("D2") + '/' + u8TimeStampDay.ToString("D2") + ' ';
             time_str += u8TimeStampHou.ToString("D2") + ':' + u8TimeStampMin.ToString("D2") + ':' + u8TimeStampSec.ToString("D2");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IncomUtility
 {
-   public enum INNCOM_CONF_LIST
+    public enum INNCOM_CONF_LIST
     {
         MODBUS_PARAM_SLAVE_ID = 0x0101,
         MODBUS_PARAM_BAUDRATE = 0x0102,
@@ -162,13 +162,120 @@ namespace IncomUtility
         NUM_CYLINDER_SN = 20,
     }
     public enum LOG_TABLE_TYPE
-    { 
+    {
         LOG_TABLE_TYPE_ALARM = 1,
         LOG_TABLE_TYPE_WARNING = 2,
         LOG_TABLE_TYPE_FAULT = 3,
         LOG_TABLE_TYPE_INFO = 4,
         LOG_TABLE_TYPE_CALIBRATION = 5,
         LOG_TABLE_TYPE_REFLEX = 6,
+    }
+    public class INCOM_DEVICE_CONFIG_STRUCT
+    {
+        public CONFIG_MODBUS_STRUCT tModbusCfg;
+        public CONFIG_RELAY_STRUCT tRelayCfg;
+        public CONFIG_MA_OUPUT_STRUCT tmAOutputCfg;
+        public CONFIG_GENERAL_SETTINGS_STRUCT tGeneralCfg;
+        public CONFIG_CIRCUIT_CALIBRATION_STRUCT tCircuitCalCfg;
+        public byte[] u8Reserved = new byte[26];
+        public CONFIG_DEVICE_INFO_STRUCT tDeviceInfo;
+        public CONFIG_SECURITY_STRUCT tSecurityCfg;
+        public CONFIG_NTC_COMP_STRUCT tNtcCfg;
+        public CONFIG_UL2075_HISTOGRAM_STRUCT tUL2075Cfg;
+
+        public INCOM_DEVICE_CONFIG_STRUCT()
+        {
+            tModbusCfg = new CONFIG_MODBUS_STRUCT();
+            tRelayCfg = new CONFIG_RELAY_STRUCT();
+            tmAOutputCfg = new CONFIG_MA_OUPUT_STRUCT();
+            tGeneralCfg = new CONFIG_GENERAL_SETTINGS_STRUCT();
+            tCircuitCalCfg = new CONFIG_CIRCUIT_CALIBRATION_STRUCT();
+            tDeviceInfo = new CONFIG_DEVICE_INFO_STRUCT();
+            tSecurityCfg = new CONFIG_SECURITY_STRUCT();
+            tNtcCfg = new CONFIG_NTC_COMP_STRUCT();
+            tUL2075Cfg = new CONFIG_UL2075_HISTOGRAM_STRUCT();
+        }
+    }
+    public class CONFIG_MODBUS_STRUCT
+    {
+        public ushort u16_crc = 0;
+        public byte u8_SlaveId;
+        public byte u8_Baudrate;
+        public byte u8_Parity;
+        public byte u8_FlowCtrl;
+        public byte u8_Databits;
+        public byte u8_Stopbits;
+    }
+    public class CONFIG_RELAY_STRUCT
+    {
+        public ushort u16_crc;
+        public byte u8_TriggerEvent1;
+        public byte u8_TriggerEvent2;
+        public byte u8_InitialState1;
+        public byte u8_InitialState2;
+        public ushort u16_OnDelayTime;
+        public ushort u16_OffDelayTime;
+    }
+
+    public class CONFIG_MA_OUPUT_STRUCT
+    {
+        public ushort u16_crc;
+        public byte u8_FaultCurrent;
+        public byte u8_WarningCurrent;
+        public byte u8_OverrangeCurrent;
+        public ushort u16_InhibitTimeout;
+    }
+    public class CONFIG_GENERAL_SETTINGS_STRUCT
+    {
+        public ushort u16_crc;
+        public byte[] u8_LocationTag = new byte[(int)INNCOM_CONF.NUM_LOCATION_TAG];
+        public byte u8_LEDCtrl;
+        public byte u8_AlarmMode;
+        public byte u8_SafeMode;
+        public byte u8_CalOverDueOption;
+        public byte[] u8_passcode = new byte[4];
+    }
+
+    public class CONFIG_CIRCUIT_CALIBRATION_STRUCT
+    {
+        public ushort u16_crc;
+        public float f32_mAOutputSinkOffset;
+        public float f32_mAOutputSourceOffset;
+        public float f32_mAOutputSinkSpan;
+        public float f32_mAOutputSourceSpan;
+        public float f32_mALoopbackSinkOffset;
+        public float f32_mALoopbackSourceOffset;
+        public float f32_mALoopbackSinkSpan;
+        public float f32_mALoopbackSourceSpan;
+        public float f32_VoltageOutputOffset;
+        public float f32_VoltageOutputSpan;
+    }
+    public class CONFIG_DEVICE_INFO_STRUCT
+    {
+        public ushort u16_crc;
+        public byte[] u8_DeviceSerialNum = new byte[(int)INNCOM_CONF.NUM_DEVICE_SN];
+        public byte[] u8_BoardSerialNum = new byte[(int)INNCOM_CONF.NUM_BOARD_SN];
+    }
+
+    public class CONFIG_SECURITY_STRUCT
+    {
+        public ushort u16_crc;
+        public byte u8_num_login_retry;
+        public byte u8_login_locktime;
+        public byte u8_otp_limits;
+        public byte u8_reserved;
+        public byte[] u8_otp_key = new byte[(int)INNCOM_CONF.NUM_OTP_KEY];
+    }
+    public class CONFIG_NTC_COMP_STRUCT
+    {
+        public ushort u16_crc;
+        public sbyte[] s8_NtcTempComp = new sbyte[(int)INNCOM_CONF.NUM_NTC_COMP];
+    }
+
+    public class CONFIG_UL2075_HISTOGRAM_STRUCT
+    {
+        public ushort u16_crc;
+        public byte[] u8_Histogram = new byte[(int)INNCOM_CONF.NUM_HISTOGRAM];
     }
     public class CONFIG_PARAM_TABLE_STRUCT
     {

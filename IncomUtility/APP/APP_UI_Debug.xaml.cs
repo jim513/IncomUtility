@@ -52,15 +52,13 @@ namespace IncomUtility.APP
                 return InputText;
             }
         }
-
-        DateTime now;
-        private void tBtn_SendCMD_Click(object sender, RoutedEventArgs e)
+        private void sendCMD()
         {
             if (!SerialPortIO.isPortOpen())
             {
                 tTxt_Log.AppendText("Port is not open");
                 tTxt_Log.AppendText(Environment.NewLine);
-                return ;
+                return;
             }
 
             byte[] CMD;
@@ -87,7 +85,7 @@ namespace IncomUtility.APP
             /*
              *  Check Additional Input
              */
-            if(tBtn_Payload.Text !="")
+            if (tBtn_Payload.Text != "")
             {
                 string addtionalCmd = tBtn_Payload.Text;
                 int value;
@@ -100,9 +98,9 @@ namespace IncomUtility.APP
                 {
                     tTxt_Log.AppendText("Input is not hex number");
                     tTxt_Log.AppendText(Environment.NewLine);
-                    return; 
+                    return;
                 }
-             
+
                 CMD = Utility.mergeByteArray(CMD, Utility.hexStringToByteArray(addtionalCmd));
             }
 
@@ -110,6 +108,8 @@ namespace IncomUtility.APP
             byte[] u8TXbuffer = quattro.buildCMDPacket((byte)PACKET_CONF.COMM_SYSTEM_MFG_PC, (byte)PACKET_CONF.COMM_SYSTEM_INCOM, CMD, ref err);
             tTxt_Log.AppendText(now.ToLongTimeString() + " TX : " + BitConverter.ToString(u8TXbuffer));
             tTxt_Log.AppendText(Environment.NewLine);
+
+            SerialPortIO.mutex.WaitOne();
 
             writePacket(ref u8TXbuffer, ref err);
 
@@ -121,15 +121,24 @@ namespace IncomUtility.APP
             }
 
             byte[] u8RXbuffer = readPacket(ref err);
+
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Log.AppendText("Read Failed!");
                 tTxt_Log.AppendText(Environment.NewLine);
+                SerialPortIO.mutex.ReleaseMutex();
+
                 return;
-            }   
-            
+            }
+            SerialPortIO.mutex.ReleaseMutex();
+
             tTxt_Log.AppendText(now.ToLongTimeString() + " RX : " + BitConverter.ToString(u8RXbuffer));
             tTxt_Log.AppendText(Environment.NewLine);
+        }
+        DateTime now;
+        private void tBtn_SendCMD_Click(object sender, RoutedEventArgs e)
+        {
+            sendCMD();
         }
         private void writePacket(ref byte[] sendbuffer, ref ERROR_LIST err)
         {
@@ -143,7 +152,6 @@ namespace IncomUtility.APP
                 err = ERROR_LIST.ERROR_INPUT_DATA_NONE;
                 return;
             }
-            SerialPortIO.mutex.WaitOne();
 
             while (SerialPortIO.serialPort.BytesToRead > 0)
             {
@@ -176,7 +184,6 @@ namespace IncomUtility.APP
                 return null;
             }
 
-            SerialPortIO.mutex.ReleaseMutex();
             err = ERROR_LIST.ERROR_NONE;
             return readBuffer;
         }

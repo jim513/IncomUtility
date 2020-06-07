@@ -36,7 +36,7 @@ namespace IncomUtility
 
         Thread timeLock = null;
 
-        ERROR_LIST err =ERROR_LIST.ERROR_NONE;
+        ERROR_LIST err = ERROR_LIST.ERROR_NONE;
 
         int DatagirdoRowSize = 16;
         public APP_UI_MonitorDeviceStatus()
@@ -143,7 +143,18 @@ namespace IncomUtility
                     value[bit_pos] = "False";
                 }
             }
-
+            currentByte = u8RXbuffer[u8RXbuffer.Length - 5];
+            for (int bit_pos = bitNumberOfByte; bit_pos < bitNumberOfByte * 2; bit_pos++)
+            {
+                if (Utility.checkBitPos(currentByte, bit_pos))
+                {
+                    value[bit_pos] = "True";
+                }
+                else
+                {
+                    value[bit_pos] = "False";
+                }
+            }
             makeDataGrid(grid, list, status, value);
 
         }
@@ -189,7 +200,7 @@ namespace IncomUtility
                 timeToSend[5] = (byte)setTime.Minute;
                 timeToSend[6] = (byte)setTime.Second;
 
-                SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err,300);
+                SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err, 300);
 
                 if (err == ERROR_LIST.ERROR_NONE)
                 {
@@ -213,40 +224,6 @@ namespace IncomUtility
                 tBtn_SetTime.IsEnabled = true;
             }));
 
-        }
-        private bool isTimeCheck(int year, int month,int day, int hour, int minute, int second)
-        {
-            if (year < 999 || year > 10000)
-            {
-                return false;
-            }
-
-            if (month < 1 || month > 12)
-            {
-                return false;
-            }
-
-            if (day < 1 || day > 31)
-            {
-                return false;
-            }
-
-            if (hour < 0 || hour > 24)
-            {
-                return false;
-            }
-
-            if (minute < 0 || minute > 60)
-            {
-                return false;
-            }
-
-            if (second < 0 || second > 60)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         private void readDeviceSatus()
@@ -382,7 +359,7 @@ namespace IncomUtility
                 int minute = u8RXbuffer[(int)PACKET_CONF.COMM_POS_PAYLOAD + 8];
                 int second = u8RXbuffer[(int)PACKET_CONF.COMM_POS_PAYLOAD + 9];
 
-                if (!isTimeCheck(year, month, day, hour, minute, second))
+                if (!Utility.isTimeCheck(year, month, day, hour, minute, second))
                 {
                     tTxt_Memo1.AppendText("ERROR - READ TIME");
                     tTxt_Memo1.AppendText(Environment.NewLine);
