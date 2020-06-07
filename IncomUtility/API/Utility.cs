@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace IncomUtility
 {
@@ -197,14 +198,31 @@ namespace IncomUtility
         {
             return data |= (byte)(0x01 << bit_pos);
         }
-        public static byte[] classToByteArray(object source)
+        public static T ByteToStruct<T>(byte[] buffer) where T : struct
         {
-            var formatter = new BinaryFormatter();
-            using (var stream = new MemoryStream())
+            int size = Marshal.SizeOf(typeof(T));
+
+            if (size > buffer.Length)
             {
-                formatter.Serialize(stream, source);
-                return stream.ToArray();
+                throw new Exception();
             }
+
+            IntPtr ptr = Marshal.AllocHGlobal(size);
+            Marshal.Copy(buffer, 0, ptr, size);
+            T obj = (T)Marshal.PtrToStructure(ptr, typeof(T));
+            Marshal.FreeHGlobal(ptr);
+
+            return obj;
+        }
+        public static byte[] StructToByte(object obj)
+        {
+            int size = Marshal.SizeOf(obj);
+            byte[] arr = new byte[size];
+            IntPtr ptr = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(obj, ptr, true);
+            Marshal.Copy(ptr, arr, 0, size);
+            Marshal.FreeHGlobal(ptr);
+            return arr;
         }
     }
 }
