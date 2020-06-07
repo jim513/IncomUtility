@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -19,6 +19,59 @@ namespace IncomUtility
         public static byte[] mergeByteArray(byte[] a, byte[] b)
         {
             return a.Concat(b).ToArray();
+        }
+        public static bool isTimeCheck(int year, int month, int day, int hour, int minute, int second)
+        {
+            if (year < 999 || year > 10000)
+            {
+                return false;
+            }
+
+            if (month < 1 || month > 12)
+            {
+                return false;
+            }
+
+            if (day < 1 || day > 31)
+            {
+                return false;
+            }
+
+            if (hour < 0 || hour > 24)
+            {
+                return false;
+            }
+
+            if (minute < 0 || minute > 60)
+            {
+                return false;
+            }
+
+            if (second < 0 || second > 60)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        public static bool isTimeCheck(int year, int month, int day)
+        {
+            if (year < 999 || year > 10000)
+            {
+                return false;
+            }
+
+            if (month < 1 || month > 12)
+            {
+                return false;
+            }
+
+            if (day < 1 || day > 31)
+            {
+                return false;
+            }
+
+            return true;
         }
         public static float getF32FromByteA(byte[] data, int offset)
         {
@@ -170,7 +223,6 @@ namespace IncomUtility
             Marshal.Copy(ptr, arr, 0, size);
             Marshal.FreeHGlobal(ptr);
             return arr;
-
         }
     }
 }

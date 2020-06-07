@@ -68,6 +68,17 @@ namespace IncomUtility
             return (UInt16)(u16_crc ^ (UInt16)CRC16.CRC_enum.CRC16_FINAL_XOR);
         }
 
+        public UInt16 UpdateCRC16(byte[] data, UInt32 u32_len,int startIndex)
+        {
+            UInt16 u16_crc = (ushort)CRC_enum.CRC_SEED;
+
+            for (int i = startIndex; i < u32_len; i++)
+            {
+                u16_crc = (UInt16)(CRC16.CRC16Table[(u16_crc >> (Byte)CRC16.CRC_enum.BYTE_BITS) ^ data[i]] ^ (u16_crc << (byte)CRC16.CRC_enum.BYTE_BITS));
+            }
+
+            return (UInt16)(u16_crc ^ (UInt16)CRC16.CRC_enum.CRC16_FINAL_XOR);
+        }
     }
 }
 

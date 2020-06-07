@@ -37,12 +37,17 @@ namespace IncomUtility.APP
         //CONFIG_PARAM_TABLE_STRUCT param = null;
         ERROR_LIST err = ERROR_LIST.ERROR_NONE;
         int offset = (int)INNCOM_CONF.SZ_PARAM_INDEX;
+
+        INCOM_DEVICE_CONFIG_STRUCT tIncom_cfg = null;
+        CRC16 crc16 = null;
         public APP_UI_InstrumentSetting()
         {
             InitializeComponent();
 
             //paramTable = new SenParamTable();
             //param = new CONFIG_PARAM_TABLE_STRUCT(0,0,0);
+            tIncom_cfg = new INCOM_DEVICE_CONFIG_STRUCT();
+            crc16 = new CRC16();
         }
 
         private byte[] getParmeterConfigruations(INNCOM_CONF_LIST configuration_setting)
@@ -76,12 +81,6 @@ namespace IncomUtility.APP
 
         private byte[] setParmeterConfigruations<T>(INNCOM_CONF_LIST configuration_setting , T dataToWrite)
         {
-            //bool found = paramTable.searchParmCfg((ushort)configuration_setting, ref param);
-            //if (!found)
-            //{
-            //    return null;
-            //}
-
             /*
              * Make Payload using Incom Parameter configuration
              */
@@ -120,6 +119,10 @@ namespace IncomUtility.APP
             int delayTime = (int)Constants.defaultSleep;
             if ((int)configuration_setting >= (int)INNCOM_CONF_LIST.ALARM_PARAM_THRESHOLD1)
             {
+                if((int)configuration_setting <= (int)INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY)
+                {
+                    delayTime = 400;
+                }
                 if ((int)configuration_setting <= (int)INNCOM_CONF_LIST.GAS_PARAM_DISPLAY_RESOLUTION)
                 {
                     delayTime = 1000;
@@ -152,6 +155,15 @@ namespace IncomUtility.APP
             readCircuitCal();         
         }
 
+        private void tBtn_ReadDeviceInfo_Click(object sender, RoutedEventArgs e)
+        {
+            readDeviceInfo();
+        }
+        private void tBtn_ReadGasSetting_Click(object sender, RoutedEventArgs e)
+        {
+            readGasSetting();
+        }
+
         private void tBtn_ReadGeneral_Click(object sender, RoutedEventArgs e)
         {
             readGeneral();
@@ -182,7 +194,7 @@ namespace IncomUtility.APP
             readSecurity();           
         }
        
-        private void tRead_UL2075_Click(object sender, RoutedEventArgs e)
+        private void tBtn_ReadUL2075_Click(object sender, RoutedEventArgs e)
         {
             readUL2075();
         }
@@ -231,6 +243,32 @@ namespace IncomUtility.APP
         {
             writeNTC();
         }
+
+        private void tBtn_WriteRelay_Click(object sender, RoutedEventArgs e)
+        {
+            writeRelay();
+        }
+
+        private void tBtn_WriteSecurity_Click(object sender, RoutedEventArgs e)
+        {
+            writeSecurity();
+        }
+
+        private void tBtn_WriteUL2075_Click(object sender, RoutedEventArgs e)
+        {
+            writeUL2075();
+        }
+
+        private void tBtn_GasSettingApply_Click(object sender, RoutedEventArgs e)
+        {
+            gasSettingApply();
+        }
+   
+        private void tBtn_Save_Click(object sender, RoutedEventArgs e)
+        {
+            getIncomConfigurationFromWindow();
+        }
+
         private void readAlarm()
         {
             /*
@@ -362,9 +400,20 @@ namespace IncomUtility.APP
             int year = Utility.getU16FromByteA(value, offset);
             byte month = value[offset + 2];
             byte day = value[offset + 3];
-            tDate_LastCalDate.SelectedDate = new DateTime(year, month, day);
-            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
+            if (Utility.isTimeCheck(year, month, day))
+            {
+                tDate_LastCalDate.SelectedDate = new DateTime(year, month, day);
+                Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            }
+            else
+            {
+                MessageBox.Show("Not Calibrated yet");
+                /*
+                 *  Do Something When Last Calibration is Wrong
+                 *  ex) No Calibrate previous
+                 */
+            }
             /*
             * Read Days Since Last Cal
             */
@@ -393,7 +442,7 @@ namespace IncomUtility.APP
                 return;
             }
             float _420mAOffsetSink = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit1.Value = _420mAOffsetSink;
+            tUpdown_4to20mAOffsetSink.Value = _420mAOffsetSink;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
@@ -406,7 +455,7 @@ namespace IncomUtility.APP
                 return;
             }
             float _420mASpanSink = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit2.Value = _420mASpanSink;
+            tUpdown_4to20mASpanSink.Value = _420mASpanSink;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
@@ -419,7 +468,7 @@ namespace IncomUtility.APP
                 return;
             }
             float _420mAOffsetSource = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit3.Value = _420mAOffsetSource;
+            tUpdown_4to20mAOffsetSource.Value = _420mAOffsetSource;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
@@ -432,7 +481,7 @@ namespace IncomUtility.APP
                 return;
             }
             float _420mASpanSource = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit4.Value = _420mASpanSource;
+            tUpdown_4to20mASpanSource.Value = _420mASpanSource;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
@@ -445,7 +494,7 @@ namespace IncomUtility.APP
                 return;
             }
             float loopOffsetSink = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit5.Value = loopOffsetSink;
+            tUpdown_LoopbakcOffsetSink.Value = loopOffsetSink;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
 
@@ -459,7 +508,7 @@ namespace IncomUtility.APP
                 return;
             }
             float loopSpanSink = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit6.Value = loopSpanSink;
+            tUpdown_LoopbackSpanSink.Value = loopSpanSink;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
 
@@ -473,7 +522,7 @@ namespace IncomUtility.APP
                 return;
             }
             float loopOffsetSource = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit7.Value = loopOffsetSource;
+            tUpdown_LoopbackOffsetSource.Value = loopOffsetSource;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
@@ -486,7 +535,7 @@ namespace IncomUtility.APP
                 return;
             }
             float loopSpanSource = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit8.Value = loopSpanSource;
+            tUpdown_LoopbackSpanSource.Value = loopSpanSource;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
@@ -499,7 +548,7 @@ namespace IncomUtility.APP
                 return;
             }
             float voltagegOutOffset = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit9.Value = voltagegOutOffset;
+            tUpdown_VoltageOutputOffset.Value = voltagegOutOffset;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
 
@@ -513,11 +562,170 @@ namespace IncomUtility.APP
                 return;
             }
             float voltagegOutSpan = Utility.getF32FromByteA(value, offset);
-            tUpdown_Circuit10.Value = voltagegOutSpan;
+            tUpdown_VoltageOutputSpan.Value = voltagegOutSpan;
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             MessageBox.Show("Read Circuit Calibration Parameters");
 
+        }
+
+        private void readDeviceInfo()
+        {
+            /*
+             * Read Device Serial Number
+             */
+    
+            byte[] value = getParmeterConfigruations(INNCOM_CONF_LIST.DEV_INFO_PARAM_DEVICE_SN);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Device Serial Number");
+                return;
+            }
+
+            string str = Encoding.Default.GetString(value, 2, value.Length - 2).Trim('\0');
+            tTxt_DeviceSerialNumber.Text = str;
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             *  Write Board Serial Number
+             */
+
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.DEV_INFO_PARAM_BOARD_SN);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Board Serial Number");
+                return;
+            }
+
+            str = Encoding.Default.GetString(value, 2, value.Length - 2).Trim('\0');
+            tTxt_BoardSerialNumber.Text = str;
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            MessageBox.Show("Read Device Info");
+        }
+
+        private void readGasSetting()
+        {
+            /*
+            * Read Gas Name
+            */
+
+            byte[] value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_USER_GAS_NAME);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read User Gas Name");
+                return;
+            }
+            string str = Encoding.Default.GetString(value, 2, value.Length - 2).Trim('\0');
+            tTxt_GasName.Text = str;
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             * Read Unit Conversion
+             */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_UNIT_CONVERSION);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Gas Unit Conversion");
+                return;
+            }
+            tUpdown_UnitConversion.Value = Utility.getF32FromByteA(value, offset);
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             * Read Correction Factor
+             */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_CORRECTION_FACTOR);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Correction Factor");
+                return;
+            }
+            tUpdown_CorrectionFactor.Value = Utility.getF32FromByteA(value, offset);
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             * Read Measurement Unit
+             */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_MEASUREMENT_UNITS);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Measurment Unit");
+                return;
+            }
+            tCmb_MeasurementUnit.SelectedIndex = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+           * Read Measuring Range
+           */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_MEASURING_RANGE);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Measuring Range");
+                return;
+            }
+            tUpdown_MeasuringRange.Value = Utility.getF32FromByteA(value, offset);
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+            * Read Deadband
+             */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_DEADBAND);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Deadband");
+                return;
+            }
+            tCmb_Deadband.SelectedIndex = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             * Read Gas Type
+            */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_GAS_TYPE);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Gas Type");
+                return;
+            }
+            tCmb_GasType.SelectedIndex = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            /*
+            * Read Target Channel
+             */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_TARGET_CHANNEL);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Target Channel");
+                return;
+            } 
+            tUpdown_TargetChannel.Value = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            /*
+             * Read Decimal Points
+              */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_DECIMAL_POINT);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Decimal Points");
+                return;
+            } 
+            tCmb_DecimalPoints.SelectedIndex = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            /*
+            * Read Display Resolution
+             */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.GAS_PARAM_DISPLAY_RESOLUTION);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read Display Resolution");
+                return;
+            }
+            tUpdown_DisplayResoultion.Value = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            MessageBox.Show("Read Gas Parameters");
         }
 
         private void readGeneral()
@@ -1113,70 +1321,70 @@ namespace IncomUtility.APP
             /*
             * Write Circuit Calibration
             */
-            byte[] value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_OFFSET_SINK, (float)tUpdown_Circuit1.Value);
+            byte[] value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_OFFSET_SINK, (float)tUpdown_4to20mAOffsetSink.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write 4-20mA Offset Sink");
                 return;
             }
 
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_OFFSET_SOURCE, (float)tUpdown_Circuit3.Value);
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_OFFSET_SOURCE, (float)tUpdown_4to20mAOffsetSource.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write 4-20mA Offset Source");
                 return;
             }
 
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_SPAN_SINK, (float)tUpdown_Circuit2.Value);
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_SPAN_SINK, (float)tUpdown_4to20mASpanSink.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write 4-20mA Span Sink");
                 return;
             }
 
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_SPAN_SOURCE, (float)tUpdown_Circuit4.Value);
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_SPAN_SOURCE, (float)tUpdown_4to20mASpanSource.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write 4-20mA Span Source");
                 return;
             }
 
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_OFFSET_SINK, (float)tUpdown_Circuit5.Value);
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_OFFSET_SINK, (float)tUpdown_LoopbakcOffsetSink.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write 4-20mA Loop Offest Sink");
                 return;
             }
 
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_OFFSET_SOURCE, (float)tUpdown_Circuit7.Value);
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_OFFSET_SOURCE, (float)tUpdown_LoopbackOffsetSource.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write 4-20mA Loop Offest Source");
                 return;
             }
 
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_SPAN_SINK, (float)tUpdown_Circuit6.Value);
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_SPAN_SINK, (float)tUpdown_LoopbackSpanSink.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write 4-20mA Loop Span Sink");
                 return;
             }
 
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_SPAN_SOURCE, (float)tUpdown_Circuit8.Value);
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_SPAN_SOURCE, (float)tUpdown_LoopbackSpanSource.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write 4-20mA Loop Span Source");
                 return;
             }
 
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_VOLTAGE_OUT_OFFSET, (float)tUpdown_Circuit9.Value);
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_VOLTAGE_OUT_OFFSET, (float)tUpdown_VoltageOutputOffset.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Voltage Output Offset");
                 return;
             }
 
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_VOLTAGE_OUT_SPAN, (float)tUpdown_Circuit10.Value);
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.CIRCUIT_PARAM_VOLTAGE_OUT_SPAN, (float)tUpdown_VoltageOutputSpan.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Voltage Output Span");
@@ -1555,5 +1763,362 @@ namespace IncomUtility.APP
 
         }
 
+        private void writeRelay()
+        {
+            /*
+             * Write Relay Trigger Event1
+             */
+            byte[] value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_TRIGGER1 , (byte)tCmb_TriggerEvent1.SelectedIndex);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write Relay Trigger Event1");
+                return;
+            }
+             /*
+             * Write Relay Trigger Event2
+             */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_TRIGGER2 ,(byte)tCmb_TriggerEvent2.SelectedIndex);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write Relay Trigger Event2");
+                return;
+            }
+       
+            /*
+             * Write Relay Initial State1
+             */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_INIT_STATE1, (byte)tCmb_InitialState1.SelectedIndex);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write Relay Initial State1");
+                return;
+            }
+      
+            /*
+             * Write Relay Initial State2
+             */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_INIT_STATE2,(byte)tCmb_InitialState2.SelectedIndex);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write Relay Initial State2");
+                return;
+            }
+       
+            /*
+             * Write Relay On Delay Time
+             */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_ON_DELAY_TIME, (ushort)tUpdown_OnDelayTime.Value);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write Relay On Delay Time");
+                return;
+            }
+                   /*
+           * Write Relay Off Delay Time
+           */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_OFF_DELAY_TIME,(ushort)tUpdown_OffDelayTime.Value);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write Relay Off Delay Time");
+                return;
+            }
+            
+            MessageBox.Show("Write Relay Settings");
+
+        }
+
+        private void writeSecurity()
+        {
+            /*
+             * Write Login Retry Count
+             */
+            byte[] value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_NUM_RETRY, (byte)tUpdown_LoginRetry.Value);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write Login Retry Count");
+                return;
+            }
+             /*
+             * Write Login Lock Time
+             */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_LOGIN_LOCK_TIME ,(byte)tUpdown_LoginLockTime.Value);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write Login Lock Time");
+                return;
+            }
+             /*
+             * Write OTP Connection
+             */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_OTP_CONNECTION,(byte)tUpdown_OTPConnection.Value);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write OTP Connection");
+                return;
+            }
+           /*
+           * Read OTP Key
+           */
+            value = getParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Read OTP Key");
+                return;
+            }
+
+            /*
+            * Write OTP Key
+             */
+
+            byte[] OTPKey = new byte[value.Length - 2];
+            Array.Copy(value, OTPKey, value.Length - 2);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY,OTPKey);
+            if (value == null)
+            {
+                MessageBox.Show("ERROR - Write OTP Key");
+                return;
+            }
+
+            MessageBox.Show("Write Security Parameters");
+        }
+
+        private void writeUL2075()
+        {
+            /*
+          * Write UL2075
+          */
+            byte[] value = null;
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_HISTOGRAM; i++)
+            {
+                DecimalUpDown UL2075 = (DecimalUpDown)this.FindName(String.Format("tUpdown_UL2075Count{0}", i + 1));           
+                value = setParmeterConfigruations(INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD1 + i ,(byte)UL2075.Value);
+                if (value == null)
+                {
+                    MessageBox.Show("ERROR - Write UL2075 : " + i + 1);
+                    return;
+                }            
+            }
+            MessageBox.Show("Write UL2075 Parameters");
+        }
+
+        private void gasSettingApply()
+        {
+           
+            tUpdown_CalCon.Value = tUpdown_CalCon.Value * tUpdown_UnitConversion.Value;
+            tUpdown_AlarmThreshold1.Value = tUpdown_AlarmThreshold1.Value * tUpdown_UnitConversion.Value;
+            tUpdown_AlarmThreshold2.Value = tUpdown_AlarmThreshold2.Value * tUpdown_UnitConversion.Value;
+            tUpdown_AlarmThreshold3.Value = tUpdown_AlarmThreshold3.Value * tUpdown_UnitConversion.Value;
+            tUpdown_MeasuringRange.Value = tUpdown_MeasuringRange.Value *  tUpdown_UnitConversion.Value;
+        }
+
+        private void getIncomConfigurationFromWindow()
+        {
+            ushort u16_param_index = 0;
+            byte u8_result = 0;
+            byte u8_idx = 0;
+            bool b_found = false;
+            byte[] u8_param_value = new byte[41];
+            ushort u16_fl_crc = 0;
+            string CompName = "";
+            byte[] classToBytes = null;
+            int crc16_sz = 2;
+
+            /*
+             * Get Modbus Parameters 
+            */
+            tIncom_cfg.tModbusCfg.u8_SlaveId = (byte)tUpdown_SlaveID.Value;
+            tIncom_cfg.tModbusCfg.u8_Parity = (byte)tCmb_Parity.SelectedIndex;
+            tIncom_cfg.tModbusCfg.u8_Baudrate = (byte)tCmb_Baudrate.SelectedIndex;
+            tIncom_cfg.tModbusCfg.u8_FlowCtrl = (byte)tCmb_FlowControl.SelectedIndex;
+            tIncom_cfg.tModbusCfg.u8_Databits = (byte)tCmb_Databits.SelectedIndex;
+            tIncom_cfg.tModbusCfg.u8_Stopbits = (byte)tCmb_Stopbits.SelectedIndex;
+
+            classToBytes = Utility.classToByteArray(tIncom_cfg.tModbusCfg);
+            tIncom_cfg.tModbusCfg.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            /*
+             * Get Relay Parameters 
+             */
+            tIncom_cfg.tRelayCfg.u8_TriggerEvent1 = (byte)tCmb_TriggerEvent1.SelectedIndex;
+            tIncom_cfg.tRelayCfg.u8_TriggerEvent2 = (byte)tCmb_TriggerEvent2.SelectedIndex;
+            tIncom_cfg.tRelayCfg.u8_InitialState1 = (byte)tCmb_InitialState1.SelectedIndex;
+            tIncom_cfg.tRelayCfg.u8_InitialState2 = (byte)tCmb_InitialState2.SelectedIndex;
+
+            tIncom_cfg.tRelayCfg.u16_OnDelayTime = (ushort)tUpdown_OnDelayTime.Value;
+            tIncom_cfg.tRelayCfg.u16_OffDelayTime = (ushort)tUpdown_OffDelayTime.Value;
+
+            //u16_fl_crc:= CRC_SEED_VAL;
+            //    CalcCRC16(@tIncom_cfg.tRelayCfg, 2, sizeof(tIncom_cfg.tRelayCfg), u16_fl_crc);
+
+            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
+            //tIncom_cfg.tRelayCfg.u16_crc := u16_fl_crc;
+
+
+            /*
+             *Get mA Output Parameters 
+             */
+            tIncom_cfg.tmAOutputCfg.u8_FaultCurrent = (byte)(tUpdown_FaultCurrent.Value * 10);
+            tIncom_cfg.tmAOutputCfg.u8_WarningCurrent = (byte)(tUpdown_WarningCurrent.Value * 10);
+            tIncom_cfg.tmAOutputCfg.u8_OverrangeCurrent = (byte)(tUpdown_OverRangeCurrent.Value * 10);
+            tIncom_cfg.tmAOutputCfg.u16_InhibitTimeout = (ushort)tUpdown_InhibitTimeout.Value;
+
+            //u16_fl_crc:= CRC_SEED_VAL;
+            //    CalcCRC16(@tIncom_cfg.tmAOutputCfg, 2, sizeof(tIncom_cfg.tmAOutputCfg), u16_fl_crc);
+            //    //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
+            //    tIncom_cfg.tmAOutputCfg.u16_crc := u16_fl_crc;
+
+            /*
+             *Get General Parameters 
+             */
+            string str = tTxt_LocationTag.Text;
+
+            int str_len = str.Length;
+            if (str_len > (int)INNCOM_CONF.NUM_LOCATION_TAG)
+            {
+                str_len = (int)INNCOM_CONF.NUM_LOCATION_TAG;
+            }
+            Encoding.ASCII.GetBytes(str, 0, str_len, tIncom_cfg.tGeneralCfg.u8_LocationTag, 0);
+
+            tIncom_cfg.tGeneralCfg.u8_LEDCtrl = (byte)tCmb_LEDControl.SelectedIndex;
+            tIncom_cfg.tGeneralCfg.u8_AlarmMode = (byte)tCmb_AlarmOperationMode.SelectedIndex;
+            tIncom_cfg.tGeneralCfg.u8_SafeMode = (byte)tCmb_SafetyMode.SelectedIndex;
+            tIncom_cfg.tGeneralCfg.u8_CalOverDueOption = (byte)tCmb_CalOverdue.SelectedIndex;
+
+            tIncom_cfg.tGeneralCfg.u8_passcode[0] = (byte)tUpdown_Passcode1.Value;
+            tIncom_cfg.tGeneralCfg.u8_passcode[1] = (byte)tUpdown_Passcode2.Value;
+            tIncom_cfg.tGeneralCfg.u8_passcode[2] = (byte)tUpdown_Passcode3.Value;
+            tIncom_cfg.tGeneralCfg.u8_passcode[3] = (byte)tUpdown_Passcode4.Value;
+
+            // u16_fl_crc:= CRC_SEED_VAL;
+            //CalcCRC16(@tIncom_cfg.tGeneralCfg, 2, sizeof(tIncom_cfg.tGeneralCfg), u16_fl_crc);
+            ////  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
+            //tIncom_cfg.tGeneralCfg.u16_crc := u16_fl_crc;
+
+            /* 
+             * Get Circuit Calibration Parameters 
+             */
+
+            tIncom_cfg.tCircuitCalCfg.f32_mAOutputSinkOffset = (float)tUpdown_4to20mAOffsetSink.Value;
+            tIncom_cfg.tCircuitCalCfg.f32_mAOutputSinkSpan = (float)tUpdown_4to20mASpanSink.Value;
+            tIncom_cfg.tCircuitCalCfg.f32_mAOutputSourceOffset = (float)tUpdown_4to20mAOffsetSource.Value;
+            tIncom_cfg.tCircuitCalCfg.f32_mAOutputSourceSpan = (float)tUpdown_4to20mASpanSource.Value;
+            tIncom_cfg.tCircuitCalCfg.f32_mALoopbackSinkOffset = (float)tUpdown_LoopbakcOffsetSink.Value;
+            tIncom_cfg.tCircuitCalCfg.f32_mALoopbackSinkSpan = (float)tUpdown_LoopbackSpanSink.Value;
+            tIncom_cfg.tCircuitCalCfg.f32_mALoopbackSourceOffset = (float)tUpdown_LoopbackOffsetSource.Value;
+            tIncom_cfg.tCircuitCalCfg.f32_mALoopbackSourceSpan = (float)tUpdown_LoopbackSpanSource.Value;
+            tIncom_cfg.tCircuitCalCfg.f32_VoltageOutputOffset = (float)tUpdown_VoltageOutputOffset.Value;
+            tIncom_cfg.tCircuitCalCfg.f32_VoltageOutputSpan = (float)tUpdown_VoltageOutputSpan.Value;
+            //u16_fl_crc:= CRC_SEED_VAL;
+            //    CalcCRC16(@tIncom_cfg.tCircuitCalCfg, 2, sizeof(tIncom_cfg.tCircuitCalCfg), u16_fl_crc);
+            //    //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
+            //    tIncom_cfg.tCircuitCalCfg.u16_crc := u16_fl_crc;
+
+            for (int i = 0; i < 26; i++)
+            {
+                tIncom_cfg.u8Reserved[i] = 0xff;
+            }
+
+            /*
+            { Get Device Info Parameters }
+        // Device SN
+
+        str:= adeDeviceSN.Text;
+        u8_str_len:= Length(str);
+
+            for u8_index := 0 to NUM_DEVICE_SN - 1 do
+                    begin
+            
+                 tIncom_cfg.tDeviceInfo.u8_DeviceSerialNum[u8_index] := 0;
+            end;
+
+            for u8_index := 0 to u8_str_len - 1 do
+                    begin
+          
+               tIncom_cfg.tDeviceInfo.u8_DeviceSerialNum[u8_index] := Integer(str[u8_index + 1]);
+            end;
+
+        // Board SN
+        str:= adeBoardSN.Text;
+        u8_str_len:= Length(str);
+
+            for u8_index := 0 to NUM_BOARD_SN - 1 do
+                    begin
+            
+                 tIncom_cfg.tDeviceInfo.u8_BoardSerialNum[u8_index] := 0;
+            end;
+
+            for u8_index := 0 to u8_str_len - 1 do
+                    begin
+          
+               tIncom_cfg.tDeviceInfo.u8_BoardSerialNum[u8_index] := Integer(str[u8_index + 1]);
+            end;
+
+        u16_fl_crc:= CRC_SEED_VAL;
+            CalcCRC16(@tIncom_cfg.tDeviceInfo, 2, sizeof(tIncom_cfg.tDeviceInfo), u16_fl_crc);
+            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
+            tIncom_cfg.tDeviceInfo.u16_crc := u16_fl_crc;
+
+            { Get Security Parameters }
+            tIncom_cfg.tSecurityCfg.u8_num_login_retry := advLoginRetry.Value;
+            tIncom_cfg.tSecurityCfg.u8_login_locktime  := advLoginLockTime.Value;
+
+            // OTP connection limits
+            tIncom_cfg.tSecurityCfg.u8_otp_limits := adeOTPNumber.Value;
+
+            tIncom_cfg.tSecurityCfg.u8_reserved := 0;
+
+        // OTP Key
+        b_found:= SearchParmCfg(SEC_PARAM_OTP_KEY, tParamCfgData);
+            if b_found then
+            begin
+    u8_result:= frmMain.ReadCfgParam(tParamCfgData.u16_parm_index, u8_param_value);
+
+            if u8_result = COMM_RESULT_OK then
+            begin
+       for u8_idx := 0 to NUM_OTP_KEY - 1 do
+                    tIncom_cfg.tSecurityCfg.u8_otp_key[u8_idx] := u8_param_value[u8_idx];
+            end
+    else
+                begin
+       for u8_idx := 0 to NUM_OTP_KEY - 1 do
+                    tIncom_cfg.tSecurityCfg.u8_otp_key[u8_idx] := $0;
+            end;
+            end;
+
+        u16_fl_crc:= CRC_SEED_VAL;
+            CalcCRC16(@tIncom_cfg.tSecurityCfg, 2, sizeof(tIncom_cfg.tSecurityCfg), u16_fl_crc);
+            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
+            tIncom_cfg.tSecurityCfg.u16_crc := u16_fl_crc;
+
+            { Get NTC Compensation Table }
+            for u8_index := 0 to NUM_NTC_COMP - 1 do
+                    begin
+                      CompName := Format('adsNtcComp%d', [u8_index + 1]);
+        Comp:= FindComponent(CompName);
+            tIncom_cfg.tNtcCfg.s8_NtcTempComp[u8_index] := TAdvSpinEdit(Comp).Value;
+            end;
+
+        u16_fl_crc:= CRC_SEED_VAL;
+            CalcCRC16(@tIncom_cfg.tNtcCfg, 2, sizeof(tIncom_cfg.tNtcCfg), u16_fl_crc);
+            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
+            tIncom_cfg.tNtcCfg.u16_crc := u16_fl_crc;
+
+            { Get UL2075 Histogram Table }
+            for u8_index := 0 to NUM_HISTOGRAM - 1 do
+                    begin
+                      CompName := Format('advHistogram%d', [u8_index + 1]);
+        Comp:= FindComponent(CompName);
+            tIncom_cfg.tUL2075Cfg.u8_Histogram[u8_index] := TAdvSpinEdit(Comp).Value;
+            end;
+
+        u16_fl_crc:= CRC_SEED_VAL;
+            CalcCRC16(@tIncom_cfg.tUL2075Cfg, 2, sizeof(tIncom_cfg.tUL2075Cfg), u16_fl_crc);
+            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
+            tIncom_cfg.tUL2075Cfg.u16_crc := u16_fl_crc;
+
+            end;*/
+        }
+
+        
     }
 }
