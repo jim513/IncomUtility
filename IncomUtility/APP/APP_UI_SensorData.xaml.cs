@@ -50,28 +50,32 @@ namespace IncomUtility.APP
             tBtn_WriteSensorData.IsEnabled = false;
             tBtn_ReadSensorData.IsEnabled = false;
 
-            int blockNum = FILESIZE / (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK;
+            int blockNum = FILESIZE / (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK;
             int eepAddr = 0;
             int dataLen = 0;
 
             tPbar_DataDownBar.Maximum = blockNum;
             tPbar_DataDownBar.Value = 0;
 
-            byte[] EEP_Data = new byte[(int)INNCOM_COMMAND_LIST.SZ_EEP_MEMORY];
+            byte[] EEP_Data = new byte[(int)INNCOM_CONF.SZ_EEP_MEMORY];
 
             for (int i = 0; i <= blockNum; i++)
             {
                 if (i < blockNum)
                 {
-                    dataLen = (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK;
+                    dataLen = (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK;
                 }
                 else
                 {
-                    dataLen = FILESIZE - (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK * i;
+                    dataLen = FILESIZE - (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK * i;
+                    if (dataLen == 0)
+                    {
+                        break;
+                    }
                 }
 
                 byte[] payload = new byte[6];
-                payload[0] = (int)INNCOM_COMMAND_LIST.MEM_TYPE_EEPROM;
+                payload[0] = (int)INNCOM_CONF.MEM_TYPE_EEPROM;
                 payload[1] = (byte)(eepAddr >> 24);
                 payload[2] = (byte)(eepAddr >> 16);
                 payload[3] = (byte)(eepAddr >> 8);
@@ -147,7 +151,7 @@ namespace IncomUtility.APP
             tBtn_WriteSensorData.IsEnabled = false;
             tBtn_ReadSensorData.IsEnabled = false;
 
-            int blockNum = FILESIZE / (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK;
+            int blockNum = FILESIZE / (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK;
             int eepAddr = 0;
             int dataLen = 0;
 
@@ -158,15 +162,19 @@ namespace IncomUtility.APP
             {
                 if (i < blockNum)
                 {
-                    dataLen = (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK;
+                    dataLen = (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK;
                 }
                 else
                 {
-                    dataLen = FILESIZE - (int)INNCOM_COMMAND_LIST.SZ_MAX_MEMORY_BLOCK * i;
+                    dataLen = FILESIZE - (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK * i;
+                    if (dataLen == 0)
+                    {
+                        break;
+                    }
                 }
 
                 byte[] payload = new byte[6 + dataLen];
-                payload[0] = (int)INNCOM_COMMAND_LIST.MEM_TYPE_EEPROM;
+                payload[0] = (int)INNCOM_CONF.MEM_TYPE_EEPROM;
                 payload[1] = (byte)(eepAddr >> 24);
                 payload[2] = (byte)(eepAddr >> 16);
                 payload[3] = (byte)(eepAddr >> 8);

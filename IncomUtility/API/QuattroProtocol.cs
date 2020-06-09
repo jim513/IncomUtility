@@ -192,17 +192,6 @@ namespace IncomUtility
 
         //Debug command,
         DBG_CMD_READ_GAS_DATA = 0x8756,
-
-        SZ_EEP_MEMORY = 4096,
-        SZ_MAX_MEMORY_BLOCK = 128,
-        MEM_TYPE_EEPROM = 1,
-        MEM_TYPE_FLASH = 0,
-
-        CERT_NOT_PRESENT = 0,
-        CERT_VALID = 1,
-        CERT_INVALID = 2,
-        CERT_EXPIRED = 3,
-
     }
 
     class QuattroProtocol : CRC16

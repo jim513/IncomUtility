@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -160,6 +161,16 @@ namespace IncomUtility
 
         NUM_CONFIG_PARAM = 111,
         NUM_CYLINDER_SN = 20,
+
+        SZ_EEP_MEMORY = 4096,
+        SZ_MAX_MEMORY_BLOCK = 128,
+        MEM_TYPE_EEPROM = 1,
+        MEM_TYPE_FLASH = 0,
+
+        CERT_NOT_PRESENT = 0,
+        CERT_VALID = 1,
+        CERT_INVALID = 2,
+        CERT_EXPIRED = 3,
     }
     public enum LOG_TABLE_TYPE
     {
@@ -182,6 +193,7 @@ namespace IncomUtility
         public CONFIG_SECURITY_STRUCT tSecurityCfg;
         public CONFIG_NTC_COMP_STRUCT tNtcCfg;
         public CONFIG_UL2075_HISTOGRAM_STRUCT tUL2075Cfg;
+        public int totalSize;
 
         public INCOM_DEVICE_CONFIG_STRUCT()
         {
@@ -194,6 +206,81 @@ namespace IncomUtility
             tSecurityCfg = new CONFIG_SECURITY_STRUCT();
             tNtcCfg = new CONFIG_NTC_COMP_STRUCT();
             tUL2075Cfg = new CONFIG_UL2075_HISTOGRAM_STRUCT();
+
+            totalSize = tModbusCfg.size + tRelayCfg.size + tmAOutputCfg.size + tGeneralCfg.size + tCircuitCalCfg.size + 26 +
+              tDeviceInfo.size + tSecurityCfg.size + tNtcCfg.size + tUL2075Cfg.size;
+
+        }
+        public byte[] getDataToByteArray()
+        {
+            byte[] returnData;
+            byte[] temp = tModbusCfg.Serialize();
+            returnData = temp;
+
+            temp = tRelayCfg.Serialize();
+            returnData = Utility.mergeByteArray(returnData, temp);
+
+            temp = tmAOutputCfg.Serialize();
+            returnData = Utility.mergeByteArray(returnData, temp);
+
+            temp = tGeneralCfg.Serialize();
+            returnData = Utility.mergeByteArray(returnData, temp);
+
+            temp = tCircuitCalCfg.Serialize();
+            returnData = Utility.mergeByteArray(returnData, temp);
+
+            returnData = Utility.mergeByteArray(returnData, u8Reserved);
+
+            temp = tDeviceInfo.Serialize();
+            returnData = Utility.mergeByteArray(returnData, temp);
+
+            temp = tSecurityCfg.Serialize();
+            returnData = Utility.mergeByteArray(returnData, temp);
+
+            temp = tNtcCfg.Serialize();
+            returnData = Utility.mergeByteArray(returnData, temp);
+
+            temp = tUL2075Cfg.Serialize();
+            returnData = Utility.mergeByteArray(returnData, temp);
+
+            return returnData;
+        }
+
+        public bool setDataFromByteArray(byte[] data)
+        {
+            if (data.Length < totalSize)
+                return false;
+         
+            int start = 0;
+            tModbusCfg.DeSerialize(data, start);
+            start += tModbusCfg.size;
+
+            tRelayCfg.DeSerialize(data, start);
+            start += tRelayCfg.size;
+
+            tmAOutputCfg.DeSerialize(data, start);
+            start += tmAOutputCfg.size;
+
+            tGeneralCfg.DeSerialize(data, start);
+            start += tGeneralCfg.size;
+
+            tCircuitCalCfg.DeSerialize(data, start);
+            start += tCircuitCalCfg.size;
+            
+            start += 26;
+
+            tDeviceInfo.DeSerialize(data, start);
+            start += tDeviceInfo.size;
+
+            tSecurityCfg.DeSerialize(data, start);
+            start += tSecurityCfg.size;
+
+            tNtcCfg.DeSerialize(data, start);
+            start += tNtcCfg.size;
+
+            tUL2075Cfg.DeSerialize(data, start);
+
+            return true;
         }
     }
     public class CONFIG_MODBUS_STRUCT
@@ -205,6 +292,35 @@ namespace IncomUtility
         public byte u8_FlowCtrl;
         public byte u8_Databits;
         public byte u8_Stopbits;
+
+        public int size = 8;
+        public byte[] Serialize()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(u16_crc);
+                    writer.Write(u8_SlaveId);
+                    writer.Write(u8_Baudrate);
+                    writer.Write(u8_Parity);
+                    writer.Write(u8_FlowCtrl);
+                    writer.Write(u8_Databits);
+                    writer.Write(u8_Stopbits);
+                }
+                return m.ToArray();
+            }
+        }
+        public void DeSerialize(byte[] data , int start)
+        {
+            u16_crc = BitConverter.ToUInt16(data, start);
+            u8_SlaveId = data[start + 2];
+            u8_Baudrate = data[start + 3];
+            u8_Parity = data[start + 4];
+            u8_FlowCtrl = data[start + 5];
+            u8_Databits = data[start + 6];
+            u8_Stopbits = data[start + 7];
+        }
     }
     public class CONFIG_RELAY_STRUCT
     {
@@ -215,6 +331,36 @@ namespace IncomUtility
         public byte u8_InitialState2;
         public ushort u16_OnDelayTime;
         public ushort u16_OffDelayTime;
+
+        public int size = 10;
+
+        public byte[] Serialize()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(u16_crc);
+                    writer.Write(u8_TriggerEvent1);
+                    writer.Write(u8_TriggerEvent2);
+                    writer.Write(u8_InitialState1);
+                    writer.Write(u8_InitialState2);
+                    writer.Write(u16_OnDelayTime);
+                    writer.Write(u16_OffDelayTime);
+                }
+                return m.ToArray();
+            }
+        }
+        public void DeSerialize(byte[] data, int start)
+        {
+            u16_crc = BitConverter.ToUInt16(data, start);
+            u8_TriggerEvent1 = data[start + 2];
+            u8_TriggerEvent2 = data[start + 3];
+            u8_InitialState1 = data[start + 4];
+            u8_InitialState2 = data[start + 5];
+            u16_OnDelayTime = BitConverter.ToUInt16(data, start + 6);
+            u16_OffDelayTime = BitConverter.ToUInt16(data, start + 8);
+        }
     }
 
     public class CONFIG_MA_OUPUT_STRUCT
@@ -224,6 +370,32 @@ namespace IncomUtility
         public byte u8_WarningCurrent;
         public byte u8_OverrangeCurrent;
         public ushort u16_InhibitTimeout;
+
+        public int size = 7;
+
+        public byte[] Serialize()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(u16_crc);
+                    writer.Write(u8_FaultCurrent);
+                    writer.Write(u8_WarningCurrent);
+                    writer.Write(u8_OverrangeCurrent);
+                    writer.Write(u16_InhibitTimeout);
+                }
+                return m.ToArray();
+            }
+        }
+        public void DeSerialize(byte[] data, int start)
+        {
+            u16_crc = BitConverter.ToUInt16(data, start);
+            u8_FaultCurrent = data[start + 2];
+            u8_WarningCurrent = data[start + 3];
+            u8_OverrangeCurrent = data[start + 4];
+            u16_InhibitTimeout = BitConverter.ToUInt16(data, start + 5);
+        }
     }
     public class CONFIG_GENERAL_SETTINGS_STRUCT
     {
@@ -234,6 +406,43 @@ namespace IncomUtility
         public byte u8_SafeMode;
         public byte u8_CalOverDueOption;
         public byte[] u8_passcode = new byte[4];
+
+        public int size = 10 + (int)INNCOM_CONF.NUM_LOCATION_TAG;
+
+        public byte[] Serialize()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(u16_crc);
+                    writer.Write(u8_LocationTag);
+                    writer.Write(u8_LEDCtrl);
+                    writer.Write(u8_AlarmMode);
+                    writer.Write(u8_SafeMode);
+                    writer.Write(u8_CalOverDueOption);
+                    writer.Write(u8_passcode);
+                }
+                return m.ToArray();
+            }
+        }
+        public void DeSerialize(byte[] data, int start)
+        {
+            u16_crc = BitConverter.ToUInt16(data, start);
+            for (int i = 0; i< (int)INNCOM_CONF.NUM_LOCATION_TAG; i++)
+            {
+                u8_LocationTag[i] = data[start + 2 + i];
+            }
+            start += (int)INNCOM_CONF.NUM_LOCATION_TAG;
+            u8_LEDCtrl = data[start + 2];
+            u8_AlarmMode = data[start + 3];
+            u8_SafeMode = data[start + 4];
+            u8_CalOverDueOption = data[start + 5];
+            for (int i = 0; i < 4; i++)
+            {
+                u8_passcode[i] = data[start + 6 + i];
+            }
+        }
     }
 
     public class CONFIG_CIRCUIT_CALIBRATION_STRUCT
@@ -249,12 +458,80 @@ namespace IncomUtility
         public float f32_mALoopbackSourceSpan;
         public float f32_VoltageOutputOffset;
         public float f32_VoltageOutputSpan;
+
+        public int size = 42;
+        public byte[] Serialize()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(u16_crc);
+                    writer.Write(f32_mAOutputSinkOffset);
+                    writer.Write(f32_mAOutputSourceOffset);
+                    writer.Write(f32_mAOutputSinkSpan);
+                    writer.Write(f32_mAOutputSourceSpan);
+                    writer.Write(f32_mALoopbackSinkOffset);
+                    writer.Write(f32_mALoopbackSourceOffset);
+                    writer.Write(f32_mALoopbackSinkSpan);
+                    writer.Write(f32_mALoopbackSourceSpan);
+                    writer.Write(f32_VoltageOutputOffset);
+                    writer.Write(f32_VoltageOutputSpan);
+                }
+                return m.ToArray();
+            }
+        }
+        public void DeSerialize(byte[] data, int start)
+        {
+            u16_crc = BitConverter.ToUInt16(data, start);
+            f32_mAOutputSinkOffset = BitConverter.ToSingle(data, start + 2);    
+            f32_mAOutputSourceOffset = BitConverter.ToSingle(data, start + 6);
+            f32_mAOutputSinkSpan = BitConverter.ToSingle(data, start + 10);
+            f32_mAOutputSourceSpan = BitConverter.ToSingle(data, start + 14);
+            f32_mALoopbackSinkOffset = BitConverter.ToSingle(data, start + 18);
+            f32_mALoopbackSourceOffset = BitConverter.ToSingle(data, start + 22);
+            f32_mALoopbackSinkSpan = BitConverter.ToSingle(data, start + 26);
+            f32_mALoopbackSourceSpan = BitConverter.ToSingle(data, start + 30);
+            f32_VoltageOutputOffset = BitConverter.ToSingle(data, start + 34);
+            f32_VoltageOutputSpan = BitConverter.ToSingle(data, start + 38);
+
+        }
     }
     public class CONFIG_DEVICE_INFO_STRUCT
     {
         public ushort u16_crc;
         public byte[] u8_DeviceSerialNum = new byte[(int)INNCOM_CONF.NUM_DEVICE_SN];
-        public byte[] u8_BoardSerialNum = new byte[(int)INNCOM_CONF.NUM_BOARD_SN];
+        public byte[] u8_BoardSerialNum = new byte[(int)INNCOM_CONF.NUM_DEVICE_SN];
+
+        public int size = 2 + (int)INNCOM_CONF.NUM_DEVICE_SN + (int)INNCOM_CONF.NUM_DEVICE_SN;
+        public byte[] Serialize()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(u16_crc);
+                    writer.Write(u8_DeviceSerialNum);
+                    writer.Write(u8_BoardSerialNum);
+                }
+                return m.ToArray();
+            }
+        }
+        public void DeSerialize(byte[] data, int start)
+        {
+            u16_crc = BitConverter.ToUInt16(data, start);
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_DEVICE_SN; i++)
+            {
+                u8_DeviceSerialNum[i] = data[start + 2 + i];
+            }
+
+            start += (int)INNCOM_CONF.NUM_DEVICE_SN;
+            
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_BOARD_SN; i++)
+            {
+                u8_BoardSerialNum[i] = data[start + 2 + i];
+            }
+        }
     }
 
     public class CONFIG_SECURITY_STRUCT
@@ -265,19 +542,96 @@ namespace IncomUtility
         public byte u8_otp_limits;
         public byte u8_reserved;
         public byte[] u8_otp_key = new byte[(int)INNCOM_CONF.NUM_OTP_KEY];
+
+        public int size = 6 + (int)INNCOM_CONF.NUM_OTP_KEY;
+
+        public byte[] Serialize()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(u16_crc);
+                    writer.Write(u8_num_login_retry);
+                    writer.Write(u8_login_locktime);
+                    writer.Write(u8_otp_limits);
+                    writer.Write(u8_reserved);
+                    writer.Write(u8_otp_key);
+                }
+                return m.ToArray();
+            }
+        }
+        public void DeSerialize(byte[] data, int start)
+        {
+            u16_crc = BitConverter.ToUInt16(data, start);
+            u8_num_login_retry = data[start + 2];
+            u8_login_locktime = data[start + 3];
+            u8_otp_limits = data[start + 4];
+            u8_reserved = data[start + 5];
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_OTP_KEY; i++)
+            {
+                u8_otp_key[i] = data[start + 6 + i];
+            }
+        }
     }
     public class CONFIG_NTC_COMP_STRUCT
     {
         public ushort u16_crc;
         public sbyte[] s8_NtcTempComp = new sbyte[(int)INNCOM_CONF.NUM_NTC_COMP];
+        public int size = 2 + (int)INNCOM_CONF.NUM_NTC_COMP;
+
+        public byte[] Serialize()
+        {
+            byte[] ntc = (byte[])(object)s8_NtcTempComp;
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(u16_crc);
+                    writer.Write(ntc);
+                }
+                return m.ToArray();
+            }
+        }
+        public void DeSerialize(byte[] data, int start)
+        {
+            u16_crc = BitConverter.ToUInt16(data, start);
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_NTC_COMP; i++)
+            {
+                s8_NtcTempComp[i] = (sbyte)data[start + 2 + i];
+            }
+        }
     }
 
     public class CONFIG_UL2075_HISTOGRAM_STRUCT
     {
         public ushort u16_crc;
         public byte[] u8_Histogram = new byte[(int)INNCOM_CONF.NUM_HISTOGRAM];
+        public int size = 2 + (int)INNCOM_CONF.NUM_HISTOGRAM;
+
+        public byte[] Serialize()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(u16_crc);
+                    writer.Write(u8_Histogram);
+                }
+                return m.ToArray();
+            }
+        }
+
+        public void DeSerialize(byte[] data, int start)
+        {
+            u16_crc = BitConverter.ToUInt16(data, start);
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_HISTOGRAM; i++)
+            {
+                u8_Histogram[i] = data[start + 2 + i];
+            }
+        }
     }
-    public class CONFIG_PARAM_TABLE_STRUCT
+    public struct CONFIG_PARAM_TABLE_STRUCT
     {
         public ushort u16_parm_index;
         public byte u8_param_type;

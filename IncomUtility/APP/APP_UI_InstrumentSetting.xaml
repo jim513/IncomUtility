@@ -21,7 +21,7 @@
 
             </Grid.ColumnDefinitions>
             <StackPanel   >
-                <GroupBox Header="Device Information" Margin="10,10,5,8.6" >
+                <GroupBox Header="0x09 Device Information" Margin="10,10,5,8.6" >
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -40,7 +40,7 @@
                         <Button x:Name="tBtn_WriteDeviceInfo"  Content="Write Device Info" Grid.Row="2" Grid.Column="1"   Height="20" Margin="5" Click="tBtn_WriteDeviceInfo_Click" />
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Relay Options" Margin="10,3.4,2,3" >
+                <GroupBox Header="0x02 Relay Options" Margin="10,3.4,2,3" >
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
@@ -86,7 +86,7 @@
                         <Button x:Name="tBtn_WriteRelay" Content="Write Relay" Grid.Row="5" Grid.Column="2"   Margin="5" Grid.ColumnSpan="2" Click="tBtn_WriteRelay_Click"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Calibartion" Margin="5,10">
+                <GroupBox Header="0x06 Calibartion" Margin="5,10">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
@@ -113,7 +113,7 @@
                         <Button x:Name="tBtn_WriteCal" Content="Write Cal Param" Grid.Row="5"   Height="20" Margin="5" Grid.Column="1" Click="tBtn_WriteCal_Click"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="mA Output Setting" Margin="10,4,5,7">
+                <GroupBox Header="0x03 mA Output Setting" Margin="10,4,5,7">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -143,7 +143,7 @@
                 </GroupBox>
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <GroupBox Header="General" Margin="5,10">
+                <GroupBox Header="0x04 General" Margin="5,10">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
@@ -194,7 +194,7 @@
                         <xctk:DecimalUpDown x:Name="tUpdown_Passcode4" Grid.Row="5" Grid.Column="4" Margin="0,2" DefaultValue="0" DisplayDefaultValueOnEmptyText="True" TextAlignment="Left"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Modbus" Margin="5,4,5,10" >
+                <GroupBox Header="0x01 Modbus" Margin="5,4,5,10" >
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -245,7 +245,7 @@
                         <Button x:Name="tBtn_WriteModbus" Content="Write Modbus" Grid.Row="6"   Height="20" Margin="5" Grid.Column="1" Click="tBtn_WriteModbus_Click"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Circuit Calibration" Height="auto" Margin="5,10,5,7">
+                <GroupBox Header="0x08 Circuit Calibration" Height="auto" Margin="5,10,5,7">
                     <Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -294,7 +294,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="2">
-                <GroupBox Header="NTC Compensation" Margin="10">
+                <GroupBox Header="0x0B NTC Compensation" Margin="10">
                     <Grid x:Name="tGrid_NTCCompensation">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -357,7 +357,7 @@
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Header="UL 2075 Histogram" Margin="5,10">
+                <GroupBox Header="0x0C UL 2075 Histogram" Margin="5,10">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -481,7 +481,7 @@
             </StackPanel>
             <StackPanel Grid.Column="3">
 
-                <GroupBox Header="Gas Setttings" Margin="5,4,10,10" >
+                <GroupBox Header="0x07 Gas Setttings" Margin="5,4,10,10" >
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
@@ -553,7 +553,7 @@
                         <Button x:Name="tBtn_WriteGasSetting" Content="Write Gas" Grid.Row="10"   Height="20" Margin="5" Grid.Column="1" Grid.ColumnSpan="2" Click="tBtn_WriteGasSetting_Click"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Gas Alarm Setttings" Margin="5,4,8,10" >
+                <GroupBox Header="0x05 Gas Alarm Setttings" Margin="5,4,8,10" >
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -602,7 +602,7 @@
                         <Button x:Name="tBtn_WriteAlarms" Content="Write Alarm" Grid.Row="7"   Height="20" Margin="5" Grid.Column="1" Click="tBtn_WriteAlarms_Click"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Security" Margin="5,10,10,10">
+                <GroupBox Header="0x0A Security" Margin="5,10,10,10">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -629,10 +629,10 @@
                 </GroupBox>
             </StackPanel>
             <DockPanel Grid.ColumnSpan="4" LastChildFill="False" HorizontalAlignment="Center"  Grid.Row="1"  >
-                <Button Content="Read Form Incom"      Margin="0,0,5,20" Padding="1,5" Width="130"/>
-                <Button Content="Save To Incom"      Margin="5,0,5,20" Padding="1,5" Width="130"/>
-                <Button Content="Open"      Margin="5,0,5,20" Padding="1,5" Width="130"/>
-                <Button x:Name="tBtn_Save" Content="Save As.."      Margin="5,0,5,20" Padding="1,5" Width="130" Click="tBtn_Save_Click"/>
+                <Button x:Name="tBtn_ReadFromIncom" Content="Read Form Incom"      Margin="0,0,5,20" Padding="1,5" Width="130" Click="tBtn_ReadFromIncom_Click"/>
+                <Button x:Name="tBtn_UpdateIncom" Content="Update Incom"      Margin="5,0,5,20" Padding="1,5" Width="130" Click="tBtn_UpdateIncom_Click"/>
+                <Button x:Name="tBtn_OpenFiie" Content="Load From File"      Margin="5,0,5,20" Padding="1,5" Width="130" Click="tBtn_OpenFiie_Click"/>
+                <Button x:Name="tBtn_Save" Content="Save To File"      Margin="5,0,5,20" Padding="1,5" Width="130" Click="tBtn_Save_Click"/>
             </DockPanel>
         </Grid>
     </ScrollViewer>

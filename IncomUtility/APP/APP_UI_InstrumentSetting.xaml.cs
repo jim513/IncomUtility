@@ -22,16 +22,6 @@ namespace IncomUtility.APP
     /// </summary>
     public partial class APP_UI_InstrumentSetting : Window
     {
-        private struct tModbusConfig
-        {
-            public UInt16 crc;
-            public byte slaveId;
-            public byte baudRate;
-            public byte parity;
-            public byte flowControl;
-            public byte dataBit;
-            public byte stopBits;
-        };
 
         //SenParamTable paramTable = null;
         //CONFIG_PARAM_TABLE_STRUCT param = null;
@@ -64,7 +54,7 @@ namespace IncomUtility.APP
             byte[] payload = new byte[2];
             payload = Utility.getBytesFromU16((ushort)configuration_setting);
             //payload = Utility.getBytesFromU16(param.u16_parm_index);
-         
+
             /*
              * Send Command
              */
@@ -76,10 +66,10 @@ namespace IncomUtility.APP
 
             byte[] parmaValue = QuattroProtocol.getResponseValueData(result);
 
-            return parmaValue;        
+            return parmaValue;
         }
 
-        private byte[] setParmeterConfigruations<T>(INNCOM_CONF_LIST configuration_setting , T dataToWrite)
+        private byte[] setParmeterConfigruations<T>(INNCOM_CONF_LIST configuration_setting, T dataToWrite)
         {
             /*
              * Make Payload using Incom Parameter configuration
@@ -119,7 +109,7 @@ namespace IncomUtility.APP
             int delayTime = (int)Constants.defaultSleep;
             if ((int)configuration_setting >= (int)INNCOM_CONF_LIST.ALARM_PARAM_THRESHOLD1)
             {
-                if((int)configuration_setting <= (int)INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY)
+                if ((int)configuration_setting <= (int)INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY)
                 {
                     delayTime = 400;
                 }
@@ -152,7 +142,7 @@ namespace IncomUtility.APP
 
         private void tBtn_ReadCircuitCal_Click(object sender, RoutedEventArgs e)
         {
-            readCircuitCal();         
+            readCircuitCal();
         }
 
         private void tBtn_ReadDeviceInfo_Click(object sender, RoutedEventArgs e)
@@ -176,29 +166,29 @@ namespace IncomUtility.APP
 
         private void tBtn_ReadModbus_Click(object sender, RoutedEventArgs e)
         {
-            readModbus();          
+            readModbus();
         }
 
         private void tBtn_ReadNTC_Click(object sender, RoutedEventArgs e)
         {
-            readNTC();         
+            readNTC();
         }
 
         private void tBtn_ReadRelay_Click(object sender, RoutedEventArgs e)
         {
-            readRelay();           
+            readRelay();
         }
 
         private void tBtn_ReadSecurity_Click(object sender, RoutedEventArgs e)
         {
-            readSecurity();           
+            readSecurity();
         }
-       
+
         private void tBtn_ReadUL2075_Click(object sender, RoutedEventArgs e)
         {
             readUL2075();
         }
-        
+
         private void tBtn_WriteAlarms_Click(object sender, RoutedEventArgs e)
         {
             writeAlarm();
@@ -208,7 +198,7 @@ namespace IncomUtility.APP
         {
             writeCal();
         }
-       
+
         private void tBtn_WriteCircuiotCal_Click(object sender, RoutedEventArgs e)
         {
             writeCircuitCal();
@@ -263,10 +253,24 @@ namespace IncomUtility.APP
         {
             gasSettingApply();
         }
-   
+
         private void tBtn_Save_Click(object sender, RoutedEventArgs e)
         {
-            getIncomConfigurationFromWindow();
+            saveToFile();
+        }
+
+        private void tBtn_OpenFiie_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFromFile();
+        }
+
+        private void tBtn_ReadFromIncom_Click(object sender, RoutedEventArgs e)
+        {
+            readFromIncom();
+        }
+        private void tBtn_UpdateIncom_Click(object sender, RoutedEventArgs e)
+        {
+            updateIncom();
         }
 
         private void readAlarm()
@@ -574,7 +578,7 @@ namespace IncomUtility.APP
             /*
              * Read Device Serial Number
              */
-    
+
             byte[] value = getParmeterConfigruations(INNCOM_CONF_LIST.DEV_INFO_PARAM_DEVICE_SN);
             if (value == null)
             {
@@ -699,7 +703,7 @@ namespace IncomUtility.APP
             {
                 MessageBox.Show("ERROR - Read Target Channel");
                 return;
-            } 
+            }
             tUpdown_TargetChannel.Value = value[offset];
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
             /*
@@ -710,7 +714,7 @@ namespace IncomUtility.APP
             {
                 MessageBox.Show("ERROR - Read Decimal Points");
                 return;
-            } 
+            }
             tCmb_DecimalPoints.SelectedIndex = value[offset];
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
             /*
@@ -872,21 +876,17 @@ namespace IncomUtility.APP
 
         private void readModbus()
         {
-            tModbusConfig t_modbus = new tModbusConfig();
-            
             /*
-             * Read Slave ID
-             */
+           * Read Slave ID
+           */
             byte[] value = getParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_SLAVE_ID);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Read Slave ID");
                 return;
             }
-            else
-            {
-                t_modbus.slaveId = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
-            }
+            tUpdown_SlaveID.Value = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
              * Read Baudrate
@@ -897,10 +897,8 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Baudrate");
                 return;
             }
-            else
-            {
-                t_modbus.baudRate = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
-            }
+            tCmb_Baudrate.SelectedIndex = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
              * Read Parity 
@@ -911,11 +909,8 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Parity");
                 return;
             }
-            else
-            {
-                t_modbus.parity = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
-            }
-
+            tCmb_Parity.SelectedIndex = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
              * Read Flow Control
@@ -926,10 +921,8 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Flow Control");
                 return;
             }
-            else
-            {
-                t_modbus.flowControl = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
-            }
+            tCmb_FlowControl.SelectedIndex = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
              * Read Data bits
@@ -940,10 +933,8 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Databits");
                 return;
             }
-            else
-            {
-                t_modbus.dataBit = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
-            }
+            tCmb_Databits.SelectedIndex = value[offset];
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             /*
              * Read Stop bits
@@ -954,25 +945,14 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Read Stopbits");
                 return;
             }
-            else
-            {
-                t_modbus.stopBits = (byte)value[(int)INNCOM_CONF.SZ_PARAM_INDEX];
-            }
-
-            tUpdown_SlaveID.Value = t_modbus.slaveId;
-            tCmb_Baudrate.SelectedIndex = t_modbus.baudRate;
-            tCmb_Parity.SelectedIndex = t_modbus.parity;
-            tCmb_FlowControl.SelectedIndex = t_modbus.flowControl;
-            tCmb_Databits.SelectedIndex = t_modbus.dataBit;
-            tCmb_Stopbits.SelectedIndex = t_modbus.stopBits;
-
+            tCmb_Stopbits.SelectedIndex = value[offset];
             Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             MessageBox.Show("Read Modbus Settings");
         }
 
         private void readNTC()
-        {          
+        {
             /*
              * Read NTC
              */
@@ -1068,7 +1048,7 @@ namespace IncomUtility.APP
             MessageBox.Show("Read Relay Settings");
 
         }
-        
+
         private void readSecurity()
         {
             /*
@@ -1139,7 +1119,7 @@ namespace IncomUtility.APP
             }
             MessageBox.Show("Read UL2075 Parameters");
         }
-        
+
         private void writeAlarm()
         {
             /*
@@ -1150,10 +1130,10 @@ namespace IncomUtility.APP
             {
                 MessageBox.Show("ERROR - Get Measuring Range");
                 return;
-            } 
+            }
             float measuringRange = Utility.getF32FromByteA(value, offset);
 
-            if(measuringRange < tUpdown_AlarmThreshold1.Value)
+            if (measuringRange < tUpdown_AlarmThreshold1.Value)
             {
                 MessageBox.Show("Gas alarm threshold  calibration concentration should not exceed measuring range!!");
                 return;
@@ -1196,8 +1176,8 @@ namespace IncomUtility.APP
             /*
              * Write Alarm Configuration
              */
-            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.ALARM_PARAM_THRESHOLD1 ,(float)tUpdown_AlarmThreshold1.Value);
-            if(value == null)
+            value = setParmeterConfigruations<float>(INNCOM_CONF_LIST.ALARM_PARAM_THRESHOLD1, (float)tUpdown_AlarmThreshold1.Value);
+            if (value == null)
             {
                 MessageBox.Show("ERROR - Write Alarm Threshold1");
                 return;
@@ -1214,7 +1194,7 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Write Alarm Threshold3");
                 return;
             }
-            value = setParmeterConfigruations<byte>(INNCOM_CONF_LIST.ALARM_PARAM_TRIGGER1,(byte)tCmb_AlarmTrigger1.SelectedIndex);
+            value = setParmeterConfigruations<byte>(INNCOM_CONF_LIST.ALARM_PARAM_TRIGGER1, (byte)tCmb_AlarmTrigger1.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Alarm Trigger1");
@@ -1402,7 +1382,7 @@ namespace IncomUtility.APP
             string str = tTxt_DeviceSerialNumber.Text;
 
             int str_len = str.Length;
-            if(str_len > (int)INNCOM_CONF.NUM_DEVICE_SN)
+            if (str_len > (int)INNCOM_CONF.NUM_DEVICE_SN)
             {
                 str_len = (int)INNCOM_CONF.NUM_DEVICE_SN;
             }
@@ -1598,17 +1578,17 @@ namespace IncomUtility.APP
             /*
              * Write Safety Mode
              */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.GENERAL_PARAM_OP_MODE,(byte)tCmb_SafetyMode.SelectedIndex);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.GENERAL_PARAM_OP_MODE, (byte)tCmb_SafetyMode.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Saftey Mode");
                 return;
             }
-         
+
             /*
              * Write Calibration Overdue
              */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.GENERAL_PARAM_CAL_OVERDUE,(byte)tCmb_CalOverdue.SelectedIndex);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.GENERAL_PARAM_CAL_OVERDUE, (byte)tCmb_CalOverdue.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Calibration Overdue");
@@ -1624,13 +1604,13 @@ namespace IncomUtility.APP
             passcode[1] = (byte)tUpdown_Passcode2.Value;
             passcode[2] = (byte)tUpdown_Passcode3.Value;
             passcode[3] = (byte)tUpdown_Passcode4.Value;
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.GENERAL_PARAM_PASSCODE , passcode);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.GENERAL_PARAM_PASSCODE, passcode);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Passcode");
                 return;
             }
-           
+
             MessageBox.Show("Write General Parameters");
         }
 
@@ -1683,7 +1663,7 @@ namespace IncomUtility.APP
             /*
             * Write Slave ID
             */
-            byte[] value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_SLAVE_ID,(byte)tUpdown_SlaveID.Value);
+            byte[] value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_SLAVE_ID, (byte)tUpdown_SlaveID.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Slave ID");
@@ -1693,53 +1673,53 @@ namespace IncomUtility.APP
             /*
              * Write Baudrate
              */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_BAUDRATE,(byte)tCmb_Baudrate.SelectedIndex);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_BAUDRATE, (byte)tCmb_Baudrate.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Baudrate");
                 return;
             }
-       
+
             /*
              * Write Parity 
              */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_PARITY,(byte)tCmb_Parity.SelectedIndex);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_PARITY, (byte)tCmb_Parity.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Parity");
                 return;
             }
-      
+
             /*
              * Write Flow Control
              */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_FLOW_CONTROL,(byte)tCmb_FlowControl.SelectedIndex);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_FLOW_CONTROL, (byte)tCmb_FlowControl.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Flow Control");
                 return;
             }
-       
+
             /*
              * Write Data bits
              */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_DATABITS,(byte)tCmb_Databits.SelectedIndex);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_DATABITS, (byte)tCmb_Databits.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Databits");
                 return;
             }
-    
+
             /*
              * Write Stop bits
              */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_STOPBITS,(byte)tCmb_Stopbits.SelectedIndex);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.MODBUS_PARAM_STOPBITS, (byte)tCmb_Stopbits.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Stopbits");
                 return;
             }
-     
+
             MessageBox.Show("Write Modbus Settings");
         }
 
@@ -1752,12 +1732,12 @@ namespace IncomUtility.APP
             for (int i = 0; i < (int)INNCOM_CONF.NUM_NTC_COMP; i++)
             {
                 IntegerUpDown NTCUpDown = (IntegerUpDown)this.FindName(String.Format("tUpdown_NTCComp{0}", i + 1));
-                value = setParmeterConfigruations(INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP1 + i , (sbyte)NTCUpDown.Value);
+                value = setParmeterConfigruations(INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP1 + i, (sbyte)NTCUpDown.Value);
                 if (value == null)
                 {
                     MessageBox.Show("ERROR - Write NTC " + i + 1);
                     return;
-                }          
+                }
             }
             MessageBox.Show("Write NTC Parameters");
 
@@ -1768,22 +1748,22 @@ namespace IncomUtility.APP
             /*
              * Write Relay Trigger Event1
              */
-            byte[] value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_TRIGGER1 , (byte)tCmb_TriggerEvent1.SelectedIndex);
+            byte[] value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_TRIGGER1, (byte)tCmb_TriggerEvent1.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Relay Trigger Event1");
                 return;
             }
-             /*
-             * Write Relay Trigger Event2
-             */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_TRIGGER2 ,(byte)tCmb_TriggerEvent2.SelectedIndex);
+            /*
+            * Write Relay Trigger Event2
+            */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_TRIGGER2, (byte)tCmb_TriggerEvent2.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Relay Trigger Event2");
                 return;
             }
-       
+
             /*
              * Write Relay Initial State1
              */
@@ -1793,17 +1773,17 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Write Relay Initial State1");
                 return;
             }
-      
+
             /*
              * Write Relay Initial State2
              */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_INIT_STATE2,(byte)tCmb_InitialState2.SelectedIndex);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_INIT_STATE2, (byte)tCmb_InitialState2.SelectedIndex);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Relay Initial State2");
                 return;
             }
-       
+
             /*
              * Write Relay On Delay Time
              */
@@ -1813,16 +1793,16 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Write Relay On Delay Time");
                 return;
             }
-                   /*
-           * Write Relay Off Delay Time
-           */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_OFF_DELAY_TIME,(ushort)tUpdown_OffDelayTime.Value);
+            /*
+    * Write Relay Off Delay Time
+    */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.RELAY_PARAM_OFF_DELAY_TIME, (ushort)tUpdown_OffDelayTime.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Relay Off Delay Time");
                 return;
             }
-            
+
             MessageBox.Show("Write Relay Settings");
 
         }
@@ -1838,27 +1818,27 @@ namespace IncomUtility.APP
                 MessageBox.Show("ERROR - Write Login Retry Count");
                 return;
             }
-             /*
-             * Write Login Lock Time
-             */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_LOGIN_LOCK_TIME ,(byte)tUpdown_LoginLockTime.Value);
+            /*
+            * Write Login Lock Time
+            */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_LOGIN_LOCK_TIME, (byte)tUpdown_LoginLockTime.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write Login Lock Time");
                 return;
             }
-             /*
-             * Write OTP Connection
-             */
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_OTP_CONNECTION,(byte)tUpdown_OTPConnection.Value);
+            /*
+            * Write OTP Connection
+            */
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_OTP_CONNECTION, (byte)tUpdown_OTPConnection.Value);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write OTP Connection");
                 return;
             }
-           /*
-           * Read OTP Key
-           */
+            /*
+            * Read OTP Key
+            */
             value = getParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY);
             if (value == null)
             {
@@ -1872,7 +1852,7 @@ namespace IncomUtility.APP
 
             byte[] OTPKey = new byte[value.Length - 2];
             Array.Copy(value, OTPKey, value.Length - 2);
-            value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY,OTPKey);
+            value = setParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY, OTPKey);
             if (value == null)
             {
                 MessageBox.Show("ERROR - Write OTP Key");
@@ -1890,36 +1870,29 @@ namespace IncomUtility.APP
             byte[] value = null;
             for (int i = 0; i < (int)INNCOM_CONF.NUM_HISTOGRAM; i++)
             {
-                DecimalUpDown UL2075 = (DecimalUpDown)this.FindName(String.Format("tUpdown_UL2075Count{0}", i + 1));           
-                value = setParmeterConfigruations(INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD1 + i ,(byte)UL2075.Value);
+                DecimalUpDown UL2075 = (DecimalUpDown)this.FindName(String.Format("tUpdown_UL2075Count{0}", i + 1));
+                value = setParmeterConfigruations(INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD1 + i, (byte)UL2075.Value);
                 if (value == null)
                 {
                     MessageBox.Show("ERROR - Write UL2075 : " + i + 1);
                     return;
-                }            
+                }
             }
             MessageBox.Show("Write UL2075 Parameters");
         }
 
         private void gasSettingApply()
         {
-           
+
             tUpdown_CalCon.Value = tUpdown_CalCon.Value * tUpdown_UnitConversion.Value;
             tUpdown_AlarmThreshold1.Value = tUpdown_AlarmThreshold1.Value * tUpdown_UnitConversion.Value;
             tUpdown_AlarmThreshold2.Value = tUpdown_AlarmThreshold2.Value * tUpdown_UnitConversion.Value;
             tUpdown_AlarmThreshold3.Value = tUpdown_AlarmThreshold3.Value * tUpdown_UnitConversion.Value;
-            tUpdown_MeasuringRange.Value = tUpdown_MeasuringRange.Value *  tUpdown_UnitConversion.Value;
+            tUpdown_MeasuringRange.Value = tUpdown_MeasuringRange.Value * tUpdown_UnitConversion.Value;
         }
 
         private void getIncomConfigurationFromWindow()
         {
-            ushort u16_param_index = 0;
-            byte u8_result = 0;
-            byte u8_idx = 0;
-            bool b_found = false;
-            byte[] u8_param_value = new byte[41];
-            ushort u16_fl_crc = 0;
-            string CompName = "";
             byte[] classToBytes = null;
             int crc16_sz = 2;
 
@@ -1933,7 +1906,7 @@ namespace IncomUtility.APP
             tIncom_cfg.tModbusCfg.u8_Databits = (byte)tCmb_Databits.SelectedIndex;
             tIncom_cfg.tModbusCfg.u8_Stopbits = (byte)tCmb_Stopbits.SelectedIndex;
 
-            classToBytes = Utility.classToByteArray(tIncom_cfg.tModbusCfg);
+            classToBytes = tIncom_cfg.tModbusCfg.Serialize();
             tIncom_cfg.tModbusCfg.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
 
             /*
@@ -1947,11 +1920,8 @@ namespace IncomUtility.APP
             tIncom_cfg.tRelayCfg.u16_OnDelayTime = (ushort)tUpdown_OnDelayTime.Value;
             tIncom_cfg.tRelayCfg.u16_OffDelayTime = (ushort)tUpdown_OffDelayTime.Value;
 
-            //u16_fl_crc:= CRC_SEED_VAL;
-            //    CalcCRC16(@tIncom_cfg.tRelayCfg, 2, sizeof(tIncom_cfg.tRelayCfg), u16_fl_crc);
-
-            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
-            //tIncom_cfg.tRelayCfg.u16_crc := u16_fl_crc;
+            classToBytes = tIncom_cfg.tRelayCfg.Serialize();
+            tIncom_cfg.tRelayCfg.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
 
 
             /*
@@ -1962,10 +1932,8 @@ namespace IncomUtility.APP
             tIncom_cfg.tmAOutputCfg.u8_OverrangeCurrent = (byte)(tUpdown_OverRangeCurrent.Value * 10);
             tIncom_cfg.tmAOutputCfg.u16_InhibitTimeout = (ushort)tUpdown_InhibitTimeout.Value;
 
-            //u16_fl_crc:= CRC_SEED_VAL;
-            //    CalcCRC16(@tIncom_cfg.tmAOutputCfg, 2, sizeof(tIncom_cfg.tmAOutputCfg), u16_fl_crc);
-            //    //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
-            //    tIncom_cfg.tmAOutputCfg.u16_crc := u16_fl_crc;
+            classToBytes = tIncom_cfg.tmAOutputCfg.Serialize();
+            tIncom_cfg.tmAOutputCfg.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
 
             /*
              *Get General Parameters 
@@ -1989,10 +1957,9 @@ namespace IncomUtility.APP
             tIncom_cfg.tGeneralCfg.u8_passcode[2] = (byte)tUpdown_Passcode3.Value;
             tIncom_cfg.tGeneralCfg.u8_passcode[3] = (byte)tUpdown_Passcode4.Value;
 
-            // u16_fl_crc:= CRC_SEED_VAL;
-            //CalcCRC16(@tIncom_cfg.tGeneralCfg, 2, sizeof(tIncom_cfg.tGeneralCfg), u16_fl_crc);
-            ////  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
-            //tIncom_cfg.tGeneralCfg.u16_crc := u16_fl_crc;
+            classToBytes = tIncom_cfg.tGeneralCfg.Serialize();
+            tIncom_cfg.tGeneralCfg.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
 
             /* 
              * Get Circuit Calibration Parameters 
@@ -2008,117 +1975,470 @@ namespace IncomUtility.APP
             tIncom_cfg.tCircuitCalCfg.f32_mALoopbackSourceSpan = (float)tUpdown_LoopbackSpanSource.Value;
             tIncom_cfg.tCircuitCalCfg.f32_VoltageOutputOffset = (float)tUpdown_VoltageOutputOffset.Value;
             tIncom_cfg.tCircuitCalCfg.f32_VoltageOutputSpan = (float)tUpdown_VoltageOutputSpan.Value;
-            //u16_fl_crc:= CRC_SEED_VAL;
-            //    CalcCRC16(@tIncom_cfg.tCircuitCalCfg, 2, sizeof(tIncom_cfg.tCircuitCalCfg), u16_fl_crc);
-            //    //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
-            //    tIncom_cfg.tCircuitCalCfg.u16_crc := u16_fl_crc;
 
             for (int i = 0; i < 26; i++)
             {
                 tIncom_cfg.u8Reserved[i] = 0xff;
             }
 
+            classToBytes = tIncom_cfg.tCircuitCalCfg.Serialize();
+            tIncom_cfg.tCircuitCalCfg.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
             /*
-            { Get Device Info Parameters }
-        // Device SN
+             * Get Device Info Parameters 
+             */
+            str = tTxt_DeviceSerialNumber.Text;
 
-        str:= adeDeviceSN.Text;
-        u8_str_len:= Length(str);
+            str_len = str.Length;
+            if (str_len > (int)INNCOM_CONF.NUM_DEVICE_SN)
+            {
+                str_len = (int)INNCOM_CONF.NUM_DEVICE_SN;
+            }
+            Encoding.ASCII.GetBytes(str, 0, str_len, tIncom_cfg.tDeviceInfo.u8_DeviceSerialNum, 0);
 
-            for u8_index := 0 to NUM_DEVICE_SN - 1 do
-                    begin
-            
-                 tIncom_cfg.tDeviceInfo.u8_DeviceSerialNum[u8_index] := 0;
-            end;
+            str = tTxt_BoardSerialNumber.Text;
 
-            for u8_index := 0 to u8_str_len - 1 do
-                    begin
-          
-               tIncom_cfg.tDeviceInfo.u8_DeviceSerialNum[u8_index] := Integer(str[u8_index + 1]);
-            end;
+            str_len = str.Length;
+            if (str_len > (int)INNCOM_CONF.NUM_BOARD_SN)
+            {
+                str_len = (int)INNCOM_CONF.NUM_BOARD_SN;
+            }
+            Encoding.ASCII.GetBytes(str, 0, str_len, tIncom_cfg.tDeviceInfo.u8_BoardSerialNum, 0);
 
-        // Board SN
-        str:= adeBoardSN.Text;
-        u8_str_len:= Length(str);
+            classToBytes = tIncom_cfg.tDeviceInfo.Serialize();
+            tIncom_cfg.tDeviceInfo.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
 
-            for u8_index := 0 to NUM_BOARD_SN - 1 do
-                    begin
-            
-                 tIncom_cfg.tDeviceInfo.u8_BoardSerialNum[u8_index] := 0;
-            end;
 
-            for u8_index := 0 to u8_str_len - 1 do
-                    begin
-          
-               tIncom_cfg.tDeviceInfo.u8_BoardSerialNum[u8_index] := Integer(str[u8_index + 1]);
-            end;
+            /*
+             * Get Security Parameters
+             */
+            tIncom_cfg.tSecurityCfg.u8_num_login_retry = (byte)tUpdown_LoginRetry.Value;
+            tIncom_cfg.tSecurityCfg.u8_login_locktime = (byte)tUpdown_LoginLockTime.Value;
 
-        u16_fl_crc:= CRC_SEED_VAL;
-            CalcCRC16(@tIncom_cfg.tDeviceInfo, 2, sizeof(tIncom_cfg.tDeviceInfo), u16_fl_crc);
-            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
-            tIncom_cfg.tDeviceInfo.u16_crc := u16_fl_crc;
+            tIncom_cfg.tSecurityCfg.u8_otp_limits = (byte)tUpdown_OTPConnection.Value;
+            tIncom_cfg.tSecurityCfg.u8_reserved = 0;
 
-            { Get Security Parameters }
-            tIncom_cfg.tSecurityCfg.u8_num_login_retry := advLoginRetry.Value;
-            tIncom_cfg.tSecurityCfg.u8_login_locktime  := advLoginLockTime.Value;
+            classToBytes = getParmeterConfigruations(INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY);
 
-            // OTP connection limits
-            tIncom_cfg.tSecurityCfg.u8_otp_limits := adeOTPNumber.Value;
+            if (classToBytes != null)
+            {
+                tTxt_OTPKey.Text = Encoding.Default.GetString(classToBytes, 2, classToBytes.Length - 2).Trim('\0');
+                Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
-            tIncom_cfg.tSecurityCfg.u8_reserved := 0;
+                str = tTxt_OTPKey.Text;
 
-        // OTP Key
-        b_found:= SearchParmCfg(SEC_PARAM_OTP_KEY, tParamCfgData);
-            if b_found then
-            begin
-    u8_result:= frmMain.ReadCfgParam(tParamCfgData.u16_parm_index, u8_param_value);
+                str_len = str.Length;
+                if (str_len > (int)INNCOM_CONF.NUM_OTP_KEY)
+                {
+                    str_len = (int)INNCOM_CONF.NUM_OTP_KEY;
+                }
+                Encoding.ASCII.GetBytes(str, 0, str_len, tIncom_cfg.tSecurityCfg.u8_otp_key, 0);
+            }
+            else
+            {
+                MessageBox.Show("ERROR - OTP KEy ");
+                return;
+            }
+            classToBytes = tIncom_cfg.tSecurityCfg.Serialize();
+            tIncom_cfg.tSecurityCfg.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
 
-            if u8_result = COMM_RESULT_OK then
-            begin
-       for u8_idx := 0 to NUM_OTP_KEY - 1 do
-                    tIncom_cfg.tSecurityCfg.u8_otp_key[u8_idx] := u8_param_value[u8_idx];
-            end
-    else
-                begin
-       for u8_idx := 0 to NUM_OTP_KEY - 1 do
-                    tIncom_cfg.tSecurityCfg.u8_otp_key[u8_idx] := $0;
-            end;
-            end;
+            /* 
+             * Get NTC Compensation Table 
+             */
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_NTC_COMP; i++)
+            {
+                IntegerUpDown NTCUpDown = (IntegerUpDown)this.FindName(String.Format("tUpdown_NTCComp{0}", i + 1));
+                tIncom_cfg.tNtcCfg.s8_NtcTempComp[i] = (sbyte)NTCUpDown.Value;
+            }
+            classToBytes = tIncom_cfg.tNtcCfg.Serialize();
+            tIncom_cfg.tNtcCfg.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
 
-        u16_fl_crc:= CRC_SEED_VAL;
-            CalcCRC16(@tIncom_cfg.tSecurityCfg, 2, sizeof(tIncom_cfg.tSecurityCfg), u16_fl_crc);
-            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
-            tIncom_cfg.tSecurityCfg.u16_crc := u16_fl_crc;
+            /*
+             * Get UL2075 Histogram Table 
+             */
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_HISTOGRAM; i++)
+            {
+                DecimalUpDown UL2075 = (DecimalUpDown)this.FindName(String.Format("tUpdown_UL2075Count{0}", i + 1));
+                tIncom_cfg.tUL2075Cfg.u8_Histogram[i] = (byte)UL2075.Value;
+            }
+            classToBytes = tIncom_cfg.tUL2075Cfg.Serialize();
+            tIncom_cfg.tUL2075Cfg.u16_crc = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
 
-            { Get NTC Compensation Table }
-            for u8_index := 0 to NUM_NTC_COMP - 1 do
-                    begin
-                      CompName := Format('adsNtcComp%d', [u8_index + 1]);
-        Comp:= FindComponent(CompName);
-            tIncom_cfg.tNtcCfg.s8_NtcTempComp[u8_index] := TAdvSpinEdit(Comp).Value;
-            end;
-
-        u16_fl_crc:= CRC_SEED_VAL;
-            CalcCRC16(@tIncom_cfg.tNtcCfg, 2, sizeof(tIncom_cfg.tNtcCfg), u16_fl_crc);
-            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
-            tIncom_cfg.tNtcCfg.u16_crc := u16_fl_crc;
-
-            { Get UL2075 Histogram Table }
-            for u8_index := 0 to NUM_HISTOGRAM - 1 do
-                    begin
-                      CompName := Format('advHistogram%d', [u8_index + 1]);
-        Comp:= FindComponent(CompName);
-            tIncom_cfg.tUL2075Cfg.u8_Histogram[u8_index] := TAdvSpinEdit(Comp).Value;
-            end;
-
-        u16_fl_crc:= CRC_SEED_VAL;
-            CalcCRC16(@tIncom_cfg.tUL2075Cfg, 2, sizeof(tIncom_cfg.tUL2075Cfg), u16_fl_crc);
-            //  SwapCopyU16Data(u16_conv_value, 0, u16_fl_crc);
-            tIncom_cfg.tUL2075Cfg.u16_crc := u16_fl_crc;
-
-            end;*/
         }
 
+        private void setIncomConfigurationToWindow()
+        {
+            /*
+             * Set Modbus
+             */
+
+            tUpdown_SlaveID.Value = tIncom_cfg.tModbusCfg.u8_SlaveId;
+            tCmb_Parity.SelectedIndex = tIncom_cfg.tModbusCfg.u8_Parity;
+            tCmb_Baudrate.SelectedIndex = tIncom_cfg.tModbusCfg.u8_Baudrate;
+            tCmb_FlowControl.SelectedIndex = tIncom_cfg.tModbusCfg.u8_FlowCtrl;
+            tCmb_Databits.SelectedIndex = tIncom_cfg.tModbusCfg.u8_Databits;
+            tCmb_Stopbits.SelectedIndex = tIncom_cfg.tModbusCfg.u8_Stopbits;
+
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             *set Relay Parameters
+             */
+            tCmb_TriggerEvent1.SelectedIndex = tIncom_cfg.tRelayCfg.u8_TriggerEvent1;
+            tCmb_TriggerEvent2.SelectedIndex = tIncom_cfg.tRelayCfg.u8_TriggerEvent2;
+            tCmb_InitialState1.SelectedIndex = tIncom_cfg.tRelayCfg.u8_InitialState1;
+            tCmb_InitialState2.SelectedIndex = tIncom_cfg.tRelayCfg.u8_InitialState2;
+
+            tUpdown_OnDelayTime.Value = tIncom_cfg.tRelayCfg.u16_OnDelayTime;
+            tUpdown_OffDelayTime.Value = tIncom_cfg.tRelayCfg.u16_OffDelayTime;
+
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             *Set mA Output Parameters 
+             */
+            tUpdown_FaultCurrent.Value = tIncom_cfg.tmAOutputCfg.u8_FaultCurrent / 10;
+            tUpdown_WarningCurrent.Value = tIncom_cfg.tmAOutputCfg.u8_WarningCurrent / 10;
+            tUpdown_OverRangeCurrent.Value = tIncom_cfg.tmAOutputCfg.u8_OverrangeCurrent / 10;
+            tUpdown_InhibitTimeout.Value = tIncom_cfg.tmAOutputCfg.u16_InhibitTimeout;
+
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             *Set General Parameters 
+             */
+            string str = Encoding.Default.GetString(tIncom_cfg.tGeneralCfg.u8_LocationTag, 0, tIncom_cfg.tGeneralCfg.u8_LocationTag.Length).Trim('\0');
+            tTxt_LocationTag.Text = str;
+
+            tCmb_LEDControl.SelectedIndex = tIncom_cfg.tGeneralCfg.u8_LEDCtrl;
+            tCmb_AlarmOperationMode.SelectedIndex = tIncom_cfg.tGeneralCfg.u8_AlarmMode;
+            tCmb_SafetyMode.SelectedIndex = tIncom_cfg.tGeneralCfg.u8_SafeMode;
+            tCmb_CalOverdue.SelectedIndex = tIncom_cfg.tGeneralCfg.u8_CalOverDueOption;
+
+            tUpdown_Passcode1.Value = tIncom_cfg.tGeneralCfg.u8_passcode[0];
+            tUpdown_Passcode2.Value = tIncom_cfg.tGeneralCfg.u8_passcode[1];
+            tUpdown_Passcode3.Value = tIncom_cfg.tGeneralCfg.u8_passcode[2];
+            tUpdown_Passcode4.Value = tIncom_cfg.tGeneralCfg.u8_passcode[3];
+
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /* 
+             * Set Circuit Calibration Parameters 
+             */
+            tUpdown_4to20mAOffsetSink.Value = tIncom_cfg.tCircuitCalCfg.f32_mAOutputSinkOffset;
+            tUpdown_4to20mASpanSink.Value = tIncom_cfg.tCircuitCalCfg.f32_mAOutputSinkSpan;
+            tUpdown_4to20mAOffsetSource.Value = tIncom_cfg.tCircuitCalCfg.f32_mAOutputSourceOffset;
+            tUpdown_4to20mASpanSource.Value = tIncom_cfg.tCircuitCalCfg.f32_mAOutputSourceSpan;
+            tUpdown_LoopbakcOffsetSink.Value = tIncom_cfg.tCircuitCalCfg.f32_mALoopbackSinkOffset;
+            tUpdown_LoopbackSpanSink.Value = tIncom_cfg.tCircuitCalCfg.f32_mALoopbackSinkSpan;
+            tUpdown_LoopbackOffsetSource.Value = tIncom_cfg.tCircuitCalCfg.f32_mALoopbackSourceOffset;
+            tUpdown_LoopbackSpanSource.Value = tIncom_cfg.tCircuitCalCfg.f32_mALoopbackSourceSpan;
+            tUpdown_VoltageOutputOffset.Value = tIncom_cfg.tCircuitCalCfg.f32_VoltageOutputOffset;
+            tUpdown_VoltageOutputSpan.Value = tIncom_cfg.tCircuitCalCfg.f32_VoltageOutputSpan;
+
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             * Set Device Info Parameters 
+             */
+            str = Encoding.Default.GetString(tIncom_cfg.tDeviceInfo.u8_DeviceSerialNum, 0, tIncom_cfg.tDeviceInfo.u8_DeviceSerialNum.Length).Trim('\0');
+            tTxt_DeviceSerialNumber.Text = str;
+
+            str = Encoding.Default.GetString(tIncom_cfg.tDeviceInfo.u8_BoardSerialNum, 0, tIncom_cfg.tDeviceInfo.u8_BoardSerialNum.Length).Trim('\0');
+            tTxt_BoardSerialNumber.Text = str;
+
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            /*
+             * Set Security Parameters
+             */
+
+            tUpdown_LoginRetry.Value = tIncom_cfg.tSecurityCfg.u8_num_login_retry;
+            tUpdown_LoginLockTime.Value = tIncom_cfg.tSecurityCfg.u8_login_locktime;
+            tUpdown_OTPConnection.Value = tIncom_cfg.tSecurityCfg.u8_otp_limits;
+
+            str = Encoding.Default.GetString(tIncom_cfg.tSecurityCfg.u8_otp_key, 0, tIncom_cfg.tSecurityCfg.u8_otp_key.Length).Trim('\0');
+            tTxt_OTPKey.Text = str;
+
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+
+            /* 
+             * Set NTC Compensation Table 
+             */
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_NTC_COMP; i++)
+            {
+                IntegerUpDown NTCUpDown = (IntegerUpDown)this.FindName(String.Format("tUpdown_NTCComp{0}", i + 1));
+                NTCUpDown.Value = tIncom_cfg.tNtcCfg.s8_NtcTempComp[i];
+            }
+
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+
+            /*
+             * Get UL2075 Histogram Table 
+             */
+            for (int i = 0; i < (int)INNCOM_CONF.NUM_HISTOGRAM; i++)
+            {
+                DecimalUpDown UL2075 = (DecimalUpDown)this.FindName(String.Format("tUpdown_UL2075Count{0}", i + 1));
+                UL2075.Value = tIncom_cfg.tUL2075Cfg.u8_Histogram[i];
+            }
+
+        }
+
+        private void saveToFile()
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "Incom Configuration"; // Default file name
+            dlg.DefaultExt = ".icfg"; // Default file extension
+            dlg.Filter = "Incom configuration files (*.icfg)|.icfg| All fils |*.*";
+
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == false)
+            {
+                return;
+            }
+            string filename = dlg.FileName;
+            getIncomConfigurationFromWindow();
+
+            byte[] saveData = tIncom_cfg.getDataToByteArray();
+
+            System.IO.File.WriteAllBytes(filename, saveData);
+
+            MessageBox.Show("Successfully saved");
+        }
+
+        private void OpenFromFile()
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = "icfg"; // Default file extension
+            dlg.Filter = "Incom configuration files (*.icfg)|*.icfg| All fils |*.*";
+
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == false)
+            {
+                return;
+            }
+            string filename = dlg.FileName;
+            byte[] data = System.IO.File.ReadAllBytes(filename);
+
+            result = tIncom_cfg.setDataFromByteArray(data);
+            if (result == false)
+            {
+                MessageBox.Show("Wrong File");
+                return;
+            }
+
+            result = verifyIncomConfiguration(ref data);
+            if (result == false)
+            {
+                return;
+            }
+
+            setIncomConfigurationToWindow();
+
+            MessageBox.Show("successfully Open File");
+        }
+
+        private bool verifyIncomConfiguration(ref byte[] data)
+        {
+            int crc16_sz = 2;
+            byte[] classToBytes = null;
+            ushort CalCRC = 0;
+
+            classToBytes = tIncom_cfg.tModbusCfg.Serialize();
+            CalCRC = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            if (CalCRC != tIncom_cfg.tModbusCfg.u16_crc)
+            {
+                MessageBox.Show("Wrong File");
+                return false;
+            }
+
+            classToBytes = tIncom_cfg.tRelayCfg.Serialize();
+            CalCRC = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            if (CalCRC != tIncom_cfg.tRelayCfg.u16_crc)
+            {
+                MessageBox.Show("Wrong File");
+                return false;
+            }
+
+            classToBytes = tIncom_cfg.tmAOutputCfg.Serialize();
+            CalCRC = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            if (CalCRC != tIncom_cfg.tmAOutputCfg.u16_crc)
+            {
+                MessageBox.Show("Wrong File");
+                return false;
+            }
+
+            classToBytes = tIncom_cfg.tGeneralCfg.Serialize();
+            CalCRC = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            if (CalCRC != tIncom_cfg.tGeneralCfg.u16_crc)
+            {
+                MessageBox.Show("Wrong File");
+                return false;
+            }
+
+            classToBytes = tIncom_cfg.tCircuitCalCfg.Serialize();
+            CalCRC = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            if (CalCRC != tIncom_cfg.tCircuitCalCfg.u16_crc)
+            {
+                MessageBox.Show("Wrong File");
+                return false;
+            }
+
+            classToBytes = tIncom_cfg.tDeviceInfo.Serialize();
+            CalCRC = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            if (CalCRC != tIncom_cfg.tDeviceInfo.u16_crc)
+            {
+                MessageBox.Show("Wrong File");
+                return false;
+            }
+
+            classToBytes = tIncom_cfg.tSecurityCfg.Serialize();
+            CalCRC = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            if (CalCRC != tIncom_cfg.tSecurityCfg.u16_crc)
+            {
+                MessageBox.Show("Wrong File");
+                return false;
+            }
+
+            classToBytes = tIncom_cfg.tNtcCfg.Serialize();
+            CalCRC = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            if (CalCRC != tIncom_cfg.tNtcCfg.u16_crc)
+            {
+                MessageBox.Show("Wrong File");
+                return false;
+            }
+
+            classToBytes = tIncom_cfg.tUL2075Cfg.Serialize();
+            CalCRC = crc16.UpdateCRC16(classToBytes, (uint)classToBytes.Length, crc16_sz);
+
+            if (CalCRC != tIncom_cfg.tUL2075Cfg.u16_crc)
+            {
+                MessageBox.Show("Wrong File");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void readFromIncom()
+        {
+            int blockNum = tIncom_cfg.totalSize / (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK;
+            int eepAddr = 0;
+            int dataLen = 0;
+            byte[] EEP_Data = new byte[(int)INNCOM_CONF.SZ_EEP_MEMORY];
+
+            for (int i = 0; i <= blockNum; i++)
+            {
+                if (i < blockNum)
+                {
+                    dataLen = (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK;
+                }
+                else
+                {
+                    dataLen = tIncom_cfg.totalSize - (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK * i;
+                    if (dataLen == 0)
+                    {
+                        break;
+                    }
+                }
+
+                byte[] payload = new byte[6];
+                payload[0] = (int)INNCOM_CONF.MEM_TYPE_FLASH;
+                payload[1] = (byte)(eepAddr >> 24);
+                payload[2] = (byte)(eepAddr >> 16);
+                payload[3] = (byte)(eepAddr >> 8);
+                payload[4] = (byte)eepAddr;
+                payload[5] = (byte)dataLen;
+
+                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DATA_FROM_MEM, payload, ref err, 500);
+                if (err != ERROR_LIST.ERROR_NONE)
+                {
+                    MessageBox.Show("ERROR - READ DATA FORM INCOM MEMORY");
+                    return;
+                }
+
+                int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
+                int dataToRead = result[offset];
+                Array.Copy(result, offset + 1, EEP_Data, eepAddr, dataToRead);
+
+                eepAddr += dataLen;
+            }
+
+            byte[] data = new byte[eepAddr];
+            Array.Copy(EEP_Data, data, eepAddr);
+
+            tIncom_cfg.setDataFromByteArray(data);
+
+            bool resultVerification = verifyIncomConfiguration(ref data);
+            if (!resultVerification)
+            {
+                MessageBox.Show("ERROR - READ DATA FORM INCOM MEMORY");
+                return;
+            }
+
+            setIncomConfigurationToWindow();
+            MessageBox.Show("Successfully Read From Incom");
+
+        }
+
+        private void updateIncom()
+        {
+            getIncomConfigurationFromWindow();
+
+            byte[] data = tIncom_cfg.getDataToByteArray();
+
+            int blockNum = tIncom_cfg.totalSize / (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK;
+            int eepAddr = 0;
+            int dataLen = 0;
+           
+            for (int i = 0; i <= blockNum; i++)
+            {
+                if (i < blockNum)
+                {
+                    dataLen = (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK;
+                }
+                else
+                {
+                    dataLen = tIncom_cfg.totalSize - (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK * i;
+
+                    if(dataLen == 0)
+                    {
+                        break;
+                    }
+                }
+
+                byte[] payload = new byte[6 + dataLen];
+                payload[0] = (int)INNCOM_CONF.MEM_TYPE_EEPROM;
+                payload[1] = (byte)(eepAddr >> 24);
+                payload[2] = (byte)(eepAddr >> 16);
+                payload[3] = (byte)(eepAddr >> 8);
+                payload[4] = (byte)eepAddr;
+                payload[5] = (byte)dataLen;
+
+                Array.Copy(data, eepAddr, payload, 6, dataLen);
+
+                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_WRITE_DATA_TO_MEM, payload, ref err, 1000);
+                if (err != ERROR_LIST.ERROR_NONE)
+                {
+                    MessageBox.Show("ERROR - WRITE DATA TO INCOM MEMORY");
+                    return;
+                }
+                eepAddr += dataLen;
+            }
+
+            MessageBox.Show("Successfully Write To Incom");
+        }
         
     }
 }
