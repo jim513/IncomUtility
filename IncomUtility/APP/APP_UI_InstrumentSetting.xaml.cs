@@ -42,18 +42,12 @@ namespace IncomUtility.APP
 
         private byte[] getParmeterConfigruations(INNCOM_CONF_LIST configuration_setting)
         {
-            //bool found = paramTable.searchParmCfg((ushort)configuration_setting, ref param);
-            //if (!found)
-            //{
-            //    return null;
-            //}
 
             /*
              * Make Payload using Incom Parameter configuration
              */
             byte[] payload = new byte[2];
             payload = Utility.getBytesFromU16((ushort)configuration_setting);
-            //payload = Utility.getBytesFromU16(param.u16_parm_index);
 
             /*
              * Send Command
@@ -268,6 +262,7 @@ namespace IncomUtility.APP
         {
             readFromIncom();
         }
+
         private void tBtn_UpdateIncom_Click(object sender, RoutedEventArgs e)
         {
             updateIncom();

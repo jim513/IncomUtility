@@ -36,13 +36,12 @@ namespace IncomUtility
             if (cmbPort.SelectedItem == null)
                 return;
 
+            SerialPortIO.mutex.WaitOne();
+
             if (SerialPortIO.serialPort.IsOpen)
             {
-                MessageBox.Show("이미 연결되었습니다.");
-                return;
+                SerialPortIO.serialPort.Close();
             }
-
-            SerialPortIO.mutex.WaitOne();
 
             SerialPortIO.serialPort.PortName = cmbPort.Text;
             SerialPortIO.serialPort.BaudRate = Convert.ToInt32(cmbBaudRate.Text);

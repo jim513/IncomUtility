@@ -111,7 +111,6 @@ namespace IncomUtility
             else
                 return BitConverter.ToInt32(data, offset);
 
-
         }
         public static uint getU32FromByteA(byte[] data, int offset)
         {
@@ -169,7 +168,16 @@ namespace IncomUtility
                 return BitConverter.ToUInt16(data, offset);
         }
 
+        public static byte[] getBytesFromU32(int data)
+        {
 
+            byte[] getBytes = BitConverter.GetBytes(data);
+
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(getBytes);
+
+            return getBytes;
+        }
         public static byte[] getBytesFromF32(float data)
         {
 

@@ -121,7 +121,7 @@ namespace IncomUtility
         COMM_CMD_WRITE_CONFIG = 0x7202,
 
         //H/W Control
-
+        COMM_CMD_FORCE_LEDS = 0x7301,
         COMM_CMD_RELEASE_LEDS = 0x7302,
         COMM_CMD_FORCE_RELAYS = 0x7303,
         COMM_CMD_RELEASE_RELAYS = 0x7304,
@@ -135,16 +135,17 @@ namespace IncomUtility
         COMM_CMD_CTRL_INTERNAL_LEDS = 0x730C,
         COMM_CMD_REPLACE_SENSOR = 0x730D,
         COMM_CMD_EXIT_REPLACE_SENSOR = 0x730E,
+        
         COMM_CMD_CANCEL_SENSOR_REPLACEMENT = 0x730F,
-
         COMM_CMD_ENABLE_REFLEX_TEST = 0x730F,
+        COMM_CMD_DISABLE_REFLEX_TEST = 0x7310,
 
         //Calibration
         COMM_CMD_START_ZERO_CAL = 0x7401,
         COMM_CMD_STOP_ZERO_CAL = 0x7402,
         COMM_CMD_ACCEPT_ZERO_CAL = 0x7403,
         COMM_CMD_START_SPAN_CAL = 0x7404,
-
+        COMM_CMD_STOP_SPAN_CAL = 0x7405,
         COMM_CMD_ACCEPT_SPAN_CAL = 0x7406,
 
         //Calibrate Analogue Output
@@ -153,7 +154,7 @@ namespace IncomUtility
         COMM_CMD_ACCEPT_ANALOGUE_ZERO_CAL = 0x7503,
         COMM_CMD_START_ANALOGUE_SPAN_CAL = 0x7504,
         COMM_CMD_STOP_ANALOGUE_SPAN_CAL = 0x7505,
-        COMM_CMD_ACCPET_ANALOGUE_SPAN_CAL = 0x7506,
+        COMM_CMD_ACCEPT_ANALOGUE_SPAN_CAL = 0x7506,
 
         //Calibrate Voltage Output
         COMM_CMD_START_VOLTAGE_ZERO_CAL = 0x7601,

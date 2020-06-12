@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="Calibrate Analogue Output" Height="300" Width="400">
     <Grid>
-        <TabControl Margin="10">
-            <TabItem Header="Zeroing">
+        <TabControl x:Name="tTab_AnalogueOutput" Margin="10">
+            <TabItem x:Name="tTabitem_Zero" Header="Zeroing">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
@@ -33,7 +33,7 @@
                     <Button x:Name="tBtn_AcceptZero" Grid.Column="3" Grid.Row="2" Margin="4" Content="Accept Zero" Click="tBtn_AcceptZero_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Span Cal">
+            <TabItem x:Name="tTabitem_Span"  Header="Span Cal">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>

@@ -1,14 +1,14 @@
-﻿<Window x:Class="IncomUtility.APP.APP_UI_GasCalibration"
+﻿<Window x:Class="IncomUtility.APP_UI_GasCalibration"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IncomUtility.APP"
+        xmlns:local="clr-namespace:IncomUtility"
         mc:Ignorable="d"
-        Title="Calibrate Gas" Height="300" Width="400">
+        Title="Calibrate Gas" Height="300" Width="450">
     <Grid>
-        <TabControl Margin="10">
-            <TabItem Header="Cal Type">
+        <TabControl x:Name="tTab_GasCalibration" Margin="10" SelectionChanged="tTab_GasCalibration_SelectionChanged">
+            <TabItem x:Name="tTabitem_CalType" Header="Cal Type">
                 <GroupBox Header="Select Calibration Type" Margin="10">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -26,11 +26,11 @@
                             <ComboBoxItem Content="0 : User Calibration"/>
                             <ComboBoxItem Content="1 : Factory Calibration"/>
                         </ComboBox>
-                        <Button x:Name="tBtn_CalTypeNext" Grid.Column="2" Grid.Row="3" Content="Next" Margin="10" Click="tBtn_CalTypeNext_Click"/>
+                        <Button x:Name="tBtn_CalTypeStart" Grid.Column="2" Grid.Row="3" Content="Next" Margin="10" Click="tBtn_CalTypeStart_Click"/>
                     </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Header="Zeroing">
+            <TabItem x:Name="tTabItem_Zero" Header="Zeroing">
                 <GroupBox Header="Zero Calibration" Margin="10">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -50,7 +50,7 @@
                     </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Header="Target Span Gas">
+            <TabItem x:Name="tTabitem_TargetSpanGas" Header="Target Span Gas">
                 <GroupBox Header="Selct Target Cal Conc." Margin="10">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -66,12 +66,12 @@
                             <ColumnDefinition Width="18*"/>
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="tTxt_TargetSpanConc" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Text="0.0" TextAlignment="Left"  FontWeight="Bold" FontSize="36" />
-                        <Button x:Name="tTxt_SpanGasNext" Content="Next" Grid.Row="3" Grid.Column="2" Margin="25,10,5,5" Click="tTxt_SpanGasNext_Click" />
-                        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Text="Configuralbe Target Calibration Conc. : 150 ~ 350" Margin="0.6,0.009,0,0.191"/>
+                        <Button x:Name="tBtn_SpanGasNext" Content="Next" Grid.Row="3" Grid.Column="2" Margin="25,10,5,5" Click="tBtn_SpanGasNext_Click" />
+                        <TextBlock x:Name="tTxt_TargetSpanRange" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Text="Configuralbe Target Calibration Conc. : 150 ~ 350" Margin="0.6,0.009,0,0.191"/>
                     </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Header="Span Cal">
+            <TabItem x:Name="tTabitem_SpanCalibration" Header="Span Cal">
                 <GroupBox Header="Gas Reading" Margin="10">
                     <Grid>
                         <Grid.RowDefinitions>

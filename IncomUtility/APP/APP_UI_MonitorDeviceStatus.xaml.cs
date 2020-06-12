@@ -38,7 +38,7 @@ namespace IncomUtility
 
         ERROR_LIST err = ERROR_LIST.ERROR_NONE;
 
-        int DatagirdoRowSize = 16;
+        int DatagridRowSize = 16;
         public APP_UI_MonitorDeviceStatus()
         {
             InitializeComponent();
@@ -127,7 +127,7 @@ namespace IncomUtility
         }
         private void updateDataGrid(byte[] u8RXbuffer, DataGrid grid, List<UIDataGrid> list, string[] status)
         {
-            string[] value = new string[DatagirdoRowSize];
+            string[] value = new string[DatagridRowSize];
 
             int bitNumberOfByte = 8;
 

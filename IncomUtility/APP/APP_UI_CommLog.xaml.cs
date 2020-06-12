@@ -24,6 +24,14 @@ namespace IncomUtility.APP
 
         public void setText(byte [] txbuffer , byte[] rxbuffer)
         {
+            if (txbuffer == null)
+            {
+                return;
+            }
+            if (rxbuffer == null)
+            {
+                return;
+            }
             DateTime now = DateTime.Now;
 
             Dispatcher.BeginInvoke(new Action(() =>

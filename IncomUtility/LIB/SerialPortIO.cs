@@ -31,18 +31,19 @@ namespace IncomUtility
 
     }
     public static class SerialPortIO
-    { 
-         public static SerialPort serialPort = new SerialPort();
-         public static Mutex mutex = new Mutex();
-         private static QuattroProtocol quattro = new QuattroProtocol();
+    {
+        public static SerialPort serialPort = new SerialPort();
+        public static Mutex mutex = new Mutex();
+        private static QuattroProtocol quattro = new QuattroProtocol();
+        public static bool isMessageboxWortk = true;
 
-          public static bool isPortOpen()
+        public static bool isPortOpen()
         {
             if (serialPort.IsOpen)
             {
                 return true;
             }
-            string[] names= SerialPort.GetPortNames();
+            string[] names = SerialPort.GetPortNames();
 
             if (names.Length == 0)
             {
@@ -53,11 +54,14 @@ namespace IncomUtility
 
             try
             {
-               serialPort.Open();
+                serialPort.Open();
             }
             catch
             {
-                MessageBox.Show("Connecting was failed");
+                if (isMessageboxWortk)
+                {
+                    MessageBox.Show("Connecting was failed");
+                }
                 return false;
             }
             if (serialPort.IsOpen)
@@ -67,9 +71,9 @@ namespace IncomUtility
 
             return false;
         }
-         private static void writePacket(ref byte[] sendbuffer ,ref ERROR_LIST err)
+        private static void writePacket(ref byte[] sendbuffer, ref ERROR_LIST err)
         {
-            
+
             if (!isPortOpen())
             {
                 err = ERROR_LIST.ERROR_PORT_NOT_OPEN;
@@ -78,13 +82,13 @@ namespace IncomUtility
             if (sendbuffer == null)
             {
                 err = ERROR_LIST.ERROR_INPUT_DATA_NONE;
-                return ;
+                return;
             }
             serialPort.Write(sendbuffer, 0, sendbuffer.Length);
             err = ERROR_LIST.ERROR_NONE;
         }
 
-         private static byte[] readPacket(ref ERROR_LIST err)
+        private static byte[] readPacket(ref ERROR_LIST err)
         {
             if (!isPortOpen())
             {
@@ -102,20 +106,22 @@ namespace IncomUtility
             else
             {
                 err = ERROR_LIST.ERROR_RECIVE_DATA_NONE;
-                return  null;
+                return null;
             }
 
             err = ERROR_LIST.ERROR_NONE;
 
             return readBuffer;
         }
-         private static byte[] sendCommand( byte[] payload, ref ERROR_LIST error ,int sleepTime)
+        private static byte[] sendCommand(byte[] payload, ref ERROR_LIST error, int sleepTime)
         {
             if (!isPortOpen())
             {
                 error = ERROR_LIST.ERROR_PORT_NOT_OPEN;
-                MessageBox.Show("Incom is not connected");
-
+                if (isMessageboxWortk)
+                {
+                    MessageBox.Show("Incom is not connected");
+                }
                 return null;
             }
             if (payload == null)
@@ -132,7 +138,7 @@ namespace IncomUtility
 
             while (retryCount-- > 0)
             {
-                flushIOBuffer(); 
+                flushIOBuffer();
 
                 u8TXbuffer = quattro.buildCMDPacket((byte)PACKET_CONF.COMM_SYSTEM_MFG_PC,
                     (byte)PACKET_CONF.COMM_SYSTEM_INCOM, payload, ref error);
@@ -157,43 +163,18 @@ namespace IncomUtility
                 error = quattro.validateRXPacket(u8RXbuffer);
                 if (error == ERROR_LIST.ERROR_NONE)
                 {
-                    if(APP_UI_CommLog.packetCheck == true)
-                    {
-                        MainWindow.winCommLog.setText(u8TXbuffer,u8RXbuffer);
-                    }                        
                     break;
                 }
+            }
+            if (APP_UI_CommLog.packetCheck == true)
+            {
+                MainWindow.winCommLog.setText(u8TXbuffer, u8RXbuffer);
             }
             mutex.ReleaseMutex();
 
             return u8RXbuffer;
         }
-         public static byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err,int sleepTime)
-        {
-            if(payload == null)
-            {
-                err = ERROR_LIST.ERROR_INPUT_DATA_NONE;
-                return null;
-            }
-            byte[]command = QuattroProtocol.commandToByteArray(CMD);
-            command = Utility.mergeByteArray(command, payload);
-            
-            return sendCommand(command, ref err, sleepTime);
-        }
-         public static byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
-        {
-            return sendCommand(CMD, payload, ref err, (int)Constants.defaultSleep);
-        }
-         public static byte[] sendCommand(COMM_COMMAND_LIST CMD,ref ERROR_LIST err, int sleepTime )
-        {
-            return sendCommand(QuattroProtocol.commandToByteArray(CMD), ref err, sleepTime);
-        }
-         public static byte[] sendCommand(COMM_COMMAND_LIST CMD, ref ERROR_LIST err)
-        {
-            return sendCommand(QuattroProtocol.commandToByteArray(CMD), ref err, (int)Constants.defaultSleep);
-        }
-
-         public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err, int sleepTime)
+        public static byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err, int sleepTime)
         {
             if (payload == null)
             {
@@ -202,24 +183,49 @@ namespace IncomUtility
             }
             byte[] command = QuattroProtocol.commandToByteArray(CMD);
             command = Utility.mergeByteArray(command, payload);
-            
-            return sendCommand(command, ref err, sleepTime);
 
+            return sendCommand(command, ref err, sleepTime);
         }
-         public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
+        public static byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
         {
-            return sendCommand(CMD,payload, ref err, (int)Constants.defaultSleep);
+            return sendCommand(CMD, payload, ref err, (int)Constants.defaultSleep);
         }
-         public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err, int sleepTime)
+        public static byte[] sendCommand(COMM_COMMAND_LIST CMD, ref ERROR_LIST err, int sleepTime)
         {
-           return sendCommand(QuattroProtocol.commandToByteArray(CMD), ref err, sleepTime);
+            return sendCommand(QuattroProtocol.commandToByteArray(CMD), ref err, sleepTime);
         }
-         public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err)
+        public static byte[] sendCommand(COMM_COMMAND_LIST CMD, ref ERROR_LIST err)
         {
             return sendCommand(QuattroProtocol.commandToByteArray(CMD), ref err, (int)Constants.defaultSleep);
         }
 
-         private static void flushIOBuffer()
+        public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err, int sleepTime)
+        {
+            if (payload == null)
+            {
+                err = ERROR_LIST.ERROR_INPUT_DATA_NONE;
+                return null;
+            }
+            byte[] command = QuattroProtocol.commandToByteArray(CMD);
+            command = Utility.mergeByteArray(command, payload);
+
+            return sendCommand(command, ref err, sleepTime);
+
+        }
+        public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
+        {
+            return sendCommand(CMD, payload, ref err, (int)Constants.defaultSleep);
+        }
+        public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err, int sleepTime)
+        {
+            return sendCommand(QuattroProtocol.commandToByteArray(CMD), ref err, sleepTime);
+        }
+        public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err)
+        {
+            return sendCommand(QuattroProtocol.commandToByteArray(CMD), ref err, (int)Constants.defaultSleep);
+        }
+
+        private static void flushIOBuffer()
         {
             if (!serialPort.IsOpen)
                 return;

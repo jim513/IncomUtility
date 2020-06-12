@@ -157,6 +157,11 @@ namespace IncomUtility
         NUM_GAS_NAME = 15,
         NUM_OTP_KEY = 32,
 
+        
+        NUM_USER_NAME = 16,
+        NUM_MOBILE_SN = 15,
+        NUM_APPLICATION_ID = 32,
+
         SZ_PARAM_INDEX = 2,
 
         NUM_CONFIG_PARAM = 111,
@@ -180,6 +185,41 @@ namespace IncomUtility
         LOG_TABLE_TYPE_INFO = 4,
         LOG_TABLE_TYPE_CALIBRATION = 5,
         LOG_TABLE_TYPE_REFLEX = 6,
+    }
+    public enum SENSOR_TPYE
+    {
+        ECC = 0,
+        FL_CAT = 1,
+        IR = 2,
+        PID = 3,
+        MOS = 4,
+    }
+    public enum GAS_TYPE
+    {
+        FLAMMABLE = 0,
+        TOXIC = 1,
+        O2 = 2,
+        VOC = 3,
+    }
+
+    public enum CELL_ID
+    {
+        O2 = 1,
+        CO = 2,
+        H2S_Low = 3,
+        H2S_High = 4,
+        H2 = 5,
+        SO2 = 6,
+        NO2 = 7,
+        NH3_Low = 8,
+        NH3_High = 9,
+        CL2 = 10,
+        O3 = 11,
+        CH4_IR_LEL =12,
+        CO2_IR_vol =13,
+        CH4_CAT_LEL =14,
+        CO2_IR_LEL =15,
+        C3H8_IR = 16,
     }
     public class INCOM_DEVICE_CONFIG_STRUCT
     {

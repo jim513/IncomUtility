@@ -17,8 +17,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <GroupBox x:Name="tTxt_TargetDrive" Header="Target Drive" Margin="10">
-            <TextBlock Text="Voltage : 3.3V" TextAlignment="Center" FontWeight="Bold" FontSize="33" Foreground="DarkBlue" VerticalAlignment="Center"/>
+        <GroupBox  Header="Target Drive" Margin="10">
+            <TextBlock x:Name="tTxt_TargetDrive" Text="Voltage : 3.3V" TextAlignment="Center" FontWeight="Bold" FontSize="33" Foreground="DarkBlue" VerticalAlignment="Center"/>
         </GroupBox>
         <GroupBox Header="Cell Drive Feedback" Margin="10" Grid.Row="1">
             <TextBlock x:Name="tTxt_CellDriveFeedback" Text="3000 / 200" TextAlignment="Center" FontWeight="Bold" FontSize="33" Foreground="DarkBlue" VerticalAlignment="Center"/>

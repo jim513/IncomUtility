@@ -26,15 +26,13 @@ namespace IncomUtility
         public APP_UI_BLEInfo()
         {
             InitializeComponent();
-
-            tBtn_getBLEInfo.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
 
         private void tBtn_getBLEInfo_Click(object sender, RoutedEventArgs e)
         {
             getBLEInfo();         
         }
-        private void getBLEInfo()
+        public void getBLEInfo()
         {
             /*
            * Read BLE Name
@@ -111,12 +109,10 @@ namespace IncomUtility
                 tTxt_BLEInfo.AppendText(Environment.NewLine);
                 return;
             }
-            string BLEInstID = Encoding.Default.GetString(QuattroProtocol.getResponseValueData(result)).Trim('\0');
-
+            string BLEInstID = BitConverter.ToString(QuattroProtocol.getResponseValueData(result)).Replace("-", ":");
             tTxt_BLEInfo.AppendText("BLE Instrument Id : " + BLEInstID);
             tTxt_BLEInfo.AppendText(Environment.NewLine);
             tTxt_BLEInstID.Text = BLEInstID;
-
         }
     }
 }

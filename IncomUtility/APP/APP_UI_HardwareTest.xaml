@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IncomUtility.APP"
         mc:Ignorable="d"
-        Title="APP_UI_HardwareTest" Height="630" Width="640">
+        Title="APP_UI_HardwareTest" Height="630" Width="740">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="258*"/>
@@ -48,7 +48,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Button x:Name="tBtn_ForceVoltage" Content="Force" Margin="4" Click="tBtn_ForceVoltage_Click"/>
-                    <Button x:Name="tBtn_ReleaseVoltage" Content="Release" Margin="4" Grid.Column="1"/>
+                    <Button x:Name="tBtn_ReleaseVoltage" Content="Release" Margin="4" Grid.Column="1" Click="tBtn_ReleaseVoltage_Click"/>
                     <xctk:DoubleUpDown x:Name="tUpdown_ForceVoltage" Grid.Row="1" Margin="4" Value="0.0" FormatString="N1" Increment="0.1" FontSize="22" VerticalContentAlignment="Center"/>
                     <TextBlock Margin="4" Text="%FSD" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="22" FontWeight="Bold" />
                 </Grid>
@@ -120,32 +120,6 @@
                     </ComboBox>
                 </Grid>
             </GroupBox>
-            <GroupBox Header="Simulation" Margin="10.8,6,10,9.6" Grid.Row="1" Grid.Column="2">
-                <Grid >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="19*"/>
-                        <ColumnDefinition Width="18*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <CheckBox x:Name="tChb_Alarm" Content="Alarm" VerticalAlignment="Bottom" />
-                        <CheckBox x:Name="tChb_Warning" Content="Warning" Grid.Row="1" VerticalAlignment="Center" />
-                        <CheckBox x:Name="tChb_Fault" Content="Fault" Grid.Row="2" VerticalAlignment="Top" />
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Button x:Name="tBtn_StartSIM" Content="Start SIM" Grid.Column="1" Margin="5,10" Click="tBtn_StartSIM_Click"/>
-                        <Button x:Name="tBtn_StopSIM" Content="Stop SIM" Grid.Column="1" Grid.Row="1" Margin="5,10" Click="tBtn_StopSIM_Click"/>
-                    </Grid>
-                </Grid>
-            </GroupBox>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -153,10 +127,10 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="63*"/>
-                <RowDefinition Height="94*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <GroupBox Header="Inhibit" Margin="10,5,9.8,5.2">
+            <GroupBox Header="Inhibit" Margin="10,5,10.2,4.8">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -166,7 +140,7 @@
                     <Button x:Name="tBtn_ReleaseOutput" Content="Release Output" Grid.Column="1" Margin="5" Click="tBtn_ReleaseOutput_Click"/>
                 </Grid>
             </GroupBox>
-            <GroupBox Header="Internal LEDs" Margin="10.2,5,9.6,5.2" Grid.Column="1">
+            <GroupBox Header="Internal LEDs" Margin="9.8,5,9.6,4.8" Grid.Column="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -176,29 +150,25 @@
                     <Button x:Name="tBtn_DisableInternalLED" Content="Disable Internal LED" Grid.Column="1" Margin="5" Click="tBtn_DisableInternalLED_Click"/>
                 </Grid>
             </GroupBox>
-            <GroupBox Header="Sensor Replacement" Margin="10,4.8,9.8,4.8" Grid.Row="1">
+            <GroupBox Header="Sensor Replacement" Margin="10,5.2,10.2,4.6" Grid.Row="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
                     <Button x:Name="tBtn_StartSensorReplacement" Content="Start Sensor Replacement" Margin="5" Click="tBtn_StartSensorReplacement_Click"/>
                     <Button x:Name="tBtn_ExitSensorReplacement" Content="Exit Sensor Replacement" Grid.Column="1" Margin="5" Click="tBtn_ExitSensorReplacement_Click"/>
-                    <Button x:Name="tBtn_CancleSensorReplacement" Content="Cancle Sensor Replacement" Grid.Row="1" Margin="5" Click="tBtn_CancleSensorReplacement_Click"/>
                 </Grid>
             </GroupBox>
-            <GroupBox Header="Reflex Control" Margin="10,5,9.8,30" Grid.Row="1" Grid.Column="1">
+            <GroupBox Header="Reflex Control" Margin="9,5,9.6,5" Grid.Row="1" Grid.Column="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="29*"/>
+                        <ColumnDefinition Width="139*"/>
+                        <ColumnDefinition Width="167*"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="tBtn_EnableReflexTest" Content="Enable Reflex Test" Margin="5" Click="tBtn_EnableReflexTest_Click"/>
-                    <Button x:Name="tBtn_DisableReflexTest" Content="Disable Reflex Test" Grid.Column="1" Margin="5" Click="tBtn_DisableReflexTest_Click"/>
+                    <Button x:Name="tBtn_EnableReflexTest" Content="Enable Reflex Test" Margin="5,5,5,5.2" Click="tBtn_EnableReflexTest_Click" Grid.ColumnSpan="2"/>
+                    <Button x:Name="tBtn_DisableReflexTest" Content="Disable Reflex Test" Grid.Column="2" Margin="5,5,5.2,5.2" Click="tBtn_DisableReflexTest_Click"/>
                 </Grid>
             </GroupBox>
         </Grid>

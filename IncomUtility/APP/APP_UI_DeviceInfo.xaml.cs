@@ -18,21 +18,6 @@ namespace IncomUtility
     /// <summary>
     /// APP_UI_DeviceInfo.xaml에 대한 상호 작용 논리
     /// </summary>
-    public enum SENSOR_TPYE
-    {
-        ECC = 0,
-        FL_CAT = 1,
-        IR = 2,
-        PID = 3,
-        MOS = 4,
-    }
-    public enum GAS_TYPE
-    {
-        FLAMMABLE = 0,
-        TOXIC = 1,
-        O2 = 2,
-        VOC = 3,
-    }
 
     public partial class APP_UI_DeviceInfo : Window
     {
@@ -40,8 +25,6 @@ namespace IncomUtility
         public APP_UI_DeviceInfo()
         {
             InitializeComponent();
-
-            tBtn_ReadDeviceInfo.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
 
             tCmb_Param.SelectedIndex = 0;
         }
@@ -76,7 +59,7 @@ namespace IncomUtility
             readConfiguartion();      
         }
 
-        private void readDeviceInfo()
+        public void readDeviceInfo()
         {
             /*
             * Read SW Version

@@ -13,10 +13,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="341*"/>
-            <ColumnDefinition Width="302*"/>
+            <ColumnDefinition Width="384*"/>
+            <ColumnDefinition Width="259*"/>
         </Grid.ColumnDefinitions>
-        <GroupBox Header="User Cert" Margin="10,10,7.8,9.6">
+        <GroupBox Header="User Certification" Margin="10,10,7,9.6">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -28,64 +28,47 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Content="User Name" Margin="10,2" />
+                <Label Content="User Name (Max Length : 20)" Margin="10,2" Grid.ColumnSpan="2"/>
                 <TextBox x:Name="tTxt_UserCertName" Text="&quot;{User Name}&quot;" Grid.Row="1" Margin="10,2" VerticalContentAlignment="Center"/>
                 <Label Content="Expiration Date" Grid.Row="2" Margin="10,2" />
-                <xctk:DecimalUpDown x:Name="tUpdown_ExpirationDate" Value="30" Grid.Row="3" TextAlignment="Left" Margin="10,2"/>
+                <DatePicker x:Name="tDate_ExpirationDate" SelectedDate="2008,01,01"  Grid.Row="3"  Margin="10,2"/>
                 <Button x:Name="tBtn_CheckUserCerInfo" Content="Check User Cert Info" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="10,2" Click="tBtn_CheckUserCerInfo_Click"/>
             </Grid>
         </GroupBox>
-        <Grid Grid.Row="1" Margin="10,10.4,7.8,10.2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Button x:Name="tBtn_ReadCryptCISN" Margin="10,20" Content="Read Crypt CI SN" Click="tBtn_ReadCryptCISN_Click"/>
-            <Button x:Name="tBtn_RequestDeviceCertInfo" Grid.Column="1" Margin="10,20" Content="Request Device Cert Info" Click="tBtn_RequestDeviceCertInfo_Click"/>
-            <Button x:Name="tBtn_CreateKeyPair" Grid.Row="1" Margin="10,20" Content="Create Key Pair" Click="tBtn_CreateKeyPair_Click" />
-            <Button x:Name="tBtn_GetDevicePublicKey" Grid.Row="1" Grid.Column="1" Margin="10,20" Content="Get Device Public Key" Click="tBtn_GetDevicePublicKey_Click"/>
-        </Grid>
-        <GroupBox Header="User Certificate" Grid.Column="1" Margin="12.2,10,10.2,9.6">
-            <Grid>
+        <GroupBox Grid.Row="1" Header="Device Certificate" Margin="10,10.4,10,10.2" Grid.ColumnSpan="1">
+            <Grid Margin="10,10.4,7.8,10.2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Content="User Name"/>
-                <Label Content="Mobile SN (IMEI)" Grid.Row="1"/>
-                <Label Content="Application ID" Grid.Row="2"/>
-                <TextBox x:Name="tTxt_UserCertficateName" Grid.Column="1" Margin="2"/>
-                <TextBox x:Name="tTxt_MobileSN" Grid.Column="1" Margin="2" Grid.Row="1"/>
-                <TextBox x:Name="tTxt_ApplicationID" Grid.Column="1" Margin="2" Grid.Row="2"/>
-                <Button x:Name="tBtn_SendUserCertificate" Content="Send User Certificate" Grid.Column="1" Grid.Row="3" Margin="10,2" Click="tBtn_SendUserCertificate_Click"/>
+
+                <Button x:Name="tBtn_ReadCryptCISN" Margin="5" Content="Read Crypt CI SN" Click="tBtn_ReadCryptCISN_Click"/>
+                <Button x:Name="tBtn_RequestDeviceCertInfo" Margin="5" Grid.Column="1"  Content="Request Device Cert Info" Click="tBtn_RequestDeviceCertInfo_Click"/>
+                <Button x:Name="tBtn_CreateKeyPair" Grid.Row="1"  Margin="5" Content="Create Key Pair" Click="tBtn_CreateKeyPair_Click" />
+                <Button x:Name="tBtn_GetDevicePublicKey" Grid.Row="1" Margin="5" Grid.Column="1"  Content="Get Device Public Key" Click="tBtn_GetDevicePublicKey_Click"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Device / CA certificate" Margin="11.2,10.4,10.2,10.2" Grid.Column="1" Grid.Row="1">
-            <Grid>
+        <GroupBox Header="Device / CA certificate" Margin="11,10,10.2,98.2" Grid.Column="1" Grid.RowSpan="2">
+            <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*"/>
-                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="71*"/>
-                    <ColumnDefinition Width="70*"/>
-                </Grid.ColumnDefinitions>
+
                 <ComboBox x:Name="tCmb_CertificateType"  Grid.ColumnSpan="2"  SelectedIndex="0" Margin="10" VerticalContentAlignment="Center">
                     <ComboBoxItem Content="Device Certificate"/>
                     <ComboBoxItem Content="CA Certificate"/>
                 </ComboBox>
-                <Button x:Name="tBtn_TransferCertificate" Content="Transter Certificate" Grid.Row="1" Margin="10" Click="tBtn_TransferCertificate_Click" />
+                <Button x:Name="tBtn_TransferCertificate" Content="Upload Certificate To Incom" Grid.Row="2" Margin="10" Click="tBtn_TransferCertificate_Click" />
                 <Button x:Name="tBtn_VerifyCertificate" Content="Verify Certificate" Grid.Row="1" Margin="10" Grid.Column="1" Click="tBtn_VerifyCertificate_Click" />
+                <Button x:Name="tBtn_DonwloadCertificate" Content="DownLoad Certificate" Grid.Row="3" Margin="10" Grid.Column="1" />
+
             </Grid>
         </GroupBox>
         <TextBox x:Name="tTxt_Logs" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,9.8,10.2,9.8" TextWrapping="Wrap" Text="memo1"/>

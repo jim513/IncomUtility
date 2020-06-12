@@ -47,6 +47,9 @@ namespace IncomUtility
         private int gridRowMax;
         private int monitorPeriod;
         ERROR_LIST err;
+
+        int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -58,13 +61,54 @@ namespace IncomUtility
             logFiles = new LogToFile("Incom_Gas_data", "csv");
             m_chart1 = new MonitorChart(this, chart_1);
 
-            winCommLog = new APP_UI_CommLog();
-            winCommLog.Closing += (sender, e) =>
+            Win_Make(ref winCommLog);
+            Win_Make(ref winMonitorDeviceStatus);
+            Win_Make(ref winCommunication);
+            Win_Make(ref winBLEInfo);
+            Win_Make(ref winDeviceInfo);
+            Win_Make(ref winViewLogs);
+            Win_Make(ref winRawData);
+            Win_Make(ref winSensorData);
+            Win_Make(ref winInstrumentSetting);
+            Win_Make(ref winSecuritySetup);
+           
+            Win_Make(ref winGasCalibration);
+            winGasCalibration.Closing += (win, t)  =>
             {
-                e.Cancel = true;
-                winCommLog.Hide();
+                SerialPortIO.isMessageboxWortk = false;
+                winGasCalibration.releaseOutput();
+                winGasCalibration.zeroCalibrationStop();
+                winGasCalibration.spanCalibrationStop();
+                SerialPortIO.isMessageboxWortk = true;
             };
-            
+
+            Win_Make(ref winCalAnalogueOutput);
+            winCalAnalogueOutput.Closing += (win, t) =>
+            {
+                SerialPortIO.isMessageboxWortk = false;
+                winCalAnalogueOutput.spanCalibrateStop();
+                winCalAnalogueOutput.zeroCalibrateStop();
+                SerialPortIO.isMessageboxWortk = true;
+            };
+            Win_Make(ref winCalVoltageOutput);
+            winCalVoltageOutput.Closing += (win, t) =>
+            {
+                SerialPortIO.isMessageboxWortk = false;
+                winCalVoltageOutput.spanCalibrateStop();
+                winCalVoltageOutput.zeroCalibrateStop();
+                SerialPortIO.isMessageboxWortk = true;
+            };
+            Win_Make(ref winCalCellDrive);
+            {
+                SerialPortIO.isMessageboxWortk = false;
+                winCalCellDrive.calibrationStop();
+                SerialPortIO.isMessageboxWortk = true;
+
+            }
+            Win_Make(ref winHardwareTest);
+            Win_Make(ref winCommLog);
+            Win_Make(ref winDebug);
+
             gas_monitor_init();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -75,6 +119,7 @@ namespace IncomUtility
             }
             gas_chart_hide();
         }
+
         private void ChangeSize(double width, double height)
         {
             scale.ScaleX = width / orginalWidth;
@@ -90,7 +135,7 @@ namespace IncomUtility
             ChangeSize(e.NewSize.Width, e.NewSize.Height);
         }
 
-        private void Win_Open<T>(ref T win) where T : Window, new()
+        private void Win_Make<T>(ref T win) where T : Window, new()
         {
             if (win == null)
             {
@@ -104,18 +149,22 @@ namespace IncomUtility
                     e.Cancel = true;
                     win2.Hide();
                 };
-                win.Show();
-            }
-            else
-            {
-                win.Show();
-                win.Activate();
             }
         }
+
+        private void Win_Open<T>(ref T win) where T : Window
+        {
+            win.Show();
+            win.Activate();
+        }
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (SerialPortIO.serialPort.IsOpen)
                 SerialPortIO.serialPort.Close();
+
+            SerialPortIO.isMessageboxWortk = false;
+
             for (int intCounter = App.Current.Windows.Count - 1; intCounter > 0; intCounter--)
             {
                 App.Current.Windows[intCounter].Closing += (send, f) =>
@@ -129,97 +178,111 @@ namespace IncomUtility
 
             logFiles.Unchecked();
         }
+
         private void tMenu_MonitorDeviceStatus_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_MonitorDeviceStatus>(ref winMonitorDeviceStatus);
+;           Win_Open(ref winMonitorDeviceStatus);
         }
 
         private void tMenu_Communication_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_Communication>(ref winCommunication);
+            Win_Open(ref winCommunication);
         }
 
         private void tMenu_ViewBLEInfo_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_BLEInfo>(ref winBLEInfo);
+            winBLEInfo.getBLEInfo();
+            Win_Open(ref winBLEInfo);
         }
 
         private void tMenu_ViewDeviceInfo_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_DeviceInfo>(ref winDeviceInfo);
+            winDeviceInfo.readDeviceInfo();
+            Win_Open(ref winDeviceInfo);
         }
+
         private void tMenu_ViewLogs_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_ViewLogs>(ref winViewLogs);
+            Win_Open(ref winViewLogs);
         }
 
         private void tMenu_MonitorRawData_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_RawData>(ref winRawData);
+            Win_Open(ref winRawData);
         }
 
         private void tMenu_EditSensorData_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_SensorData>(ref winSensorData);
+            Win_Open(ref winSensorData);
         }
 
         private void tMenu_EditInstrumentSettings_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_InstrumentSetting>(ref winInstrumentSetting);
+            Win_Open(ref winInstrumentSetting);
         }
 
         private void tMenu_SecuritySetup_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_SecuritySetup>(ref winSecuritySetup);
+            Win_Open(ref winSecuritySetup);
         }
 
         private void tMenu_GasCalibration_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_GasCalibration>(ref winGasCalibration);
+            winGasCalibration.setInhitbitOutput();
+            Win_Open(ref winGasCalibration);
         }
 
         private void tMenu_CalAnalougeOutput_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_CalAnalogueOutput>(ref winCalAnalogueOutput);
+            Win_Open(ref winCalAnalogueOutput);
         }
 
         private void tMenu_CalVoltageOutput_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_CalVoltageOutput>(ref winCalVoltageOutput);
+            Win_Open(ref winCalVoltageOutput);
         }
 
         private void tMenuCalCellDrive_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_CalCellDrive>(ref winCalCellDrive);
+            Win_Open(ref winCalCellDrive);
         }
 
         private void tMenu_HardwareTest_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_HardwareTest>(ref winHardwareTest);
+            Win_Open(ref winHardwareTest);
         }
 
         private void tMenu_CommLog_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_CommLog>(ref winCommLog);
+            Win_Open(ref winCommLog);
         }
         private void tMenu_Debug_Click(object sender, RoutedEventArgs e)
         {
-            Win_Open<APP_UI_Debug>(ref winDebug);
+            Win_Open(ref winDebug);
         }
 
         private void tChb_CaputreDebugPacket_Checked(object sender, RoutedEventArgs e)
         {
             APP_UI_CommLog.packetCheck = (bool)tChb_CaputreDebugPacket.IsChecked;
         }
+
         private void tBtn_MainStart_Click(object sender, RoutedEventArgs e)
         {
-            gasMonitoringStart();
+            if ((bool)tChb_GetGasDataOnce.IsChecked == true)
+            {
+                getGasData();
+            }
+            else
+            {
+                gasMonitoringStart();
+            }
         }
 
         private void tBtn_MainStop_Click(object sender, RoutedEventArgs e)
         {
             gasMonitoringStop();
         }
+
         private void tBtn_MainClear_Click(object sender, RoutedEventArgs e)
         {
             windowClear();
@@ -228,6 +291,64 @@ namespace IncomUtility
         private void tBtn_ResetAlarmFaults_Click(object sender, RoutedEventArgs e)
         {
             resetAlarmFaults();       
+        }
+
+        private string getGasData() 
+        {
+            DateTime curr_Time = DateTime.Now;
+            string date_time_str = curr_Time.ToString("yyyy/MM/dd HH:mm:ss");
+            string time_str = curr_Time.ToString("HH:mm:ss");
+
+            byte[] gas_raw_data_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_GAS_DATA, ref err);
+            if (err != ERROR_LIST.ERROR_NONE)
+            {
+                return null;
+            }
+            byte[] gas_voltage_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_OUTPUT, ref err);
+            if (err != ERROR_LIST.ERROR_NONE)
+            {
+                return null;
+            }
+            byte[] gas_analouge_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
+            if (err != ERROR_LIST.ERROR_NONE)
+            {
+                return null; 
+            }
+            int raw_adc = Utility.getS32FromByteA(gas_raw_data_buffer, offset + 0);
+            float cell_output = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 4);
+            float primary_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 8);
+            float linear_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 12);
+            float deadband_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 16);
+            float display_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 20);
+            int raw_temp = Utility.getS32FromByteA(gas_raw_data_buffer, offset + 24);
+            int temp = Utility.getS32FromByteA(gas_raw_data_buffer, offset + 28);
+            uint fault_state = Utility.getU32FromByteA(gas_raw_data_buffer, offset + 32);
+            uint warning_state = Utility.getU32FromByteA(gas_raw_data_buffer, offset + 36);
+            byte alarm_state = gas_raw_data_buffer[offset + 40];
+
+
+            float target_analouge_output = Utility.getF32FromByteA(gas_voltage_output_buffer, offset);
+            float measured_lop_back_current = Utility.getF32FromByteA(gas_voltage_output_buffer, offset + 4);
+
+            byte ma_output_type = gas_analouge_output_buffer[offset];
+            float target_output = Utility.getF32FromByteA(gas_analouge_output_buffer, offset + 1);
+            float loop_back = Utility.getF32FromByteA(gas_analouge_output_buffer, offset + 5);
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                gas_data_update(tGrid_GasData, gridGasDataList, m_chart1, time_str, raw_adc, cell_output, primary_conc, linear_conc, deadband_conc,
+ display_conc, raw_temp, temp, fault_state, warning_state, alarm_state, target_analouge_output, measured_lop_back_current, target_output, loop_back);
+            }
+            ));
+            string gas_data = date_time_str + string.Format(",{0},{1:0.000},{2:0.000},{3:0.000}," +
+                                              "{4:0.000},{5:0.000},{6},{7}," +
+                                              "{8},{9},{10},{11:0.000}," +
+                                              "{12:0.000},{13:0.000},{14:0.000}", raw_adc, cell_output, primary_conc, linear_conc, deadband_conc,
+                                              display_conc, raw_temp, temp, fault_state, warning_state, alarm_state, target_analouge_output,
+                                              measured_lop_back_current, target_output, loop_back
+                                         );
+
+            return gas_data;
         }
 
         private void gasMonitoringStart()
@@ -351,7 +472,7 @@ namespace IncomUtility
             gas_monitor = new Thread(gas_monitor_run);
             gas_monitor.Start();
         }
-
+  
         private void gasMonitoringStop()
         {
             logFiles.Unchecked();
@@ -413,76 +534,14 @@ namespace IncomUtility
 
         private void gas_monitor_run()
         {
-            int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
-
-            int raw_adc;
-            float cell_ouput;
-            float primary_conc;
-            float linear_conc;
-            float deadband_conc;
-            float display_conc;
-            int raw_temp;
-            int temp;
-            uint fault_state;
-            uint warning_state;
-            byte alarm_state;
-
-            float target_analouge_output;
-            float measured_lop_back_current;
-
-            byte ma_output_type;
-            float target_output;
-            float loop_back;
-
+            string gas_data = "";
             while (gas_monitor_running)
             {
-                DateTime curr_Time = DateTime.Now;
-                string date_time_str = curr_Time.ToString("yyyy/MM/dd HH:mm:ss");
-                string time_str = curr_Time.ToString("HH:mm:ss");
-
-                byte[] gas_raw_data_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_GAS_DATA, ref err);
-                if (err != ERROR_LIST.ERROR_NONE)
-                    continue;
-                byte[] gas_voltage_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_OUTPUT, ref err);
-                if (err != ERROR_LIST.ERROR_NONE)
-                    continue;
-                byte[] gas_analouge_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
-                if (err != ERROR_LIST.ERROR_NONE)
-                    continue;
-
-                raw_adc = Utility.getS32FromByteA(gas_raw_data_buffer, offset + 0);
-                cell_ouput = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 4);
-                primary_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 8);
-                linear_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 12);
-                deadband_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 16);
-                display_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 20);
-                raw_temp = Utility.getS32FromByteA(gas_raw_data_buffer, offset + 24);
-                temp = Utility.getS32FromByteA(gas_raw_data_buffer, offset + 28);
-                fault_state = Utility.getU32FromByteA(gas_raw_data_buffer, offset + 32);
-                warning_state = Utility.getU32FromByteA(gas_raw_data_buffer, offset + 36);
-                alarm_state = gas_raw_data_buffer[offset + 40];
-
-
-                target_analouge_output = Utility.getF32FromByteA(gas_voltage_output_buffer, offset);
-                measured_lop_back_current = Utility.getF32FromByteA(gas_voltage_output_buffer, offset + 4);
-
-                ma_output_type = gas_analouge_output_buffer[offset];
-                target_output = Utility.getF32FromByteA(gas_analouge_output_buffer, offset + 1);
-                loop_back = Utility.getF32FromByteA(gas_analouge_output_buffer, offset + 5);
-
-                Dispatcher.BeginInvoke(new Action(() =>
+                gas_data = getGasData();
+                if (gas_data == null)
                 {
-                    gas_data_update(tGrid_GasData, gridGasDataList, m_chart1, time_str, raw_adc, cell_ouput, primary_conc, linear_conc, deadband_conc,
-     display_conc, raw_temp, temp, fault_state, warning_state, alarm_state, target_analouge_output, measured_lop_back_current, target_output, loop_back);
+                    continue;
                 }
-                ));
-                string gas_data = date_time_str + string.Format(",{0},{1:0.000},{2:0.000},{3:0.000}," +
-                                                  "{4:0.000},{5:0.000},{6},{7}," +
-                                                  "{8},{9},{10},{11:0.000}," +
-                                                  "{12:0.000},{13:0.000},{14:0.000}", raw_adc, cell_ouput, primary_conc, linear_conc, deadband_conc,
-                                                  display_conc, raw_temp, temp, fault_state, warning_state, alarm_state, target_analouge_output,
-                                                  measured_lop_back_current, target_output, loop_back
-                                             );
                 logFiles.Write(gas_data);
                 Thread.Sleep(monitorPeriod);
             }
@@ -559,6 +618,7 @@ namespace IncomUtility
             chart1.AddData(1, time, data2);
             chart1.AddData(2, time, data3);
             chart1.AddData(3, time, data4);
+            chart1.AddData(4, time, data5);
 
             grid.Items.Refresh();
 
@@ -574,11 +634,14 @@ namespace IncomUtility
             System.Drawing.Color ch2_color = System.Drawing.Color.DarkOrange;
             System.Drawing.Color ch3_color = System.Drawing.Color.Blue;
             System.Drawing.Color ch4_color = System.Drawing.Color.Green;
+            System.Drawing.Color ch5_color = System.Drawing.Color.DeepPink;
+
 
             m_chart1.AddSeries(gas_data_1, chart_1_legend_1, ch1_color);
             m_chart1.AddSeries(gas_data_2, chart_1_legend_2, ch2_color);
             m_chart1.AddSeries(gas_data_3, chart_1_legend_3, ch3_color);
             m_chart1.AddSeries(gas_data_4, chart_1_legend_4, ch4_color);
+            m_chart1.AddSeries(gas_data_5, chart_1_legend_5, ch5_color);
 
         }
         private void gas_chart_show(int max_window)
@@ -619,6 +682,11 @@ namespace IncomUtility
         private void chart_1_legend_4_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             m_chart1.ToggleLegend(3);
+
+        }
+        private void chart_1_legend_5_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            m_chart1.ToggleLegend(4);
 
         }
         #endregion
