@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -117,23 +118,32 @@ namespace IncomUtility.APP
 
         public bool setInhitbitOutput()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_INHIBIT_OUTPUT, ref err);
+            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_INHIBIT_OUTPUT, ref err, 300);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - INHIBITING OUTPUT");
                 tTxt_Logs.AppendText(Environment.NewLine);
-                return false ;
+                return false;
             }
 
             tTxt_Logs.AppendText("Output has been inhibited");
             tTxt_Logs.AppendText(Environment.NewLine);
+
+            tBtn_InhibitOutput.IsEnabled = false;
+            tBtn_ReleaseOutput.IsEnabled = false;
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            Thread.Sleep(500);
+
+            tBtn_InhibitOutput.IsEnabled = true;
+            tBtn_ReleaseOutput.IsEnabled = true;
 
             return true;
         }
 
         public bool releaseOutput()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_OUTPUT, ref err,200);
+            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_OUTPUT, ref err, 300);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - RELEASEING OUTPUT");
@@ -143,10 +153,18 @@ namespace IncomUtility.APP
 
             tTxt_Logs.AppendText("Output has been released");
             tTxt_Logs.AppendText(Environment.NewLine);
-            
+           
+            tBtn_InhibitOutput.IsEnabled = false;
+            tBtn_ReleaseOutput.IsEnabled = false;
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            Thread.Sleep(500);
+
+            tBtn_InhibitOutput.IsEnabled = true;
+            tBtn_ReleaseOutput.IsEnabled = true;
             return true;
         }
-
+      
         private void enableInternalLED()
         {
             byte[] switchOn = { 0x01 };

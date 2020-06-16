@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -290,7 +291,7 @@ namespace IncomUtility
         {
             if (data.Length < totalSize)
                 return false;
-         
+
             int start = 0;
             tModbusCfg.DeSerialize(data, start);
             start += tModbusCfg.size;
@@ -306,7 +307,7 @@ namespace IncomUtility
 
             tCircuitCalCfg.DeSerialize(data, start);
             start += tCircuitCalCfg.size;
-            
+
             start += 26;
 
             tDeviceInfo.DeSerialize(data, start);
@@ -524,7 +525,7 @@ namespace IncomUtility
         public void DeSerialize(byte[] data, int start)
         {
             u16_crc = BitConverter.ToUInt16(data, start);
-            f32_mAOutputSinkOffset = BitConverter.ToSingle(data, start + 2);    
+            f32_mAOutputSinkOffset = BitConverter.ToSingle(data, start + 2);
             f32_mAOutputSourceOffset = BitConverter.ToSingle(data, start + 6);
             f32_mAOutputSinkSpan = BitConverter.ToSingle(data, start + 10);
             f32_mAOutputSourceSpan = BitConverter.ToSingle(data, start + 14);
@@ -566,7 +567,7 @@ namespace IncomUtility
             }
 
             start += (int)INNCOM_CONF.NUM_DEVICE_SN;
-            
+
             for (int i = 0; i < (int)INNCOM_CONF.NUM_BOARD_SN; i++)
             {
                 u8_BoardSerialNum[i] = data[start + 2 + i];

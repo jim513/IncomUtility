@@ -2396,7 +2396,7 @@ namespace IncomUtility.APP
             int blockNum = tIncom_cfg.totalSize / (int)INNCOM_CONF.SZ_MAX_MEMORY_BLOCK;
             int eepAddr = 0;
             int dataLen = 0;
-           
+
             for (int i = 0; i <= blockNum; i++)
             {
                 if (i < blockNum)
@@ -2434,6 +2434,6 @@ namespace IncomUtility.APP
 
             MessageBox.Show("Successfully Write To Incom");
         }
-        
+
     }
 }

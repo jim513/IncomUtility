@@ -8,7 +8,7 @@
         Title="Comm. Log" Height="800" Width="600">
     <Grid>
         <ScrollViewer>
-        <TextBox x:Name="tTxt_Log" AcceptsReturn="True" TextWrapping="WrapWithOverflow"></TextBox>
+        <TextBox x:Name="tTxt_Log" AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
         </ScrollViewer>
     </Grid>
 </Window>

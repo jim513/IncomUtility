@@ -76,7 +76,7 @@ namespace IncomUtility
         public static float getF32FromByteA(byte[] data, int offset)
         {
 
-            if (data.Length < 4)
+            if (data.Length < offset + 4)
                 return -1;
             if (offset > data.Length || offset < 0)
                 return -1;
@@ -95,7 +95,7 @@ namespace IncomUtility
         }
         public static int getS32FromByteA(byte[] data, int offset)
         {
-            if (data.Length < 4)
+            if (data.Length < offset + 4)
                 return -1;
             if (offset > data.Length || offset < 0)
                 return -1;
@@ -114,7 +114,7 @@ namespace IncomUtility
         }
         public static uint getU32FromByteA(byte[] data, int offset)
         {
-            if (data.Length < 4)
+            if (data.Length < offset + 4)
                 return 0;
             if (offset > data.Length || offset < 0)
                 return 0;
@@ -133,7 +133,7 @@ namespace IncomUtility
 
         public static short getS16FromByteA(byte[] data, int offset)
         {
-            if (data.Length < 2)
+            if (data.Length < offset + 2)
                 return -1;
             if (offset > data.Length || offset < 0)
                 return -1;
@@ -151,7 +151,7 @@ namespace IncomUtility
         }
         public static ushort getU16FromByteA(byte[] data, int offset)
         {
-            if (data.Length < 2)
+            if (data.Length < offset + 2)
                 return 0;
             if (offset > data.Length || offset < 0)
                 return 0;

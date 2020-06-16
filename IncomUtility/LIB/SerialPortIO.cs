@@ -7,6 +7,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Globalization;
+using System.Resources;
+using System.Reflection;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace IncomUtility
 {
@@ -32,6 +36,10 @@ namespace IncomUtility
     }
     public static class SerialPortIO
     {
+        public static ResourceManager rm = new ResourceManager("IncomUtility.StringsKor", Assembly.GetExecutingAssembly());
+        //public static ResourceManager rm = new ResourceManager("IncomUtility.StringsEng", Assembly.GetExecutingAssembly());
+        //public static ResourceManager rm = new ResourceManager("IncomUtility.StringsChn", Assembly.GetExecutingAssembly());
+
         public static SerialPort serialPort = new SerialPort();
         public static Mutex mutex = new Mutex();
         private static QuattroProtocol quattro = new QuattroProtocol();
@@ -60,7 +68,8 @@ namespace IncomUtility
             {
                 if (isMessageboxWortk)
                 {
-                    MessageBox.Show("Connecting was failed");
+                   // MessageBox.Show("Connecting was failed");
+                    MessageBox.Show(rm.GetString("NotConnected"));
                 }
                 return false;
             }
@@ -113,14 +122,15 @@ namespace IncomUtility
 
             return readBuffer;
         }
-        private static byte[] sendCommand(byte[] payload, ref ERROR_LIST error, int sleepTime)
+        public static byte[] sendCommand(byte[] payload, ref ERROR_LIST error, int sleepTime)
         {
             if (!isPortOpen())
             {
                 error = ERROR_LIST.ERROR_PORT_NOT_OPEN;
                 if (isMessageboxWortk)
                 {
-                    MessageBox.Show("Incom is not connected");
+                //    MessageBox.Show("Incom is not connected");
+                    MessageBox.Show(rm.GetString("NotConnected"));
                 }
                 return null;
             }
@@ -170,6 +180,8 @@ namespace IncomUtility
             {
                 MainWindow.winCommLog.setText(u8TXbuffer, u8RXbuffer);
             }
+
+            flushIOBuffer();
             mutex.ReleaseMutex();
 
             return u8RXbuffer;
@@ -232,6 +244,9 @@ namespace IncomUtility
 
             if (serialPort.BytesToRead > 0)
                 serialPort.ReadExisting();
+
+            serialPort.DiscardInBuffer();
+            serialPort.DiscardOutBuffer();
         }
     }
 }

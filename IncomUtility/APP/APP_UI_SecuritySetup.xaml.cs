@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +23,9 @@ namespace IncomUtility.APP
     public partial class APP_UI_SecuritySetup : Window
     {
         ERROR_LIST err = ERROR_LIST.ERROR_NONE;
+
+        int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
+
         public APP_UI_SecuritySetup()
         {
             InitializeComponent();
@@ -64,6 +69,10 @@ namespace IncomUtility.APP
             verifyCertificate();
         }
 
+        private void tBtn_DonwloadCertificate_Click(object sender, RoutedEventArgs e)
+        { 
+           downloadCertificate();
+        }
         /*
          *  Need Debug
          */
@@ -348,6 +357,147 @@ namespace IncomUtility.APP
             }
             tTxt_Logs.AppendText("CERT VERIFY STATUS SUCCESS");
             tTxt_Logs.AppendText(Environment.NewLine);
+
+        }
+
+        private void readDeviceCertificateInfo(ref int TotalSize ,ref int ChunkSize)
+        {
+            if (tCmb_CertificateType.SelectedIndex == 1)
+            {
+                tTxt_Logs.AppendText("CA Certificate Cannot read");
+                tTxt_Logs.AppendText(Environment.NewLine);
+                return;
+            }
+
+            /*
+             * Read Device Certifiace Information
+             */
+
+            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_COMD_READ_DEVICE_CERT_INFO, ref err, 1000);
+            if (err != ERROR_LIST.ERROR_NONE)
+            {
+                tTxt_Logs.AppendText("ERROR - READ CERTIFICATE INFORMAITON");
+                tTxt_Logs.AppendText(Environment.NewLine);
+                return;
+            }
+
+            TotalSize = Utility.getU16FromByteA(result, offset + 16);
+            ChunkSize = Utility.getU16FromByteA(result, offset + 20);
+
+            tTxt_Logs.AppendText("Total Size : " + TotalSize.ToString());
+            tTxt_Logs.AppendText(Environment.NewLine);
+            tTxt_Logs.AppendText("Chunk Size : " + ChunkSize.ToString());
+            tTxt_Logs.AppendText(Environment.NewLine);
+
+            Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+
+        }
+        private void downloadCertificate()
+        {
+            int totalSize = 0;
+            int chunkSize = 0;
+            //int totalSize = 0x2F0;
+            //int chunkSize = 0x3C;
+            readDeviceCertificateInfo(ref totalSize, ref chunkSize);
+            
+            /*
+             * Read Device Certifiace Data
+             */
+            int blockNum = totalSize / chunkSize;
+            int chunkAddress = 0;
+            int dataLen = 0;
+
+            /*
+             * Need Debug Chunk Data how work
+             */
+            Thread.Sleep(2000);
+
+            byte[] chunkBuffer = new byte[totalSize * 2];
+
+            for (int i = 0; i <= blockNum; i++)
+            {
+                if (chunkAddress == totalSize)
+                {
+                    return;
+                }
+
+                byte[] payload = new byte[1];
+                payload[0] = (byte)i;
+
+                byte[] datas = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_COMD_READ_DEVICE_CERT_DATA, payload, ref err, 800);
+                if (err != ERROR_LIST.ERROR_NONE)
+                {
+                    tTxt_Logs.AppendText("ERROR - READ eerpom : " + chunkAddress);
+                    tTxt_Logs.AppendText(Environment.NewLine);
+                    return;
+                }
+
+                dataLen = datas[offset];
+
+                try
+                {
+                    Array.Copy(datas, offset + 1, chunkBuffer, chunkAddress, dataLen);
+                }
+                catch
+                {
+                    tTxt_Logs.AppendText("ERROR - Array Copy Error");
+                    tTxt_Logs.AppendText(Environment.NewLine);
+
+                    tTxt_Logs.AppendText("ERROR - READ eerpom : " + chunkAddress);
+                    tTxt_Logs.AppendText(Environment.NewLine);
+                    return;
+                }
+                chunkAddress += dataLen;
+
+                tTxt_Logs.AppendText("Read chunk : " + chunkAddress);
+                tTxt_Logs.AppendText(Environment.NewLine);
+                Dispatcher.Invoke((ThreadStart)(() => { }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            }
+
+            byte[] certificateData = null;
+            if (chunkAddress == totalSize)
+            {
+                certificateData = new byte[totalSize];
+
+                Array.Copy(chunkBuffer, certificateData, chunkAddress);  
+            }
+            else
+            {
+                tTxt_Logs.AppendText("Failed Download");
+                tTxt_Logs.AppendText(Environment.NewLine);
+                return;
+            }
+
+            string certificate = "-----BEGIN CERTIFICATE-----\n" + Convert.ToBase64String(certificateData) + "\n-----END CERTIFICATE-----";
+            tTxt_Logs.AppendText(certificate);
+            tTxt_Logs.AppendText(Environment.NewLine);
+
+            /*
+             * Save Certificate
+             */
+
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.FileName = "Incom Device Certificate"; // Default file name
+            dlg.DefaultExt = ".cer"; // Default file extension
+            dlg.Filter = "Certificate files (*.cer)|.cer| All fils |*.*";
+
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == false)
+            {
+                tTxt_Logs.AppendText("File Selected Error");
+                tTxt_Logs.AppendText(Environment.NewLine);
+
+            }
+            else
+            {
+                string filename = dlg.FileName;
+                System.IO.File.WriteAllText(filename, certificate);
+                MessageBox.Show("Successfully saved");
+
+            }
+        
 
         }
     }

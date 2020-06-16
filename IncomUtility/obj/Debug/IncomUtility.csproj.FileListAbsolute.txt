@@ -100,3 +100,6 @@ C:\Users\Honeywell\Desktop\tt\IncomUtility\IncomUtility\obj\Debug\IncomUtility.c
 C:\Users\Honeywell\Desktop\tt\IncomUtility\IncomUtility\obj\Debug\IncomUtility.csproj.Fody.CopyLocal.cache
 C:\Users\Honeywell\Desktop\tt\IncomUtility\IncomUtility\obj\Debug\IncomUtility.exe
 C:\Users\Honeywell\Desktop\tt\IncomUtility\IncomUtility\obj\Debug\IncomUtility.pdb
+C:\Users\Honeywell\Desktop\tt\IncomUtility\IncomUtility\obj\Debug\IncomUtility.StringsChn.resources
+C:\Users\Honeywell\Desktop\tt\IncomUtility\IncomUtility\obj\Debug\IncomUtility.StringsEng.resources
+C:\Users\Honeywell\Desktop\tt\IncomUtility\IncomUtility\obj\Debug\IncomUtility.StringsKor.resources

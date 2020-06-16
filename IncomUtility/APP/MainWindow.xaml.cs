@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 
@@ -299,21 +300,15 @@ namespace IncomUtility
             string date_time_str = curr_Time.ToString("yyyy/MM/dd HH:mm:ss");
             string time_str = curr_Time.ToString("HH:mm:ss");
 
+            /*
+             * read Raw data
+             */
             byte[] gas_raw_data_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_GAS_DATA, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 return null;
             }
-            byte[] gas_voltage_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_OUTPUT, ref err);
-            if (err != ERROR_LIST.ERROR_NONE)
-            {
-                return null;
-            }
-            byte[] gas_analouge_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
-            if (err != ERROR_LIST.ERROR_NONE)
-            {
-                return null; 
-            }
+         
             int raw_adc = Utility.getS32FromByteA(gas_raw_data_buffer, offset + 0);
             float cell_output = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 4);
             float primary_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 8);
@@ -327,9 +322,26 @@ namespace IncomUtility
             byte alarm_state = gas_raw_data_buffer[offset + 40];
 
 
+            /*
+             * Read Voltage Output Data
+             */
+            byte[] gas_voltage_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_OUTPUT, ref err);
+            if (err != ERROR_LIST.ERROR_NONE)
+            {
+                return null;
+            }
             float target_analouge_output = Utility.getF32FromByteA(gas_voltage_output_buffer, offset);
             float measured_lop_back_current = Utility.getF32FromByteA(gas_voltage_output_buffer, offset + 4);
 
+            /*        
+             * Read Analogue Output Data
+             */
+
+            byte[] gas_analouge_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
+            if (err != ERROR_LIST.ERROR_NONE)
+            {
+                return null;
+            }
             byte ma_output_type = gas_analouge_output_buffer[offset];
             float target_output = Utility.getF32FromByteA(gas_analouge_output_buffer, offset + 1);
             float loop_back = Utility.getF32FromByteA(gas_analouge_output_buffer, offset + 5);
@@ -684,11 +696,13 @@ namespace IncomUtility
             m_chart1.ToggleLegend(3);
 
         }
+
         private void chart_1_legend_5_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             m_chart1.ToggleLegend(4);
 
         }
+
         #endregion
     }
 }

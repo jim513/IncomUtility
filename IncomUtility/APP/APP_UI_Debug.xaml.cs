@@ -28,11 +28,12 @@ namespace IncomUtility.APP
 
         QuattroProtocol quattro = new QuattroProtocol();
         ERROR_LIST err;
+        DateTime now;
+
         private string CheckInput(string InputText)
         {
-            int value;
 
-            if (!int.TryParse(InputText, out value))
+            if (!IsHex(InputText))
             {
                 tTxt_Log.AppendText("Input is not hex number");
                 tTxt_Log.AppendText(Environment.NewLine);
@@ -43,14 +44,8 @@ namespace IncomUtility.APP
                 return string.Concat("0", InputText);
             }
 
-            if (value > 255 || value < 0)
-            {
-                return null;
-            }
-            else
-            {
-                return InputText;
-            }
+            return InputText;
+
         }
         private void sendCMD()
         {
@@ -88,13 +83,13 @@ namespace IncomUtility.APP
             if (tBtn_Payload.Text != "")
             {
                 string addtionalCmd = tBtn_Payload.Text;
-                int value;
                 if (addtionalCmd.Length % 2 == 1)
                 {
                     addtionalCmd = string.Concat("0", addtionalCmd);
                 }
 
-                if (!int.TryParse(addtionalCmd, out value))
+
+                if (!IsHex(addtionalCmd))
                 {
                     tTxt_Log.AppendText("Input is not hex number");
                     tTxt_Log.AppendText(Environment.NewLine);
@@ -104,15 +99,35 @@ namespace IncomUtility.APP
                 CMD = Utility.mergeByteArray(CMD, Utility.hexStringToByteArray(addtionalCmd));
             }
 
+            /*
+             * Build Packet
+             */
             now = DateTime.Now;
             byte[] u8TXbuffer = quattro.buildCMDPacket((byte)PACKET_CONF.COMM_SYSTEM_MFG_PC, (byte)PACKET_CONF.COMM_SYSTEM_INCOM, CMD, ref err);
             tTxt_Log.AppendText(now.ToLongTimeString() + " TX : " + BitConverter.ToString(u8TXbuffer));
             tTxt_Log.AppendText(Environment.NewLine);
 
-            SerialPortIO.mutex.WaitOne();
-
-            writePacket(ref u8TXbuffer, ref err);
-
+            /*
+             * SendCommand
+             */
+            byte[] u8RXbuffer = SerialPortIO.sendCommand(CMD, ref err, (int)tUpdown_DelayTime.Value);
+            if(err == ERROR_LIST.ERROR_RECIVE_DATA_NONE)
+            {
+                tTxt_Log.AppendText("Delay Time is too Short");
+                tTxt_Log.AppendText(Environment.NewLine);
+                return;
+            }
+            if (u8RXbuffer != null)
+            {
+                tTxt_Log.AppendText(now.ToLongTimeString() + " RX : " + BitConverter.ToString(u8RXbuffer));
+                tTxt_Log.AppendText(Environment.NewLine);
+            }
+            if (err == ERROR_LIST.ERROR_NCK)
+            {
+                tTxt_Log.AppendText("Recieve Data is Wrong");
+                tTxt_Log.AppendText(Environment.NewLine);
+                return;
+            }
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Log.AppendText("Write Failed!");
@@ -120,72 +135,27 @@ namespace IncomUtility.APP
                 return;
             }
 
-            byte[] u8RXbuffer = readPacket(ref err);
-
-            if (err != ERROR_LIST.ERROR_NONE)
-            {
-                tTxt_Log.AppendText("Read Failed!");
-                tTxt_Log.AppendText(Environment.NewLine);
-                SerialPortIO.mutex.ReleaseMutex();
-
-                return;
-            }
-            SerialPortIO.mutex.ReleaseMutex();
-
-            tTxt_Log.AppendText(now.ToLongTimeString() + " RX : " + BitConverter.ToString(u8RXbuffer));
-            tTxt_Log.AppendText(Environment.NewLine);
+          
         }
-        DateTime now;
+
+        private bool IsHex(IEnumerable<char> chars)
+        {
+            bool isHex;
+            foreach (var c in chars)
+            {
+                isHex = ((c >= '0' && c <= '9') ||
+                         (c >= 'a' && c <= 'f') ||
+                         (c >= 'A' && c <= 'F'));
+
+                if (!isHex)
+                    return false;
+            }
+            return true;
+        }
         private void tBtn_SendCMD_Click(object sender, RoutedEventArgs e)
         {
             sendCMD();
         }
-        private void writePacket(ref byte[] sendbuffer, ref ERROR_LIST err)
-        {
-            if (!SerialPortIO.serialPort.IsOpen)
-            {
-                err = ERROR_LIST.ERROR_PORT_NOT_OPEN;
-                return;
-            }
-            if (sendbuffer == null)
-            {
-                err = ERROR_LIST.ERROR_INPUT_DATA_NONE;
-                return;
-            }
-
-            while (SerialPortIO.serialPort.BytesToRead > 0)
-            {
-                SerialPortIO.serialPort.ReadExisting();
-            }
-        
-            SerialPortIO.serialPort.Write(sendbuffer, 0, sendbuffer.Length);
-            err = ERROR_LIST.ERROR_NONE;
-            Thread.Sleep(500);
-        }
-
-        private byte[] readPacket(ref ERROR_LIST err)
-        {
-            if (!SerialPortIO.serialPort.IsOpen)
-            {
-                err = ERROR_LIST.ERROR_PORT_NOT_OPEN;
-                return null;
-            }
-
-            int readBytes = SerialPortIO.serialPort.BytesToRead;
-            byte[] readBuffer = new byte[readBytes];
-
-            if (SerialPortIO.serialPort.BytesToRead > 1)
-            {
-                SerialPortIO.serialPort.Read(readBuffer, 0, readBytes);
-            }
-            else
-            {
-                err = ERROR_LIST.ERROR_RECIVE_DATA_NONE;
-                return null;
-            }
-
-            err = ERROR_LIST.ERROR_NONE;
-            return readBuffer;
-        }
+     
     }
 }
