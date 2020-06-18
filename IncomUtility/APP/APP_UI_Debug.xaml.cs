@@ -103,14 +103,14 @@ namespace IncomUtility.APP
              * Build Packet
              */
             now = DateTime.Now;
-            byte[] u8TXbuffer = quattro.buildCMDPacket((byte)PACKET_CONF.COMM_SYSTEM_MFG_PC, (byte)PACKET_CONF.COMM_SYSTEM_INCOM, CMD, ref err);
+            byte[] u8TXbuffer = QuattroProtocol.buildCMDPacket((byte)PACKET_CONF.COMM_SYSTEM_MFG_PC, (byte)PACKET_CONF.COMM_SYSTEM_INCOM, CMD, ref err);
             tTxt_Log.AppendText(now.ToLongTimeString() + " TX : " + BitConverter.ToString(u8TXbuffer));
             tTxt_Log.AppendText(Environment.NewLine);
 
             /*
              * SendCommand
              */
-            byte[] u8RXbuffer = SerialPortIO.sendCommand(CMD, ref err, (int)tUpdown_DelayTime.Value);
+            byte[] u8RXbuffer = QuattroProtocol.sendCommand(CMD, ref err, (int)tUpdown_DelayTime.Value);
             if(err == ERROR_LIST.ERROR_RECIVE_DATA_NONE)
             {
                 tTxt_Log.AppendText("Delay Time is too Short");

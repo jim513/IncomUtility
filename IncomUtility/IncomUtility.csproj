@@ -98,6 +98,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="StringsChn.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -179,7 +184,7 @@
     </Page>
     <Compile Include="API\DeviceConfiguration.cs" />
     <Compile Include="API\QuattroProtocol.cs" />
-    <Compile Include="API\Utility.cs" />
+    <Compile Include="Tool\Utility.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -226,8 +231,8 @@
     <Compile Include="APP\APP_UI_MonitorDeviceStatus.xaml.cs">
       <DependentUpon>APP_UI_MonitorDeviceStatus.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LIB\MonitorChart.cs" />
-    <Compile Include="LIB\UIDataGrid.cs" />
+    <Compile Include="Tool\MonitorChart.cs" />
+    <Compile Include="Tool\UIDataGrid.cs" />
     <Compile Include="APP\APP_UI_RawData.xaml.cs">
       <DependentUpon>APP_UI_RawData.xaml</DependentUpon>
     </Compile>
@@ -244,16 +249,11 @@
     <Compile Include="APP\APP_UI_ViewLogs.xaml.cs">
       <DependentUpon>APP_UI_ViewLogs.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LIB\CRC16.cs" />
-    <Compile Include="LIB\LogToFile.cs" />
-    <Compile Include="LIB\SerialPortIO.cs" />
+    <Compile Include="Tool\CRC16.cs" />
+    <Compile Include="Tool\LogToFile.cs" />
+    <Compile Include="Tool\SerialPortIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -296,6 +296,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.0.0\build\Fody.targets" Condition="Exists('..\packages\Fody.6.0.0\build\Fody.targets')" />

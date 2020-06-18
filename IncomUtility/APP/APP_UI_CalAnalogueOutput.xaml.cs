@@ -65,7 +65,7 @@ namespace IncomUtility.APP
             float targetmA = 4;
             byte[] payload = Utility.getBytesFromF32(targetmA);
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_ANALOGUE_ZERO_CAL, payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_ANALOGUE_ZERO_CAL, payload, ref err);
             if (err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Cannot start Analouge Zero Calibartion");
@@ -92,7 +92,7 @@ namespace IncomUtility.APP
                 mAOutputRunning = false;
                 mAOutput.Join();
 
-                SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_ANALOGUE_ZERO_CAL, ref err);
+                QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_ANALOGUE_ZERO_CAL, ref err);
 
                 if (err == ERROR_LIST.ERROR_PORT_NOT_OPEN)
                 {
@@ -110,7 +110,7 @@ namespace IncomUtility.APP
         {
             float targetCurrent = (float)tUpdown_AnalogueOutputZero.Value;
             byte[] payload = Utility.getBytesFromF32(targetCurrent);
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_ANALOGUE_ZERO_CAL,payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_ANALOGUE_ZERO_CAL,payload, ref err);
             if (err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Failed Analouge Zero Calibartion");
@@ -132,7 +132,7 @@ namespace IncomUtility.APP
             float targetmA = 20;
             byte[] payload = Utility.getBytesFromF32(targetmA);
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_ANALOGUE_SPAN_CAL, payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_ANALOGUE_SPAN_CAL, payload, ref err);
             if (err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Cannot start Analouge SPAN Calibartion");
@@ -159,7 +159,7 @@ namespace IncomUtility.APP
                 mAOutputRunning = false;
                 mAOutput.Join();
 
-                SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_ANALOGUE_SPAN_CAL, ref err);
+                QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_ANALOGUE_SPAN_CAL, ref err);
 
                 if (err == ERROR_LIST.ERROR_PORT_NOT_OPEN)
                 {
@@ -177,7 +177,7 @@ namespace IncomUtility.APP
         {
             float targetCurrent = (float)tUpdown_analogueOutputSpan.Value;
             byte[] payload = Utility.getBytesFromF32(targetCurrent);
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_ANALOGUE_SPAN_CAL, payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_ANALOGUE_SPAN_CAL, payload, ref err);
             if (err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Failed Analouge Zero Calibartion");
@@ -196,7 +196,7 @@ namespace IncomUtility.APP
         private void getmAOutput()
         {
             while (mAOutputRunning) {
-                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
+                byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
 
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
@@ -214,6 +214,12 @@ namespace IncomUtility.APP
 
                 Thread.Sleep(1000);
             }
+        }
+
+        public void threadClose()
+        {
+            if (mAOutputRunning)
+                mAOutput.Abort();
         }
     }
 }

@@ -118,7 +118,7 @@ namespace IncomUtility.APP
 
         public bool setInhitbitOutput()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_INHIBIT_OUTPUT, ref err, 300);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_INHIBIT_OUTPUT, ref err, 300);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - INHIBITING OUTPUT");
@@ -143,7 +143,7 @@ namespace IncomUtility.APP
 
         public bool releaseOutput()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_OUTPUT, ref err, 300);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_OUTPUT, ref err, 300);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - RELEASEING OUTPUT");
@@ -168,7 +168,7 @@ namespace IncomUtility.APP
         private void enableInternalLED()
         {
             byte[] switchOn = { 0x01 };
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CTRL_INTERNAL_LEDS, switchOn, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CTRL_INTERNAL_LEDS, switchOn, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - SWITCGING ON INTERNAL LEDs");
@@ -183,7 +183,7 @@ namespace IncomUtility.APP
         private void disableInternalLED()
         {
             byte[] switchOff = { 0x00 };
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CTRL_INTERNAL_LEDS, switchOff,ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CTRL_INTERNAL_LEDS, switchOff,ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - SWITCGING OFF INTERNAL LEDs");
@@ -198,7 +198,7 @@ namespace IncomUtility.APP
 
         private void cancleSensorReplcement()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CANCEL_SENSOR_REPLACEMENT, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CANCEL_SENSOR_REPLACEMENT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - CANCLE SENSRO REPLACEMENT");
@@ -206,7 +206,7 @@ namespace IncomUtility.APP
                 return;
             }
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_OUTPUT, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - CANCLE SENSRO REPLACEMENT");
@@ -220,7 +220,7 @@ namespace IncomUtility.APP
 
         private void startSensorReplacement()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_REPLACE_SENSOR, ref err,200);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_REPLACE_SENSOR, ref err,200);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - SENSOR NOT POWERED OFF");
@@ -234,7 +234,7 @@ namespace IncomUtility.APP
 
         private void exitSensorReplacement()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_EXIT_REPLACE_SENSOR, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_EXIT_REPLACE_SENSOR, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - EXIT SENSRO REPLACEMENT");
@@ -251,7 +251,7 @@ namespace IncomUtility.APP
             float current = (float)tUpdonw_ForceCurrent.Value;
             byte[] payload = Utility.getBytesFromF32(current);
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_FORCE_ANALOGUE_OUTPUT, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_FORCE_ANALOGUE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - FORCE CURRENT");
@@ -265,7 +265,7 @@ namespace IncomUtility.APP
 
         private void releaseCurrent()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_ANALOGUE_OUTPUT, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_ANALOGUE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - RELEASE CURRENT");
@@ -291,7 +291,7 @@ namespace IncomUtility.APP
             {
                 payload[2] = 0;
             }
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_FORCE_LEDS,payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_FORCE_LEDS,payload, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - FORCE LEDs");
@@ -304,7 +304,7 @@ namespace IncomUtility.APP
 
         private void releaseLEDs()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_LEDS, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_LEDS, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - RELEASE LEDs");
@@ -322,7 +322,7 @@ namespace IncomUtility.APP
             payload[0] = (byte)(tCmb_RelayType.SelectedIndex + 1);
             payload[1] = (byte)tCmb_Energized.SelectedIndex;
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_FORCE_RELAYS, payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_FORCE_RELAYS, payload, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - FORCE RELAYS");
@@ -336,7 +336,7 @@ namespace IncomUtility.APP
 
         private void releaseRelays()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_RELAYS, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_RELAYS, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - RELEASE RELAYS");
@@ -353,7 +353,7 @@ namespace IncomUtility.APP
             float current = (float)tUpdown_ForceVoltage.Value;
             byte[] payload = Utility.getBytesFromF32(current);
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_FORCE_VOLTAGE_OUTPUT,payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_FORCE_VOLTAGE_OUTPUT,payload, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - FORCE VOLTAGE");
@@ -367,7 +367,7 @@ namespace IncomUtility.APP
 
         private void releaseVoltage()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_VOLTAGE_OUTPUT, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_VOLTAGE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - RELEASE VOLTAGE");
@@ -390,7 +390,7 @@ namespace IncomUtility.APP
             {
                 payload[0] = 0;
             }
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CTRL_WATCHDOG, payload, ref err ,200);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CTRL_WATCHDOG, payload, ref err ,200);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - CONTROLLING WATCHDOG ");
@@ -434,7 +434,7 @@ namespace IncomUtility.APP
                 payload[0] |= Utility.setBitPos(payload[0], 2);
             }
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_SIMULATION,payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_SIMULATION,payload, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - START SIMULATION");
@@ -451,7 +451,7 @@ namespace IncomUtility.APP
          /*
         private void stopSimulation()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SIMULATION, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SIMULATION, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - STOP SIMULATION");
@@ -465,7 +465,7 @@ namespace IncomUtility.APP
 
         private void enableReflexTest()
         {
-             SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ENABLE_REFLEX_TEST, ref err);
+             QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ENABLE_REFLEX_TEST, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
                 {
                     tTxt_Logs.AppendText("ERROR - ENABLE REFLEX TEST");
@@ -478,7 +478,7 @@ namespace IncomUtility.APP
 
         private void disableReflexTest()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_DISABLE_REFLEX_TEST, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_DISABLE_REFLEX_TEST, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - DISABLE REFLEX TEST");

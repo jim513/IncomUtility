@@ -101,7 +101,7 @@ namespace IncomUtility.APP
 
             Encoding.ASCII.GetBytes(str, 0, str.Length, sendData, 4);
 
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_CHECK_USER_CERT_INFO,sendData, ref err,1000);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_CHECK_USER_CERT_INFO,sendData, ref err,1000);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read User Certificate Information");
@@ -118,7 +118,7 @@ namespace IncomUtility.APP
             /*
              * Create Key Pair
              */
-            SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_CREATE_KEY_PAIR, ref err ,300);
+            QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_CREATE_KEY_PAIR, ref err ,300);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Create Key Pair");
@@ -134,7 +134,7 @@ namespace IncomUtility.APP
             /*
              *  Get Device Public Key
              */
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_DEVICE_PUBLIC_KEY, ref err ,500);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_DEVICE_PUBLIC_KEY, ref err ,500);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Get Device Public Key");
@@ -154,7 +154,7 @@ namespace IncomUtility.APP
             /*
              * Read Crypt IC SN
              */
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_CRYPT_SN, ref err, 500);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_CRYPT_SN, ref err, 500);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read Crypt SN");
@@ -173,7 +173,7 @@ namespace IncomUtility.APP
             /*
             * Read Device Certificate Information
             */
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_REQUEST_DEVICE_CERT_INFO, ref err, 1000);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_REQUEST_DEVICE_CERT_INFO, ref err, 1000);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Request Cert Info");
@@ -268,7 +268,7 @@ namespace IncomUtility.APP
             sendData = Utility.mergeByteArray(sendData, data);
 
             
-             SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_SEND_USER_CERT, sendData,ref err, 700);
+             QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_SEND_USER_CERT, sendData,ref err, 700);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Send User Certificate file");
@@ -316,7 +316,7 @@ namespace IncomUtility.APP
                 sendCommand = COMM_COMMAND_LIST.COMM_CMD_TRANSFER_CA_CERT;
             }
 
-            SerialPortIO.sendCommand(sendCommand, data, ref err, 1000);
+            QuattroProtocol.sendCommand(sendCommand, data, ref err, 1000);
             if(err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - CANNOT TRANSFER CERT FILE");
@@ -339,7 +339,7 @@ namespace IncomUtility.APP
             {
                 sendCommand = COMM_COMMAND_LIST.COMM_CMD_VERIFY_CA_CERT;
             }
-            byte[] result = SerialPortIO.sendCommand(sendCommand, ref err , 700);
+            byte[] result = QuattroProtocol.sendCommand(sendCommand, ref err , 700);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Verify Certification");
@@ -373,7 +373,7 @@ namespace IncomUtility.APP
              * Read Device Certifiace Information
              */
 
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_COMD_READ_DEVICE_CERT_INFO, ref err, 1000);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_COMD_READ_DEVICE_CERT_INFO, ref err, 1000);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - READ CERTIFICATE INFORMAITON");
@@ -425,7 +425,7 @@ namespace IncomUtility.APP
                 byte[] payload = new byte[1];
                 payload[0] = (byte)i;
 
-                byte[] datas = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_COMD_READ_DEVICE_CERT_DATA, payload, ref err, 800);
+                byte[] datas = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_COMD_READ_DEVICE_CERT_DATA, payload, ref err, 800);
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
                     tTxt_Logs.AppendText("ERROR - READ eerpom : " + chunkAddress);

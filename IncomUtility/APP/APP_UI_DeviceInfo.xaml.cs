@@ -64,7 +64,7 @@ namespace IncomUtility
             /*
             * Read SW Version
             */
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_SW_VERSION, ref err);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_SW_VERSION, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read SW Version");
@@ -84,7 +84,7 @@ namespace IncomUtility
             /*
             *  Read EEPROM Version
             */
-            result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_EEPROM_VER, ref err);
+            result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_EEPROM_VER, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read EERPOM Version");
@@ -100,7 +100,7 @@ namespace IncomUtility
             /*
             *  Read Device SN
             */
-            result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_DEVICE_SN, ref err);
+            result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_DEVICE_SN, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read Device SN");
@@ -118,7 +118,7 @@ namespace IncomUtility
             /*
             *  Read Output Type
             */
-            result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_OUTPUT_DEVICE_TYPE, ref err);
+            result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_OUTPUT_DEVICE_TYPE, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read Board SN");
@@ -165,7 +165,7 @@ namespace IncomUtility
             /*
             *  Read Sensor Info
             */
-            result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SENSOR_INFO, ref err);
+            result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SENSOR_INFO, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read Sensor Information");
@@ -251,7 +251,7 @@ namespace IncomUtility
            *  Read Gas Info
            */
             byte[] channelByte = { 0x00 };
-            result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_GAS_INFO, channelByte, ref err);
+            result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_GAS_INFO, channelByte, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read Gas Information");
@@ -388,7 +388,7 @@ namespace IncomUtility
             */
             byte[] payload = new byte[1];
             payload[0] = (byte)(tCmb_LatchedType.SelectedIndex + 1);
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CLR_LATCHED_TABLES, payload, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CLR_LATCHED_TABLES, payload, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Clear Latch Tables");
@@ -405,7 +405,7 @@ namespace IncomUtility
             /*
            * Reset To Factory
            */
-            SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_FACTORY, ref err, 500);
+            QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_FACTORY, ref err, 500);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Reset To Factory");
@@ -422,7 +422,7 @@ namespace IncomUtility
             /*
            * Reset Alarms and Faults 
            */
-            SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_ALARMS, ref err, 1500);
+            QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_ALARMS, ref err, 1500);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Reset Alarms and Faults");
@@ -445,7 +445,7 @@ namespace IncomUtility
                 serialNumber = Utility.mergeByteArray(serialNumber, ret);
             }
 
-            SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_DEVICE_SN, serialNumber, ref err, 300);
+            QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_DEVICE_SN, serialNumber, ref err, 300);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Write Device SN");
@@ -463,7 +463,7 @@ namespace IncomUtility
              */
             INNCOM_CONF_LIST param = (INNCOM_CONF_LIST)tCmb_Param.SelectedItem;
 
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, DeviceConfiguration.configurationToByteArray(param), ref err, 300);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, DeviceConfiguration.configurationToByteArray(param), ref err, 300);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - Read Configurations");

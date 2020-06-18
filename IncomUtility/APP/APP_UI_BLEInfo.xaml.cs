@@ -37,7 +37,7 @@ namespace IncomUtility
             /*
            * Read BLE Name
            */
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_DEVICE_NAME, ref err);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_DEVICE_NAME, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_BLEInfo.AppendText("ERROR - Read BLE Name");
@@ -54,7 +54,7 @@ namespace IncomUtility
             /*
              * Read BLE Mac Address
              */
-            result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_MAC_ADDR, ref err);
+            result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_MAC_ADDR, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_BLEInfo.AppendText("ERROR - Read BLE Mac Addreess");
@@ -70,7 +70,7 @@ namespace IncomUtility
             /*
              *  Read BLE SW Version
              */
-            result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_SW_VER, ref err);
+            result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_SW_VER, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_BLEInfo.AppendText("ERROR - Read BLE SW Version");
@@ -87,7 +87,7 @@ namespace IncomUtility
             /*
              * Read BLE TX Power
              */
-            result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_TX_POWER, ref err);
+            result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_TX_POWER, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_BLEInfo.AppendText("ERROR - Read BLE TW Power");
@@ -102,7 +102,7 @@ namespace IncomUtility
             /*
              * Read BLE Instrument ID
              */
-            result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_INST_ID, ref err);
+            result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_BLE_INST_ID, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_BLEInfo.AppendText("ERROR - Read Instrument ID");

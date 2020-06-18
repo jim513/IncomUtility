@@ -59,7 +59,7 @@ namespace IncomUtility.APP
         {
             byte[] step = new byte[1];
             step[0] = (byte)tUpdown_AdjustPv.Value;
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_INC_DRIVE_DUTY, step, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_INC_DRIVE_DUTY, step, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - INCREASE DUTY");
@@ -75,7 +75,7 @@ namespace IncomUtility.APP
         {
             byte[] step = new byte[1];
             step[0] = (byte)tUpdown_AdjustPv.Value;
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_DEC_DRIVE_DUTY, step, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_DEC_DRIVE_DUTY, step, ref err);
             if(err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - DECREASE DUTY");
@@ -92,7 +92,7 @@ namespace IncomUtility.APP
             /*
              * Stop Calibration before Start
              */
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SEN_DRIVE_CAL, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SEN_DRIVE_CAL, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - START CALIBRATION");
@@ -104,7 +104,7 @@ namespace IncomUtility.APP
             /*
              * Start Cell Drive Calibration
              */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_SEN_DRIVE_CAL, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_SEN_DRIVE_CAL, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - START CELL DRIVE CALIBRATION");
@@ -154,7 +154,7 @@ namespace IncomUtility.APP
                 feedBackRunning = false;
                 feedBack.Join();
 
-                SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SEN_DRIVE_CAL, ref err);
+                QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SEN_DRIVE_CAL, ref err);
                 if(err == ERROR_LIST.ERROR_PORT_NOT_OPEN)
                 {
                     return;
@@ -170,7 +170,7 @@ namespace IncomUtility.APP
         }
         private void calibrationAccept()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCPET_SEN_DRIVE_CAL, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCPET_SEN_DRIVE_CAL, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - ACCEPT CELL DRIVE CALIBRATION");
@@ -189,7 +189,7 @@ namespace IncomUtility.APP
         {
             while (feedBackRunning)
             {
-                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CELL_VOLTAGE_CURRENT, ref err);
+                byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CELL_VOLTAGE_CURRENT, ref err);
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
                     continue;
@@ -209,6 +209,12 @@ namespace IncomUtility.APP
 
                 Thread.Sleep(1000);
             }
+        }
+
+        public void threadClose()
+        {
+            if (feedBackRunning)
+                feedBack.Abort();
         }
     }
 }

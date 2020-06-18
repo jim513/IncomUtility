@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Globalization;
 
 namespace IncomUtility
 {
@@ -200,7 +203,7 @@ namespace IncomUtility
 
     class QuattroProtocol : CRC16
     {
-        public byte[] buildCMDPacket(byte src, byte dest, byte[] payload, ref ERROR_LIST ret)
+        public static byte[] buildCMDPacket(byte src, byte dest, byte[] payload, ref ERROR_LIST ret)
         {
             if (payload == null)
             {
@@ -242,7 +245,7 @@ namespace IncomUtility
         }
 
 
-        public ERROR_LIST validateRXPacket(byte[] data)
+        public static ERROR_LIST validateRXPacket(byte[] data)
         {
             if (data == null)
                 return ERROR_LIST.ERROR_INPUT_DATA_NONE;
@@ -287,6 +290,127 @@ namespace IncomUtility
                 return ERROR_LIST.ERROR_EXCEPTION;
             }
 
+        }
+
+        public static bool isMessageboxWortk = true;
+        
+        public static ResourceManager rm = new ResourceManager("IncomUtility.StringsKor", Assembly.GetExecutingAssembly());
+        //public static ResourceManager rm = new ResourceManager("IncomUtility.StringsEng", Assembly.GetExecutingAssembly());
+        //public static ResourceManager rm = new ResourceManager("IncomUtility.StringsChn", Assembly.GetExecutingAssembly());
+
+        public static byte[] sendCommand(byte[] payload, ref ERROR_LIST error, int sleepTime)
+        {
+            if (!SerialPortIO.isPortOpen())
+            {
+                error = ERROR_LIST.ERROR_PORT_NOT_OPEN;
+                if (isMessageboxWortk)
+                {
+                    //    MessageBox.Show("Incom is not connected");
+                    MessageBox.Show(rm.GetString("NotConnected"));
+                }
+                return null;
+            }
+            if (payload == null)
+            {
+                error = ERROR_LIST.ERROR_INPUT_DATA_NONE;
+                return null;
+            }
+
+            int retryCount = (int)Constants.retryCount;
+            byte[] u8TXbuffer = null;
+            byte[] u8RXbuffer = null;
+
+            SerialPortIO.mutex.WaitOne();
+
+            while (retryCount-- > 0)
+            {
+                SerialPortIO.flushIOBuffer();
+
+                u8TXbuffer = buildCMDPacket((byte)PACKET_CONF.COMM_SYSTEM_MFG_PC,
+                    (byte)PACKET_CONF.COMM_SYSTEM_INCOM, payload, ref error);
+                if (error != ERROR_LIST.ERROR_NONE)
+                {
+                    continue;
+                }
+
+                SerialPortIO.writePacket(ref u8TXbuffer, ref error);
+                if (error != ERROR_LIST.ERROR_NONE)
+                {
+                    continue;
+                }
+                Thread.Sleep(sleepTime);
+
+                u8RXbuffer = SerialPortIO.readPacket(ref error);
+                if (error != ERROR_LIST.ERROR_NONE)
+                {
+                    continue;
+                }
+
+                error = validateRXPacket(u8RXbuffer);
+                if (error == ERROR_LIST.ERROR_NONE)
+                {
+                    break;
+                }
+            }
+            if (APP.APP_UI_CommLog.packetCheck == true)
+            {
+                MainWindow.winCommLog.setText(u8TXbuffer, u8RXbuffer);
+            }
+
+            SerialPortIO.flushIOBuffer();
+            SerialPortIO.mutex.ReleaseMutex();
+
+            return u8RXbuffer;
+        }
+        public static byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err, int sleepTime)
+        {
+            if (payload == null)
+            {
+                err = ERROR_LIST.ERROR_INPUT_DATA_NONE;
+                return null;
+            }
+            byte[] command = commandToByteArray(CMD);
+            command = Utility.mergeByteArray(command, payload);
+
+            return sendCommand(command, ref err, sleepTime);
+        }
+        public static byte[] sendCommand(COMM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
+        {
+            return sendCommand(CMD, payload, ref err, (int)Constants.defaultSleep);
+        }
+        public static byte[] sendCommand(COMM_COMMAND_LIST CMD, ref ERROR_LIST err, int sleepTime)
+        {
+            return sendCommand(commandToByteArray(CMD), ref err, sleepTime);
+        }
+        public static byte[] sendCommand(COMM_COMMAND_LIST CMD, ref ERROR_LIST err)
+        {
+            return sendCommand(commandToByteArray(CMD), ref err, (int)Constants.defaultSleep);
+        }
+
+        public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err, int sleepTime)
+        {
+            if (payload == null)
+            {
+                err = ERROR_LIST.ERROR_INPUT_DATA_NONE;
+                return null;
+            }
+            byte[] command = commandToByteArray(CMD);
+            command = Utility.mergeByteArray(command, payload);
+
+            return sendCommand(command, ref err, sleepTime);
+
+        }
+        public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, byte[] payload, ref ERROR_LIST err)
+        {
+            return sendCommand(CMD, payload, ref err, (int)Constants.defaultSleep);
+        }
+        public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err, int sleepTime)
+        {
+            return sendCommand(commandToByteArray(CMD), ref err, sleepTime);
+        }
+        public static byte[] sendCommand(INNCOM_COMMAND_LIST CMD, ref ERROR_LIST err)
+        {
+            return sendCommand(commandToByteArray(CMD), ref err, (int)Constants.defaultSleep);
         }
 
         public static byte[] commandToByteArray(INNCOM_COMMAND_LIST com)

@@ -1,15 +1,14 @@
-﻿using IncomUtility;
-using IncomUtility.APP;
+﻿using IncomUtility.APP;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms.DataVisualization.Charting;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 
 
@@ -41,6 +40,7 @@ namespace IncomUtility
         private APP_UI_Debug winDebug;
 
         private Thread gas_monitor;
+        private Thread connection_monitor;
         private List<UIDataGrid> gridGasDataList;
         private LogToFile logFiles;
         private MonitorChart m_chart1;
@@ -72,38 +72,38 @@ namespace IncomUtility
             Win_Make(ref winSensorData);
             Win_Make(ref winInstrumentSetting);
             Win_Make(ref winSecuritySetup);
-           
+
             Win_Make(ref winGasCalibration);
-            winGasCalibration.Closing += (win, t)  =>
+            winGasCalibration.Closing += (win, t) =>
             {
-                SerialPortIO.isMessageboxWortk = false;
+                QuattroProtocol.isMessageboxWortk = false;
                 winGasCalibration.releaseOutput();
                 winGasCalibration.zeroCalibrationStop();
                 winGasCalibration.spanCalibrationStop();
-                SerialPortIO.isMessageboxWortk = true;
+                QuattroProtocol.isMessageboxWortk = true;
             };
 
             Win_Make(ref winCalAnalogueOutput);
             winCalAnalogueOutput.Closing += (win, t) =>
             {
-                SerialPortIO.isMessageboxWortk = false;
+                QuattroProtocol.isMessageboxWortk = false;
                 winCalAnalogueOutput.spanCalibrateStop();
                 winCalAnalogueOutput.zeroCalibrateStop();
-                SerialPortIO.isMessageboxWortk = true;
+                QuattroProtocol.isMessageboxWortk = true;
             };
             Win_Make(ref winCalVoltageOutput);
             winCalVoltageOutput.Closing += (win, t) =>
             {
-                SerialPortIO.isMessageboxWortk = false;
+                QuattroProtocol.isMessageboxWortk = false;
                 winCalVoltageOutput.spanCalibrateStop();
                 winCalVoltageOutput.zeroCalibrateStop();
-                SerialPortIO.isMessageboxWortk = true;
+                QuattroProtocol.isMessageboxWortk = true;
             };
             Win_Make(ref winCalCellDrive);
             {
-                SerialPortIO.isMessageboxWortk = false;
+                QuattroProtocol.isMessageboxWortk = false;
                 winCalCellDrive.calibrationStop();
-                SerialPortIO.isMessageboxWortk = true;
+                QuattroProtocol.isMessageboxWortk = true;
 
             }
             Win_Make(ref winHardwareTest);
@@ -119,6 +119,9 @@ namespace IncomUtility
                 ChangeSize(ActualWidth, ActualHeight);
             }
             gas_chart_hide();
+
+            connectionMonitoringStart();
+
         }
 
         private void ChangeSize(double width, double height)
@@ -161,10 +164,22 @@ namespace IncomUtility
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            QuattroProtocol.isMessageboxWortk = false;
+
+            if (gas_monitor_running)
+                gas_monitor.Abort();
+
+            connection_monitor.Abort();
+
+            winGasCalibration.threadClose();
+            winCalAnalogueOutput.threadClose();
+            winCalCellDrive.threadClose();
+            winCalVoltageOutput.threadClose();
+            winMonitorDeviceStatus.threadClose();
+            winViewLogs.threadClose();
+
             if (SerialPortIO.serialPort.IsOpen)
                 SerialPortIO.serialPort.Close();
-
-            SerialPortIO.isMessageboxWortk = false;
 
             for (int intCounter = App.Current.Windows.Count - 1; intCounter > 0; intCounter--)
             {
@@ -173,16 +188,29 @@ namespace IncomUtility
                     f.Cancel = false;
                 };
                 App.Current.Windows[intCounter].Close();
-            }
-            if (gas_monitor_running)
-                gas_monitor.Abort();
+            }     
+            
+        }
 
-            logFiles.Unchecked();
+        private void allThreadStop()
+        {
+            winGasCalibration.zeroCalibrationStop();
+            winGasCalibration.spanCalibrationStop();
+
+            winCalAnalogueOutput.zeroCalibrateStop();
+            winCalAnalogueOutput.spanCalibrateStop();
+
+            winCalCellDrive.calibrationStop();
+
+            winCalVoltageOutput.zeroCalibrateStop();
+            winCalVoltageOutput.spanCalibrateStop();
+
+            winViewLogs.stopDownload();
         }
 
         private void tMenu_MonitorDeviceStatus_Click(object sender, RoutedEventArgs e)
         {
-;           Win_Open(ref winMonitorDeviceStatus);
+            ; Win_Open(ref winMonitorDeviceStatus);
         }
 
         private void tMenu_Communication_Click(object sender, RoutedEventArgs e)
@@ -257,6 +285,7 @@ namespace IncomUtility
         {
             Win_Open(ref winCommLog);
         }
+
         private void tMenu_Debug_Click(object sender, RoutedEventArgs e)
         {
             Win_Open(ref winDebug);
@@ -269,7 +298,7 @@ namespace IncomUtility
 
         private void tBtn_MainStart_Click(object sender, RoutedEventArgs e)
         {
-            if ((bool)tChb_GetGasDataOnce.IsChecked == true)
+            if (tChb_GetGasDataOnce.IsChecked == true)
             {
                 getGasData();
             }
@@ -291,10 +320,15 @@ namespace IncomUtility
 
         private void tBtn_ResetAlarmFaults_Click(object sender, RoutedEventArgs e)
         {
-            resetAlarmFaults();       
+            resetAlarmFaults();
         }
 
-        private string getGasData() 
+        private void tBtn_Connect_Click(object sender, RoutedEventArgs e)
+        {
+            connectControl();
+        }
+
+        private string getGasData()
         {
             DateTime curr_Time = DateTime.Now;
             string date_time_str = curr_Time.ToString("yyyy/MM/dd HH:mm:ss");
@@ -303,12 +337,12 @@ namespace IncomUtility
             /*
              * read Raw data
              */
-            byte[] gas_raw_data_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_GAS_DATA, ref err);
+            byte[] gas_raw_data_buffer = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_GAS_DATA, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 return null;
             }
-         
+
             int raw_adc = Utility.getS32FromByteA(gas_raw_data_buffer, offset + 0);
             float cell_output = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 4);
             float primary_conc = Utility.getF32FromByteA(gas_raw_data_buffer, offset + 8);
@@ -325,7 +359,7 @@ namespace IncomUtility
             /*
              * Read Voltage Output Data
              */
-            byte[] gas_voltage_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_OUTPUT, ref err);
+            byte[] gas_voltage_output_buffer = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 return null;
@@ -337,7 +371,7 @@ namespace IncomUtility
              * Read Analogue Output Data
              */
 
-            byte[] gas_analouge_output_buffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
+            byte[] gas_analouge_output_buffer = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 return null;
@@ -350,6 +384,24 @@ namespace IncomUtility
             {
                 gas_data_update(tGrid_GasData, gridGasDataList, m_chart1, time_str, raw_adc, cell_output, primary_conc, linear_conc, deadband_conc,
  display_conc, raw_temp, temp, fault_state, warning_state, alarm_state, target_analouge_output, measured_lop_back_current, target_output, loop_back);
+
+                if(fault_state != 0)
+                {
+                    tTxt_FaultStatus.Content = "Fault";
+                    tTxt_FaultStatus.Foreground = Brushes.Red;
+                }
+
+                if(warning_state != 0)
+                {
+                    tTxt_WarningStatus.Content = "Fault";
+                    tTxt_WarningStatus.Foreground = Brushes.Red;
+                }
+
+                if(alarm_state != 0)
+                {
+                    tTxt_AlarmStatus.Content = "Fault";
+                    tTxt_AlarmStatus.Foreground = Brushes.Red;
+                }
             }
             ));
             string gas_data = date_time_str + string.Format(",{0},{1:0.000},{2:0.000},{3:0.000}," +
@@ -363,58 +415,59 @@ namespace IncomUtility
             return gas_data;
         }
 
-        private void gasMonitoringStart()
+        private string getDeviceVersion()
         {
-            string strHeader1 = "";
+            string str = "";
+
             /*
-              *  Read Device SN
-             */
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_DEVICE_SN, ref err);
+             *  Read Device SN
+            */
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_DEVICE_SN, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Read Device SN");
-                return;
+                return null;
             }
             string DeviceSN = Encoding.Default.GetString(QuattroProtocol.getResponseValueData(result)).Trim('\0');
-            strHeader1 += "DeviceSN : " + DeviceSN + ",";
+            str += "DeviceSN : " + DeviceSN + ",";
 
             /*
             * Read SW Version
              */
-            result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_SW_VERSION, ref err);
+            result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_SW_VERSION, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Read SW Version");
-                return;
+                return null;
             }
             int offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + 3;
             int major = result[offset];
             int minor = result[offset + 1];
             int built = Utility.getU16FromByteA(result, offset + 2);
             tTxt_FirmVersion.Text = major.ToString() + "." + minor.ToString() + "." + built.ToString();
-            strHeader1 += "SW Version : " + major.ToString() + "." + minor.ToString() + "." + built.ToString() + ",";
+            str += "SW Version : " + major.ToString() + "." + minor.ToString() + "." + built.ToString() + ",";
 
             /*
             *  Read EEPROM Version
             */
-            result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_EEPROM_VER, ref err);
+            result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_EEPROM_VER, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Read EERPOM Version"); ;
-                return;
+                return null;
             }
             byte E2PVer = result[(int)PACKET_CONF.COMM_POS_PAYLOAD + 3];
             tTxt_SensorDataVersion.Text = E2PVer.ToString();
-            strHeader1 += "EEPROM : " + E2PVer.ToString() + ",";
+            str += "EEPROM : " + E2PVer.ToString() + ",";
 
             /*
             *  Read Output Type
             */
-            result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_OUTPUT_DEVICE_TYPE, ref err);
+            result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_OUTPUT_DEVICE_TYPE, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Read Board SN");
-                return;
+                return null;
             }
             offset = (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ;
             int OutputType = result[offset];
@@ -423,34 +476,41 @@ namespace IncomUtility
 
             if (OutputType == 0)
             {
-                strHeader1 += "OutPut Type : mA Output,";
+                str += "OutPut Type : mA Output,";
             }
             else
             {
-                strHeader1 += "OutPut Type : Modbus,";
+                str += "OutPut Type : Modbus,";
             }
             if (Relay == 0)
             {
-                strHeader1 += "Relay : Not Fitted,";
+                str += "Relay : Not Fitted,";
             }
             else
             {
-                strHeader1 += "Relay : Fitted,";
+                str += "Relay : Fitted,";
             }
             if (BLEModule == 0)
             {
-                strHeader1 += "BLE : Not Fitted";
+                str += "BLE : Not Fitted";
             }
             else
             {
-                strHeader1 += "BLE : Not Fitted";
+                str += "BLE : Not Fitted";
             }
 
+            return str;
+        }
+
+        private void makeSaveFileFormat(string strheader1)
+        {
             /*
-            *  Save Data to CSV file
+            *  Settings for Saveing Data to CSV file
             */
+            
             string filePath = logFiles.Checked();
             string strHeader2 = "";
+
             if (filePath != null)
             {
                 int columCount = tGrid_GasData.Columns.Count;
@@ -463,8 +523,23 @@ namespace IncomUtility
                     }
                     strHeader2 += tGrid_GasData.Columns[i].Header.ToString() + ",";
                 }
-                logFiles.SetDataHeader(strHeader1, strHeader2);
+                logFiles.SetDataHeader(strheader1, strHeader2);
             }
+            return ;
+        }
+
+        private void gasMonitoringStart()
+        {
+            string strHeader1 = "";
+
+            strHeader1 = getDeviceVersion();
+
+            if(strHeader1 == null)
+            {
+                return;
+            }
+          
+            makeSaveFileFormat(strHeader1);
 
             /*
             *  Monitoring Start
@@ -475,7 +550,7 @@ namespace IncomUtility
             tBtn_MainStop.IsEnabled = true;
             tUpdown_NumReadings.IsEnabled = false;
             tUpdown_LogInterval.IsEnabled = false;
-            monitorPeriod = (int)tUpdown_LogInterval.Value * 1000 - 300;
+            monitorPeriod = (int)tUpdown_LogInterval.Value * (int)Constants.secondTomilisecond - (int)Constants.defaultSleep * 3;
 
             gas_chart_reset();
             gas_chart_make();
@@ -484,15 +559,13 @@ namespace IncomUtility
             gas_monitor = new Thread(gas_monitor_run);
             gas_monitor.Start();
         }
-  
+
         private void gasMonitoringStop()
         {
             logFiles.Unchecked();
 
             gas_monitor_stop();
 
-            tBtn_MainStart.IsEnabled = true;
-            tBtn_MainStop.IsEnabled = false;
             tUpdown_NumReadings.IsEnabled = true;
             tUpdown_LogInterval.IsEnabled = true;
         }
@@ -502,19 +575,83 @@ namespace IncomUtility
             gridGasDataList.Clear();
             tGrid_GasData.Items.Refresh();
 
+            tTxt_FaultStatus.Content = "Normal";
+            tTxt_FaultStatus.Foreground = Brushes.Green;
+
+            tTxt_AlarmStatus.Content = "Normal"; 
+            tTxt_AlarmStatus.Foreground = Brushes.Green;
+
+            tTxt_WarningStatus.Content = "Normal";
+            tTxt_WarningStatus.Foreground = Brushes.Green;
+
             gas_chart_reset();
             gas_chart_make();
+
         }
 
         private void resetAlarmFaults()
         {
-            SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_ALARMS, ref err);
+            QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_RESET_ALARMS, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Reset Alarms and Faults");
                 return;
             }
             MessageBox.Show("Succesfully Reset Alarms and Faults");
+
+        }
+
+        private void connectionMonitoringStart()
+        {
+            connection_monitor = new Thread(checkConnect);
+            connection_monitor.Start();
+        }
+
+        private void checkConnect()
+        {
+            while (true)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    bool isConnect = SerialPortIO.serialPort.IsOpen;
+                    if (isConnect)
+                    {
+                        tBtn_Connect.Content = "Disconnect";
+                        tTxt_ConnectSatus.Content = "Connected";
+                        tTxt_ConnectSatus.Foreground = Brushes.Green;
+                    }
+                    else
+                    {
+                        tBtn_Connect.Content = "Connect";
+                        tTxt_ConnectSatus.Content = "Not Connected";
+                        tTxt_ConnectSatus.Foreground = Brushes.Red;
+                    }
+                   
+                }));
+                Thread.Sleep(1000);      //1 second
+            }
+        }
+            
+        private void connectControl()
+        {
+            if (tBtn_Connect.Content.ToString() == "Connect")
+            {
+                if (SerialPortIO.isPortOpen())
+                {
+                    tBtn_Connect.Content = "Disconnect";
+                    tTxt_ConnectSatus.Content = "Connected";
+                    tTxt_ConnectSatus.Foreground = Brushes.Green;
+                }
+            }
+            else
+            {
+                gas_monitor_stop();
+                allThreadStop();
+                SerialPortIO.serialPort.Close();
+                tBtn_Connect.Content = "Connect";
+                tTxt_ConnectSatus.Content = "Not Connected";
+                tTxt_ConnectSatus.Foreground = Brushes.Red;
+            }
 
         }
 
@@ -558,6 +695,7 @@ namespace IncomUtility
                 Thread.Sleep(monitorPeriod);
             }
         }
+
         private void gas_monitor_stop()
         {
             if (gas_monitor != null)
@@ -566,7 +704,11 @@ namespace IncomUtility
 
                 gas_monitor.Join();
             }
+
+            tBtn_MainStart.IsEnabled = true;
+            tBtn_MainStop.IsEnabled = false;
         }
+
         private void gas_grid_make()
         {
             gridGasDataList = new List<UIDataGrid>();
@@ -640,6 +782,7 @@ namespace IncomUtility
             }
 
         }
+       
         private void gas_chart_make()
         {
             System.Drawing.Color ch1_color = System.Drawing.Color.Red;
@@ -656,6 +799,7 @@ namespace IncomUtility
             m_chart1.AddSeries(gas_data_5, chart_1_legend_5, ch5_color);
 
         }
+        
         private void gas_chart_show(int max_window)
         {
             m_chart1.WindowSize = max_window;
@@ -704,5 +848,8 @@ namespace IncomUtility
         }
 
         #endregion
+
+        
+
     }
 }

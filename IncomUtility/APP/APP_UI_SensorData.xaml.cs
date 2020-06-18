@@ -82,7 +82,7 @@ namespace IncomUtility.APP
                 payload[4] = (byte)eepAddr;
                 payload[5] = (byte)dataLen;
 
-                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DATA_FROM_MEM, payload, ref err, 500);
+                byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DATA_FROM_MEM, payload, ref err, 500);
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
                     tTxt_Logs.AppendText("ERROR - READ eerpom : " + eepAddr);
@@ -183,7 +183,7 @@ namespace IncomUtility.APP
 
                 Array.Copy(datas, eepAddr, payload, 6, dataLen);
 
-                SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_WRITE_DATA_TO_MEM, payload, ref err, 1000);
+                QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_WRITE_DATA_TO_MEM, payload, ref err, 1000);
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
                     tTxt_Logs.AppendText("ERROR - WRITE eeprom : " + eepAddr);

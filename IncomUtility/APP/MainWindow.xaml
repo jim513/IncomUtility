@@ -3,17 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IncomUtility"
-        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="IncomUtility.MainWindow"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="IncomUtility.MainWindow"
         mc:Ignorable="d" 
+        Icon="/IncomUtility;component/logo.ico" 
         Loaded="Window_Loaded"  SizeChanged="Window_SizeChanged"  Closing="Window_Closing"
-        Title="Incom Utility v.0.0.8" Height="800" Width="1350">
+        Title="Incom Utility v.0.0.9" Height="800" Width="1350">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60*"/>
-            <ColumnDefinition Width="60*"/>
-            <ColumnDefinition Width="60*"/>
-            <ColumnDefinition Width="694*"/>
+            <ColumnDefinition Width="93*"/>
+            <ColumnDefinition Width="92*"/>
+            <ColumnDefinition Width="92*"/>
+            <ColumnDefinition Width="262*"/>
+            <ColumnDefinition Width="316*"/>
+            <ColumnDefinition Width="120*"/>
+            <ColumnDefinition Width="359*"/>
+            <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="29*"/>
@@ -21,7 +25,7 @@
             <RowDefinition Height="405*"/>
             <RowDefinition Height="256*"/>
         </Grid.RowDefinitions>
-        <Menu Grid.ColumnSpan="4" Background="White" Margin="10,5,0,1.8" FontStyle="Normal" FontWeight="Normal" FontSize="13">
+        <Menu Grid.ColumnSpan="4" Background="White" Margin="10,5,26.2,1.8" FontStyle="Normal" FontWeight="Normal" FontSize="13">
             <MenuItem Header="_View">
                 <MenuItem x:Name="tMenu_ViewBLEInfo" Header="View BLE Info" Click="tMenu_ViewBLEInfo_Click"/>
                 <MenuItem x:Name="tMenu_ViewDeviceInfo" Header="View Device Info" Click="tMenu_ViewDeviceInfo_Click"/>
@@ -51,7 +55,7 @@
                 <MenuItem x:Name="tMenu_Debug" Header="Debug" Click="tMenu_Debug_Click"/>
             </MenuItem>
         </Menu>
-        <DataGrid x:Name="tGrid_GasData" Grid.ColumnSpan="2" Grid.Column="2" Margin="10.2,8.4,10,10.4" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid x:Name="tGrid_GasData" Grid.ColumnSpan="5" Grid.Column="2" Margin="10.2,8.4,4.4,10.4" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.ColumnHeaderStyle >
                 <Style TargetType = "{x:Type DataGridColumnHeader}">
                     <Setter Property = "HorizontalContentAlignment" Value = "Center" />
@@ -106,7 +110,7 @@
             <Button x:Name="tBtn_ResetAlarmFaults" Content="Reset Alarams &amp; Faults" Margin="10,10,10,0" Height="45" Click="tBtn_ResetAlarmFaults_Click"/>
 
         </StackPanel>
-        <GroupBox Header="Chart" Grid.Row="3" Grid.ColumnSpan="4" Margin="10,0,10,10">
+        <GroupBox Header="Chart" Grid.Row="2" Grid.ColumnSpan="7" Margin="10,404.4,3.4,10.4" Grid.RowSpan="2">
             <Grid Margin="5,5,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1145*"/>
@@ -118,6 +122,38 @@
                 <TextBlock Grid.Column="1" Margin="10.2,50,0,0" Name="chart_1_legend_3" Text="Legend3" HorizontalAlignment="Left" Width="92" Height="20" VerticalAlignment="Top" FontSize="14" MouseLeftButtonDown="chart_1_legend_3_MouseLeftButtonDown" />
                 <TextBlock Grid.Column="1"  Margin="10.2,70,0,0" Name="chart_1_legend_4" Text="Legend4" HorizontalAlignment="Left" Width="92" Height="20" VerticalAlignment="Top" FontSize="14" MouseLeftButtonDown="chart_1_legend_4_MouseLeftButtonDown" />
                 <TextBlock Grid.Column="1"  Margin="10.2,90,0,0" Name="chart_1_legend_5" Text="Legend5" HorizontalAlignment="Left" Width="92" Height="20" VerticalAlignment="Top" FontSize="14" MouseLeftButtonDown="chart_1_legend_5_MouseLeftButtonDown" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Connection" Margin="10.8,10,10.2,9.6" Grid.RowSpan="2" Grid.Column="4" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="47*"/>
+                    <ColumnDefinition Width="23*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="tBtn_Connect" Content="Connect" Grid.Column="1" Margin="8,10,10,10.2" Click="tBtn_Connect_Click"/>
+                <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <Label FontSize="14" Content="Connect :"/>
+                    <Label x:Name="tTxt_ConnectSatus" Content ="Not Connected" VerticalAlignment="Center" FontSize="14" Foreground="Red" />
+                </DockPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Check Gas Monitoring Status" Grid.Column="6" Grid.RowSpan="3" Margin="4.8,0,2.4,404.4">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="13*"/>
+                    <RowDefinition Height="16*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Fault" HorizontalAlignment="Center"  VerticalAlignment="Center"/>
+                <Label Content="Alarm" HorizontalAlignment="Center"  VerticalAlignment="Center" Grid.Column="1"/>
+                <Label Content="Wanrning" HorizontalAlignment="Center"  VerticalAlignment="Center" Grid.Column="2"/>
+                <Label x:Name="tTxt_FaultStatus" Content="Normal" Foreground="Green" HorizontalAlignment="Center"  Grid.Row="1" VerticalAlignment="Center" FontSize="17"/>
+                <Label x:Name="tTxt_AlarmStatus" Content="Normal" Foreground="Green" HorizontalAlignment="Center"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" FontSize="17"/>
+                <Label x:Name="tTxt_WarningStatus" Content="Normal" Foreground="Green" HorizontalAlignment="Center"  Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" FontSize="17"/>
             </Grid>
         </GroupBox>
     </Grid>

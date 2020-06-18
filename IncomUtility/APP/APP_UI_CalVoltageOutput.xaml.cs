@@ -66,7 +66,7 @@ namespace IncomUtility.APP
             float targetVoltage = 0;
             byte[] payload = Utility.getBytesFromF32(targetVoltage);
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_VOLTAGE_ZERO_CAL, payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_VOLTAGE_ZERO_CAL, payload, ref err);
             if(err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Cannot start Voltage Calibartion");
@@ -93,7 +93,7 @@ namespace IncomUtility.APP
                 voltageOutputRunning = false;
                 voltageOutput.Join();
 
-                SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_VOLTAGE_ZERO_CAL, ref err);
+                QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_VOLTAGE_ZERO_CAL, ref err);
 
                 if (err == ERROR_LIST.ERROR_PORT_NOT_OPEN)
                 {
@@ -111,7 +111,7 @@ namespace IncomUtility.APP
         {
             float targetCurrent = (float)tUpdown_VoltageOutputZero.Value;
             byte[] payload = Utility.getBytesFromF32(targetCurrent);
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_VOLTAGE_ZERO_CAL, payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_VOLTAGE_ZERO_CAL, payload, ref err);
             if (err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Failed Voltage Zero Accept");
@@ -133,7 +133,7 @@ namespace IncomUtility.APP
             float targetVoltageConc = (float)tUpdown_TargetConc.Value;
             byte[] payload = Utility.getBytesFromF32(targetVoltageConc);
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_VOLTAGE_SPAN_CAL, payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_VOLTAGE_SPAN_CAL, payload, ref err);
             if (err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Cannot start Voltage SPAN Calibartion");
@@ -160,7 +160,7 @@ namespace IncomUtility.APP
                 voltageOutputRunning = false;
                 voltageOutput.Join();
 
-                SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_VOLTAGE_SPAN_CAL, ref err);
+                QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_VOLTAGE_SPAN_CAL, ref err);
 
                 if (err == ERROR_LIST.ERROR_PORT_NOT_OPEN)
                 {
@@ -178,7 +178,7 @@ namespace IncomUtility.APP
         {
             float targetCurrent = (float)tUpdown_VoltageOutputSpan.Value;
             byte[] payload = Utility.getBytesFromF32(targetCurrent);
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_ANALOGUE_SPAN_CAL, payload, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_ANALOGUE_SPAN_CAL, payload, ref err);
             if (err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Failed Voltage Span Calibartion");
@@ -198,7 +198,7 @@ namespace IncomUtility.APP
         {
             while (voltageOutputRunning)
             {
-                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
+                byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
 
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
@@ -216,6 +216,12 @@ namespace IncomUtility.APP
 
                 Thread.Sleep(1000);
             }
+        }
+
+        public void threadClose()
+        {
+            if (voltageOutputRunning)
+                voltageOutput.Abort();
         }
 
     }

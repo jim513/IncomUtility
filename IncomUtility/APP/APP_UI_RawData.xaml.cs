@@ -83,7 +83,7 @@ namespace IncomUtility.APP
              * Get Gas Reading
              */
             byte[] channel = { 0x00 };
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_GAS_READING, channel, ref err, 300);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_GAS_READING, channel, ref err, 300);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - GET GAS READING");
@@ -106,7 +106,7 @@ namespace IncomUtility.APP
             /*
             * Read Analogue Output
             */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - READ ANLOGUE OUTPUT");
@@ -144,7 +144,7 @@ namespace IncomUtility.APP
             /*
              * Read Cell Voltage /Current
              */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CELL_VOLTAGE_CURRENT, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CELL_VOLTAGE_CURRENT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - READ CELL VOLTAGE / CURRENT");
@@ -166,7 +166,7 @@ namespace IncomUtility.APP
             /*
              * Read Raw ADC
              */
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_RAW_ADC, ref err);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_RAW_ADC, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - READ RAW ADC");
@@ -190,7 +190,7 @@ namespace IncomUtility.APP
             /*
              * Read Raw Cell Signal
              */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_CELL_SIGNAL, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_CELL_SIGNAL, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - READ RAW CELL SIGANL");
@@ -213,7 +213,7 @@ namespace IncomUtility.APP
             /*
              * Read Internal Temperature
              */
-            byte[] result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_INTERNAL_TEMP, ref err);
+            byte[] result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_INTERNAL_TEMP, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - READ TEMPERATURE");
@@ -233,7 +233,7 @@ namespace IncomUtility.APP
             /*
             * Read Voltage Level
             */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_LEVELS, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_LEVELS, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - READ VOLTAGE LEVEL");
@@ -259,7 +259,7 @@ namespace IncomUtility.APP
             /*
              * Read Voltage Output
              */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_OUTPUT, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_VOLTAGE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - READ VOLTAGE OUTPUT");
@@ -282,7 +282,7 @@ namespace IncomUtility.APP
             /*
              * Read Raw GasData
              */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_GAS_DATA, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_RAW_GAS_DATA, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Logs.AppendText("ERROR - READ RAW GAS DATA");

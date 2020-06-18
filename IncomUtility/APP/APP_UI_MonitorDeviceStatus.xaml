@@ -80,10 +80,10 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Style.Triggers>
-                                    <Trigger Property="Text" Value="False">
+                                    <Trigger Property="Text" Value="Normal">
                                         <Setter Property="Background" Value="LightGreen"/>
                                     </Trigger>
-                                    <Trigger Property="Text" Value="True">
+                                    <Trigger Property="Text" Value="Fault">
                                         <Setter Property="Background" Value="Red"/>
                                     </Trigger>
                                 </Style.Triggers>
@@ -94,10 +94,10 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Style.Triggers>
-                                    <Trigger Property="Text" Value="False">
+                                    <Trigger Property="Text" Value="Normal">
                                         <Setter Property="Background" Value="LightGreen"/>
                                     </Trigger>
-                                    <Trigger Property="Text" Value="True">
+                                    <Trigger Property="Text" Value="Fault">
                                         <Setter Property="Background" Value="Red"/>
                                     </Trigger>
                                 </Style.Triggers>
@@ -119,10 +119,10 @@
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Style.Triggers>
-                                <Trigger Property="Text" Value="False">
+                                <Trigger Property="Text" Value="Normal">
                                     <Setter Property="Background" Value="LightGreen"/>
                                 </Trigger>
-                                <Trigger Property="Text" Value="True">
+                                <Trigger Property="Text" Value="Fault">
                                     <Setter Property="Background" Value="Red"/>
                                 </Trigger>
                             </Style.Triggers>
@@ -133,10 +133,10 @@
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Style.Triggers>
-                                <Trigger Property="Text" Value="False">
+                                <Trigger Property="Text" Value="Normal">
                                     <Setter Property="Background" Value="LightGreen"/>
                                 </Trigger>
-                                <Trigger Property="Text" Value="True">
+                                <Trigger Property="Text" Value="Fault">
                                     <Setter Property="Background" Value="Red"/>
                                 </Trigger>
                             </Style.Triggers>
@@ -157,10 +157,10 @@
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Style.Triggers>
-                                <Trigger Property="Text" Value="False">
+                                <Trigger Property="Text" Value="Normal">
                                     <Setter Property="Background" Value="LightGreen"/>
                                 </Trigger>
-                                <Trigger Property="Text" Value="True">
+                                <Trigger Property="Text" Value="Fault">
                                     <Setter Property="Background" Value="Red"/>
                                 </Trigger>
                             </Style.Triggers>
@@ -171,10 +171,10 @@
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Style.Triggers>
-                                <Trigger Property="Text" Value="False">
+                                <Trigger Property="Text" Value="Normal">
                                     <Setter Property="Background" Value="LightGreen"/>
                                 </Trigger>
-                                <Trigger Property="Text" Value="True">
+                                <Trigger Property="Text" Value="Fault">
                                     <Setter Property="Background" Value="Red"/>
                                 </Trigger>
                             </Style.Triggers>

@@ -52,7 +52,7 @@ namespace IncomUtility.APP
             /*
              * Send Command
              */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, payload, ref err, 350);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, payload, ref err, 350);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 return null;
@@ -115,7 +115,7 @@ namespace IncomUtility.APP
             /*
              * Send Command
              */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_WRITE_CONFIG, payload, ref err, delayTime);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_WRITE_CONFIG, payload, ref err, delayTime);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 return null;
@@ -860,7 +860,7 @@ namespace IncomUtility.APP
             /*
              * Read Device Output Type
              */
-            value = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_OUTPUT_DEVICE_TYPE, ref err);
+            value = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_OUTPUT_DEVICE_TYPE, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
                 tUpdown_InhibitCurrent.Value = 0;
             tUpdown_InhibitCurrent.Value = Utility.getF32FromByteA(value, (int)PACKET_CONF.COMM_POS_PAYLOAD + (int)PACKET_CONF.COMM_RESPONSE_SZ + 3);
@@ -2356,7 +2356,7 @@ namespace IncomUtility.APP
                 payload[4] = (byte)eepAddr;
                 payload[5] = (byte)dataLen;
 
-                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DATA_FROM_MEM, payload, ref err, 500);
+                byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DATA_FROM_MEM, payload, ref err, 500);
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
                     MessageBox.Show("ERROR - READ DATA FORM INCOM MEMORY");
@@ -2423,7 +2423,7 @@ namespace IncomUtility.APP
 
                 Array.Copy(data, eepAddr, payload, 6, dataLen);
 
-                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_WRITE_DATA_TO_MEM, payload, ref err, 1000);
+                byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_WRITE_DATA_TO_MEM, payload, ref err, 1000);
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
                     MessageBox.Show("ERROR - WRITE DATA TO INCOM MEMORY");

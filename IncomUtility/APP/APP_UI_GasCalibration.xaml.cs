@@ -77,7 +77,7 @@ namespace IncomUtility
             /*
              *  Check Sensor Gas Type
              */
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SENSOR_INFO, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SENSOR_INFO, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Gas Calibration Start");
@@ -95,7 +95,7 @@ namespace IncomUtility
             /*
              *  Stop Zero Cal befor Start
              */
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_ZERO_CAL, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_ZERO_CAL, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Gas Calibration Start");
@@ -111,7 +111,7 @@ namespace IncomUtility
             byte[] payload1 = Utility.getBytesFromF32(baseLineConcentrate);
             payload0 = Utility.mergeByteArray(payload0, payload1);
             
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_ZERO_CAL, payload0, ref err ,200);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_ZERO_CAL, payload0, ref err ,200);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Gas Calibration Start");
@@ -133,7 +133,7 @@ namespace IncomUtility
             /*
            *  Stop Span Cal befor Start
            */
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SPAN_CAL, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SPAN_CAL, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Span Calibration Start");
@@ -161,7 +161,7 @@ namespace IncomUtility
             payload1 = Utility.getBytesFromF32(targetsensitivitiy);
             payload0 = Utility.mergeByteArray(payload0, payload1);
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_SPAN_CAL, payload0, ref err, 200);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_START_SPAN_CAL, payload0, ref err, 200);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Span Calibration Start");
@@ -198,7 +198,7 @@ namespace IncomUtility
             byte[] payload1 = Utility.getBytesFromF32(baseLineConcentrate);
             payload0 = Utility.mergeByteArray(payload0, payload1);
 
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_ZERO_CAL,payload0, ref err ,400);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_ZERO_CAL,payload0, ref err ,400);
             if (err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Failed in zeroing");
@@ -243,7 +243,7 @@ namespace IncomUtility
             payload0 = Utility.mergeByteArray(payload0, payload1);
 
             byte[] payload2 = Utility.getBytesFromU16((ushort)INNCOM_CONF_LIST.GAS_PARAM_CORRECTION_FACTOR);
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, payload2, ref err, 200);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, payload2, ref err, 200);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Read Span Gas Data");
@@ -256,7 +256,7 @@ namespace IncomUtility
             /*
              * Accept Span Cal
              */
-            result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_SPAN_CAL, payload0, ref err, 400);
+            result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_ACCEPT_SPAN_CAL, payload0, ref err, 400);
             if (err == ERROR_LIST.ERROR_NCK)
             {
                 MessageBox.Show("Failed in spaning");
@@ -300,7 +300,7 @@ namespace IncomUtility
                 /*
                  * Read Sensor Info
                  */
-                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SENSOR_INFO, ref err);
+                byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SENSOR_INFO, ref err);
                 if (err == ERROR_LIST.ERROR_PORT_NOT_OPEN)
                 {
                     return;
@@ -317,7 +317,7 @@ namespace IncomUtility
                  * read target span gas
                  */
                 byte[] payload = Utility.getBytesFromU16((ushort)INNCOM_CONF_LIST.CAL_PARAM_CAL_CONC);
-                result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, payload, ref err, 200);
+                result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, payload, ref err, 200);
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
                     MessageBox.Show("ERROR - Read Span Gas Data");
@@ -327,7 +327,7 @@ namespace IncomUtility
                 tTxt_TargetSpanConc.Text = CalCon.ToString("N1");
 
                 payload = Utility.getBytesFromU16((ushort)INNCOM_CONF_LIST.GAS_PARAM_MEASURING_RANGE);
-                result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, payload, ref err, 200);
+                result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_CONFIG, payload, ref err, 200);
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
                     MessageBox.Show("ERROR - Read Span Gas Data");
@@ -354,7 +354,7 @@ namespace IncomUtility
             while (zeroCalibrationRunning)
             {
 
-                result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_GAS_READING,payload, ref err ,100);
+                result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_GAS_READING,payload, ref err ,100);
                
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
@@ -378,7 +378,7 @@ namespace IncomUtility
             while (spanCalibrationRunning)
             {
 
-                result = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_GAS_READING, payload, ref err, 100);
+                result = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_GET_GAS_READING, payload, ref err, 100);
 
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
@@ -405,7 +405,7 @@ namespace IncomUtility
                 spanCalibrationRunning = false;
                 spanCal.Join();
 
-                SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SPAN_CAL, ref err);
+                QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_SPAN_CAL, ref err);
                 
                 releaseOutput();
 
@@ -432,7 +432,7 @@ namespace IncomUtility
                 zeroCalibrationRunning = false;
                 zeroCal.Join();
                
-                SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_ZERO_CAL, ref err);
+                QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_STOP_ZERO_CAL, ref err);
                 releaseOutput();
                 if (err == ERROR_LIST.ERROR_PORT_NOT_OPEN)
                 {
@@ -452,7 +452,7 @@ namespace IncomUtility
 
         public bool setInhitbitOutput()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_INHIBIT_OUTPUT, ref err);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_INHIBIT_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {        
                 return false;
@@ -463,7 +463,7 @@ namespace IncomUtility
 
         public bool releaseOutput()
         {
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_OUTPUT, ref err, 200);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_RELEASE_OUTPUT, ref err, 200);
             if (err == ERROR_LIST.ERROR_PORT_NOT_OPEN)
             {
                 return false ;
@@ -475,6 +475,13 @@ namespace IncomUtility
             return true;
         }
 
+        public void threadClose()
+        {
+            if (spanCalibrationRunning)
+                spanCal.Abort();
+            if (zeroCalibrationRunning)
+                zeroCal.Abort();
+        }
        
     }
 }

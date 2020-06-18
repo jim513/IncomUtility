@@ -131,30 +131,31 @@ namespace IncomUtility
 
             int bitNumberOfByte = 8;
 
-            byte currentByte = u8RXbuffer[u8RXbuffer.Length - 4];
-            for (int bit_pos = 0; bit_pos <  bitNumberOfByte  ; bit_pos++)
+            /*
+             * check two byte bit
+             */
+            byte currentByte = u8RXbuffer[u8RXbuffer.Length -(int)PACKET_CONF.COMM_AFTER_PAYLOAD_OVERHEAD -1];
+            
+            int oneBytePos = 0;
+           
+            for (int two_byte_bit_pos = 0; two_byte_bit_pos <  bitNumberOfByte * 2; two_byte_bit_pos++)
             {
-                if (Utility.checkBitPos(currentByte, bit_pos))
+                if(two_byte_bit_pos == bitNumberOfByte)
                 {
-                    value[bit_pos] = "True";
+                    currentByte = u8RXbuffer[u8RXbuffer.Length - (int)PACKET_CONF.COMM_AFTER_PAYLOAD_OVERHEAD - 2];
+                    oneBytePos = 0;
+                }
+                if (Utility.checkBitPos(currentByte, oneBytePos))
+                {
+                    value[two_byte_bit_pos] = "Fault";
                 }
                 else
                 {
-                    value[bit_pos] = "False";
+                    value[two_byte_bit_pos] = "Normal";
                 }
+                oneBytePos++;
             }
-            currentByte = u8RXbuffer[u8RXbuffer.Length - 5];
-            for (int bit_pos = bitNumberOfByte; bit_pos < bitNumberOfByte * 2; bit_pos++)
-            {
-                if (Utility.checkBitPos(currentByte, bit_pos))
-                {
-                    value[bit_pos] = "True";
-                }
-                else
-                {
-                    value[bit_pos] = "False";
-                }
-            }
+         
             makeDataGrid(grid, list, status, value);
 
         }
@@ -200,7 +201,7 @@ namespace IncomUtility
                 timeToSend[5] = (byte)setTime.Minute;
                 timeToSend[6] = (byte)setTime.Second;
 
-                SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err, 300);
+                QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_WRITE_TIME, timeToSend, ref err, 300);
 
                 if (err == ERROR_LIST.ERROR_NONE)
                 {
@@ -231,7 +232,7 @@ namespace IncomUtility
             /* 
             * Read Device Status
             */
-            byte[] u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DEVICE_STATUS, ref err);
+            byte[] u8RXbuffer = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_DEVICE_STATUS, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Memo1.AppendText("ERROR - READ INCOM STATUS");
@@ -244,7 +245,7 @@ namespace IncomUtility
              * Read Warning Status
              */
             byte[] cmd_ReadFaultOption = { 0x01 };
-            u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_FAULT_DETAILS, cmd_ReadFaultOption, ref err);
+            u8RXbuffer = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_FAULT_DETAILS, cmd_ReadFaultOption, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Memo1.AppendText("ERROR : READ WARNING DETAILS");
@@ -257,7 +258,7 @@ namespace IncomUtility
              * Read Fault Status
              */
             cmd_ReadFaultOption[0] = 0x02;
-            u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_FAULT_DETAILS, cmd_ReadFaultOption, ref err);
+            u8RXbuffer = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_FAULT_DETAILS, cmd_ReadFaultOption, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Memo1.AppendText("ERROR : READ FAULT DETAILS");
@@ -272,7 +273,7 @@ namespace IncomUtility
             /*
             *Read Switch Status
             */
-            byte[] u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SWITCH_STATUS, ref err);
+            byte[] u8RXbuffer = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_SWITCH_STATUS, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Memo1.AppendText("ERROR - READ SWITCH STATUS");
@@ -314,7 +315,7 @@ namespace IncomUtility
             /*
             *Read Inhibit Switch
             */
-            u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_INHIBIT_SWITCH, ref err);
+            u8RXbuffer = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_INHIBIT_SWITCH, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Memo1.AppendText("ERROR - READ INHIBIT SWITCH STATUS");
@@ -327,7 +328,7 @@ namespace IncomUtility
             /*
              * Read SInk/Source Switch
              */
-            u8RXbuffer = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
+            u8RXbuffer = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_ANALOGUE_OUTPUT, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 tTxt_Memo1.AppendText("ERROR - READ ANLOGUE TYPE");
@@ -342,7 +343,7 @@ namespace IncomUtility
             /*
              *  Read Time
              */
-            byte[] u8RXbuffer = SerialPortIO.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_TIME, ref err);
+            byte[] u8RXbuffer = QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_READ_TIME, ref err);
 
             if (err != ERROR_LIST.ERROR_NONE)
             {
@@ -375,6 +376,17 @@ namespace IncomUtility
                 tTxt_Memo1.AppendText("ERROR - READ TIME - INDEX OUT RANGE");
                 tTxt_Memo1.AppendText(Environment.NewLine);
                 return;
+            }
+        }
+
+        public void threadClose()
+        {
+            if (timeLock != null)
+            {
+                if (timeLock.IsAlive)
+                {
+                    timeLock.Abort();
+                }
             }
         }
     }

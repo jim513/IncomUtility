@@ -291,7 +291,7 @@ namespace IncomUtility.APP
              */
             byte[] eventType = new byte[1];
             eventType[0] = (byte)(tCmb_LogsType.SelectedIndex + 1);
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_LOG_INFO, eventType, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_LOG_INFO, eventType, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Read Log Info");
@@ -386,7 +386,7 @@ namespace IncomUtility.APP
                 payload[1] = (byte)(index >> 8);
                 payload[2] = (byte)index;
 
-                byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_LOG_DATA, payload, ref err, 300);
+                byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_LOG_DATA, payload, ref err, 300);
                 if (err != ERROR_LIST.ERROR_NONE)
                 {
                     MessageBox.Show("Index : " + index.ToString() + "  ERROR - Read Log Data");
@@ -451,7 +451,7 @@ namespace IncomUtility.APP
             byte[] eventType = new byte[1];
             eventType[0] = (byte)(tCmb_LogsType.SelectedIndex + 1);
 
-            byte[] result = SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_LOG_INFO, eventType, ref err);
+            byte[] result = QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_READ_LOG_INFO, eventType, ref err);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Read Log Info");
@@ -565,7 +565,7 @@ namespace IncomUtility.APP
             if ((bool)tChb_RecordClrLog.IsChecked)
                 payload[1] = 1;
 
-            SerialPortIO.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CLR_LOG_DATA, payload, ref err, 800);
+            QuattroProtocol.sendCommand(INNCOM_COMMAND_LIST.COMM_CMD_CLR_LOG_DATA, payload, ref err, 800);
             if (err != ERROR_LIST.ERROR_NONE)
             {
                 MessageBox.Show("ERROR - Clear Log Data");
@@ -575,7 +575,7 @@ namespace IncomUtility.APP
             MessageBox.Show("Cleared logs - " + LOG_TABLE_TYPE_STRINGA[payload[0]].ToString(), "Information");
         }
 
-        private void stopDownload()
+        public void stopDownload()
         {
             if (LogMonitorRunning)
             {
@@ -724,6 +724,12 @@ namespace IncomUtility.APP
             {
                 updateLogGrid(grid_LogRelfex, logReflexList, index + 1, "tReflex Log", "-", f32Adc1, f32Adc2);
             }));
+        }
+
+        public void threadClose()
+        {
+            if (LogMonitorRunning)
+                LogMonitor.Abort();
         }
 
     }

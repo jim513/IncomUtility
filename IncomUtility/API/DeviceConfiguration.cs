@@ -248,9 +248,8 @@ namespace IncomUtility
             tNtcCfg = new CONFIG_NTC_COMP_STRUCT();
             tUL2075Cfg = new CONFIG_UL2075_HISTOGRAM_STRUCT();
 
-            totalSize = tModbusCfg.size + tRelayCfg.size + tmAOutputCfg.size + tGeneralCfg.size + tCircuitCalCfg.size + 26 +
-              tDeviceInfo.size + tSecurityCfg.size + tNtcCfg.size + tUL2075Cfg.size;
-
+            totalSize = tModbusCfg.getSize() + tRelayCfg.getSize() + tmAOutputCfg.getSize() + tGeneralCfg.getSize() + tCircuitCalCfg.getSize() + 26 +
+              tDeviceInfo.getSize() + tSecurityCfg.getSize() + tNtcCfg.getSize() + tUL2075Cfg.getSize();
         }
         public byte[] getDataToByteArray()
         {
@@ -294,30 +293,30 @@ namespace IncomUtility
 
             int start = 0;
             tModbusCfg.DeSerialize(data, start);
-            start += tModbusCfg.size;
+            start += tModbusCfg.getSize();
 
             tRelayCfg.DeSerialize(data, start);
-            start += tRelayCfg.size;
+            start += tRelayCfg.getSize();
 
             tmAOutputCfg.DeSerialize(data, start);
-            start += tmAOutputCfg.size;
+            start += tmAOutputCfg.getSize();
 
             tGeneralCfg.DeSerialize(data, start);
-            start += tGeneralCfg.size;
+            start += tGeneralCfg.getSize();
 
             tCircuitCalCfg.DeSerialize(data, start);
-            start += tCircuitCalCfg.size;
+            start += tCircuitCalCfg.getSize();
 
             start += 26;
 
             tDeviceInfo.DeSerialize(data, start);
-            start += tDeviceInfo.size;
+            start += tDeviceInfo.getSize();
 
             tSecurityCfg.DeSerialize(data, start);
-            start += tSecurityCfg.size;
+            start += tSecurityCfg.getSize();
 
             tNtcCfg.DeSerialize(data, start);
-            start += tNtcCfg.size;
+            start += tNtcCfg.getSize();
 
             tUL2075Cfg.DeSerialize(data, start);
 
@@ -326,7 +325,7 @@ namespace IncomUtility
     }
     public class CONFIG_MODBUS_STRUCT
     {
-        public ushort u16_crc = 0;
+        public ushort u16_crc ;
         public byte u8_SlaveId;
         public byte u8_Baudrate;
         public byte u8_Parity;
@@ -334,7 +333,7 @@ namespace IncomUtility
         public byte u8_Databits;
         public byte u8_Stopbits;
 
-        public int size = 8;
+        private int size = 8;
         public byte[] Serialize()
         {
             using (MemoryStream m = new MemoryStream())
@@ -362,6 +361,13 @@ namespace IncomUtility
             u8_Databits = data[start + 6];
             u8_Stopbits = data[start + 7];
         }
+
+        public int getSize()
+        {
+            // class member size
+            size = (int)PACKET_CONF.COMM_CRC_SZ + 6;
+            return size;
+        }
     }
     public class CONFIG_RELAY_STRUCT
     {
@@ -373,7 +379,7 @@ namespace IncomUtility
         public ushort u16_OnDelayTime;
         public ushort u16_OffDelayTime;
 
-        public int size = 10;
+        private int size ;
 
         public byte[] Serialize()
         {
@@ -402,6 +408,12 @@ namespace IncomUtility
             u16_OnDelayTime = BitConverter.ToUInt16(data, start + 6);
             u16_OffDelayTime = BitConverter.ToUInt16(data, start + 8);
         }
+        public int getSize()
+        {
+            // class member size
+            size = (int)PACKET_CONF.COMM_CRC_SZ + 8;
+            return size;
+        }
     }
 
     public class CONFIG_MA_OUPUT_STRUCT
@@ -412,7 +424,7 @@ namespace IncomUtility
         public byte u8_OverrangeCurrent;
         public ushort u16_InhibitTimeout;
 
-        public int size = 7;
+        private int size ;
 
         public byte[] Serialize()
         {
@@ -437,6 +449,12 @@ namespace IncomUtility
             u8_OverrangeCurrent = data[start + 4];
             u16_InhibitTimeout = BitConverter.ToUInt16(data, start + 5);
         }
+        public int getSize()
+        {
+            // class member size
+            size = (int)PACKET_CONF.COMM_CRC_SZ + 5;
+            return size;
+        }
     }
     public class CONFIG_GENERAL_SETTINGS_STRUCT
     {
@@ -448,7 +466,7 @@ namespace IncomUtility
         public byte u8_CalOverDueOption;
         public byte[] u8_passcode = new byte[4];
 
-        public int size = 10 + (int)INNCOM_CONF.NUM_LOCATION_TAG;
+        private int size;
 
         public byte[] Serialize()
         {
@@ -484,6 +502,12 @@ namespace IncomUtility
                 u8_passcode[i] = data[start + 6 + i];
             }
         }
+        public int getSize()
+        {
+            // class member size
+            size = (int)PACKET_CONF.COMM_CRC_SZ + 8 + (int)INNCOM_CONF.NUM_LOCATION_TAG;
+            return size;
+        }
     }
 
     public class CONFIG_CIRCUIT_CALIBRATION_STRUCT
@@ -500,7 +524,7 @@ namespace IncomUtility
         public float f32_VoltageOutputOffset;
         public float f32_VoltageOutputSpan;
 
-        public int size = 42;
+        private int size;
         public byte[] Serialize()
         {
             using (MemoryStream m = new MemoryStream())
@@ -537,14 +561,21 @@ namespace IncomUtility
             f32_VoltageOutputSpan = BitConverter.ToSingle(data, start + 38);
 
         }
+        public int getSize()
+        {
+            // class member size
+            size = (int)PACKET_CONF.COMM_CRC_SZ + 40;
+            return size;
+        }
+
     }
     public class CONFIG_DEVICE_INFO_STRUCT
     {
         public ushort u16_crc;
         public byte[] u8_DeviceSerialNum = new byte[(int)INNCOM_CONF.NUM_DEVICE_SN];
-        public byte[] u8_BoardSerialNum = new byte[(int)INNCOM_CONF.NUM_DEVICE_SN];
+        public byte[] u8_BoardSerialNum = new byte[(int)INNCOM_CONF.NUM_BOARD_SN];
 
-        public int size = 2 + (int)INNCOM_CONF.NUM_DEVICE_SN + (int)INNCOM_CONF.NUM_DEVICE_SN;
+        private int size;
         public byte[] Serialize()
         {
             using (MemoryStream m = new MemoryStream())
@@ -573,6 +604,12 @@ namespace IncomUtility
                 u8_BoardSerialNum[i] = data[start + 2 + i];
             }
         }
+        public int getSize()
+        {
+            // class member size
+            size = (int)PACKET_CONF.COMM_CRC_SZ + (int)INNCOM_CONF.NUM_DEVICE_SN + (int)INNCOM_CONF.NUM_BOARD_SN;
+            return size;
+        }
     }
 
     public class CONFIG_SECURITY_STRUCT
@@ -584,7 +621,7 @@ namespace IncomUtility
         public byte u8_reserved;
         public byte[] u8_otp_key = new byte[(int)INNCOM_CONF.NUM_OTP_KEY];
 
-        public int size = 6 + (int)INNCOM_CONF.NUM_OTP_KEY;
+        private int size = 6 + (int)INNCOM_CONF.NUM_OTP_KEY;
 
         public byte[] Serialize()
         {
@@ -614,12 +651,18 @@ namespace IncomUtility
                 u8_otp_key[i] = data[start + 6 + i];
             }
         }
+        public int getSize()
+        {
+            // class member size
+            size = (int)PACKET_CONF.COMM_CRC_SZ + 4 + (int)INNCOM_CONF.NUM_OTP_KEY;
+            return size;
+        }
     }
     public class CONFIG_NTC_COMP_STRUCT
     {
         public ushort u16_crc;
         public sbyte[] s8_NtcTempComp = new sbyte[(int)INNCOM_CONF.NUM_NTC_COMP];
-        public int size = 2 + (int)INNCOM_CONF.NUM_NTC_COMP;
+        private int size = 2 + (int)INNCOM_CONF.NUM_NTC_COMP;
 
         public byte[] Serialize()
         {
@@ -642,13 +685,19 @@ namespace IncomUtility
                 s8_NtcTempComp[i] = (sbyte)data[start + 2 + i];
             }
         }
+        public int getSize()
+        {
+            // class member size
+            size = (int)PACKET_CONF.COMM_CRC_SZ + (int)INNCOM_CONF.NUM_NTC_COMP;
+            return size;
+        }
     }
 
     public class CONFIG_UL2075_HISTOGRAM_STRUCT
     {
         public ushort u16_crc;
         public byte[] u8_Histogram = new byte[(int)INNCOM_CONF.NUM_HISTOGRAM];
-        public int size = 2 + (int)INNCOM_CONF.NUM_HISTOGRAM;
+        private int size = 2 + (int)INNCOM_CONF.NUM_HISTOGRAM;
 
         public byte[] Serialize()
         {
@@ -671,188 +720,14 @@ namespace IncomUtility
                 u8_Histogram[i] = data[start + 2 + i];
             }
         }
-    }
-    public struct CONFIG_PARAM_TABLE_STRUCT
-    {
-        public ushort u16_parm_index;
-        public byte u8_param_type;
-        public byte u8_length;
-
-        public CONFIG_PARAM_TABLE_STRUCT(ushort index, byte type, byte length)
+        public int getSize()
         {
-            u16_parm_index = index;
-            u8_param_type = type;
-            u8_length = length;
+            // class member size
+            size = (int)PACKET_CONF.COMM_CRC_SZ + (int)INNCOM_CONF.NUM_HISTOGRAM;
+            return size;
         }
     }
-    public class SenParamTable
-    {
-        public List<CONFIG_PARAM_TABLE_STRUCT> SenParamTableList = new List<CONFIG_PARAM_TABLE_STRUCT>();
 
-        public SenParamTable()
-        {
-            initTable();
-        }
-        private void initTable()
-        {
-            //Modbus Settings
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MODBUS_PARAM_SLAVE_ID, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MODBUS_PARAM_BAUDRATE, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MODBUS_PARAM_PARITY, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MODBUS_PARAM_FLOW_CONTROL, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MODBUS_PARAM_DATABITS, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MODBUS_PARAM_STOPBITS, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-
-            //Relay Settings
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.RELAY_PARAM_TRIGGER1, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.RELAY_PARAM_TRIGGER2, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.RELAY_PARAM_INIT_STATE1, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.RELAY_PARAM_INIT_STATE2, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.RELAY_PARAM_ON_DELAY_TIME, (byte)PARAMETER_TYPE.PARAM_TYPE_U16, 2));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.RELAY_PARAM_OFF_DELAY_TIME, (byte)PARAMETER_TYPE.PARAM_TYPE_U16, 2));
-
-            //mA Output Settings
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MA_PARAM_FAULT_CURRENT, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MA_PARAM_WARNING_CURRENT, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MA_PARAM_OVERRANGE_CURRENT, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.MA_PARAM_INHIBIT_TIMEOUT, (byte)PARAMETER_TYPE.PARAM_TYPE_U16, 2));
-
-            //General,
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GENERAL_PARAM_LOCATION_TAG, (byte)PARAMETER_TYPE.PARAM_TYPE_STR, 25));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GENERAL_PARAM_LED_CONTROL, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GENERAL_PARAM_ALARM_OP_MODE, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GENERAL_PARAM_OP_MODE, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GENERAL_PARAM_CAL_OVERDUE, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GENERAL_PARAM_PASSCODE, (byte)PARAMETER_TYPE.PARAM_TYPE_U8A, 4));
-
-
-            //Gas Alarm Settings,
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.ALARM_PARAM_THRESHOLD1, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.ALARM_PARAM_THRESHOLD2, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.ALARM_PARAM_THRESHOLD3, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.ALARM_PARAM_TRIGGER1, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.ALARM_PARAM_TRIGGER2, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.ALARM_PARAM_TRIGGER3, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.ALARM_PARAM_LATCHING, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-
-            //Gas Calibration Settings,
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CAL_PARAM_CAL_INTERVAL, (byte)PARAMETER_TYPE.PARAM_TYPE_U16, 2));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CAL_PARAM_CAL_CONC, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CAL_PARAM_LAST_CAL_DATE, (byte)PARAMETER_TYPE.PARAM_TYPE_U32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CAL_PARAM_DAYS_SINCE_LAST_CAL, (byte)PARAMETER_TYPE.PARAM_TYPE_U16, 2));
-
-
-            //Gas Settings,
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_USER_GAS_NAME, (byte)PARAMETER_TYPE.PARAM_TYPE_STR, 15));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_MEASURING_RANGE, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_CORRECTION_FACTOR, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_MEASUREMENT_UNITS, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_UNIT_CONVERSION, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_DEADBAND, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_GAS_TYPE, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_TARGET_CHANNEL, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_DECIMAL_POINT, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.GAS_PARAM_DISPLAY_RESOLUTION, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-
-
-            //Circuit Calibration,
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_OFFSET_SINK, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_OFFSET_SOURCE, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_SPAN_SINK, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_SPAN_SOURCE, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_OFFSET_SINK, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_OFFSET_SOURCE, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_SPAN_SINK, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_420MA_LOOP_SPAN_SOURCE, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_VOLTAGE_OUT_OFFSET, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.CIRCUIT_PARAM_VOLTAGE_OUT_SPAN, (byte)PARAMETER_TYPE.PARAM_TYPE_F32, 4));
-
-            //Device Information,
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.DEV_INFO_PARAM_DEVICE_SN, (byte)PARAMETER_TYPE.PARAM_TYPE_STR, (byte)INNCOM_CONF.NUM_DEVICE_SN));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.DEV_INFO_PARAM_BOARD_SN, (byte)PARAMETER_TYPE.PARAM_TYPE_STR, 16));
-
-            //Security,
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.SEC_PARAM_NUM_RETRY, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.SEC_PARAM_LOGIN_LOCK_TIME, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.SEC_PARAM_OTP_CONNECTION, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.SEC_PARAM_OTP_KEY, (byte)PARAMETER_TYPE.PARAM_TYPE_STR, 32));
-
-            //NTC Compensation Table,
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP1, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP2, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP3, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP4, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP5, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP6, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP7, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP8, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP9, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP10, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP11, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.NTC_PARAM_TEMP_COMP12, (byte)PARAMETER_TYPE.PARAM_TYPE_S8, 1));
-
-            //UL2075 histogram,
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD1, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD2, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD3, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD4, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD5, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD6, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD7, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD8, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD9, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD10, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD11, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD12, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD13, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD14, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD15, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD16, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD17, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD18, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD19, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD20, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD21, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD22, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD23, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD24, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD25, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD26, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD27, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD28, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD29, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD30, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD31, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD32, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD33, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD34, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD35, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD36, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD37, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD38, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD39, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-            SenParamTableList.Add(new CONFIG_PARAM_TABLE_STRUCT((ushort)INNCOM_CONF_LIST.UL2075_ALARM_THRESHOLD40, (byte)PARAMETER_TYPE.PARAM_TYPE_U8, 1));
-        }
-        public bool searchParmCfg(ushort u16_param, ref CONFIG_PARAM_TABLE_STRUCT data)
-        {
-            bool b_found = false;
-
-            for (int u16_index = 0; u16_index < (int)INNCOM_CONF.NUM_CONFIG_PARAM; u16_index++)
-            {
-                if (SenParamTableList[u16_index].u16_parm_index == u16_param)
-                {
-
-                    b_found = true;
-                    data = SenParamTableList[u16_index];
-                    break;
-                }
-            }
-
-            return b_found;
-
-        }
-    };
-    
     class DeviceConfiguration
     {
         public static byte[] configurationToByteArray(INNCOM_CONF com)
