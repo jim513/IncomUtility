@@ -1,8 +1,10 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -203,85 +205,105 @@ namespace IncomUtility.APP
             tTxt_Logs.AppendText(Environment.NewLine);
         }
 
+        public void ParserX509Certificate(byte[] data)
+        {
+
+            X509Certificate cert = new X509Certificate(data);
+
+            byte[] pubkey_results = cert.GetPublicKey();
+            string serialNum = cert.GetSerialNumberString();
+            string subject = cert.Subject;
+            string name  = cert.Issuer;
+
+            tTxt_Logs.AppendText("Name : " + name);
+            tTxt_Logs.AppendText(Environment.NewLine);
+            tTxt_Logs.AppendText("Public resutl : " + BitConverter.ToString(pubkey_results).Replace("-", string.Empty).Trim('\0'));
+            tTxt_Logs.AppendText(Environment.NewLine);
+            tTxt_Logs.AppendText("Subject: " + subject);
+            tTxt_Logs.AppendText(Environment.NewLine);
+            tTxt_Logs.AppendText("Serial Number : " +serialNum);
+            tTxt_Logs.AppendText(Environment.NewLine);    
+
+        }
         /*
          * Not Used
          */
-         /*
-        private void sendUserCertificate()
-        {
+        /*
+       private void sendUserCertificate()
+       {
 
-            OpenFileDialog BrowserDialog = new OpenFileDialog();
-            BrowserDialog.InitialDirectory = "C:\\";
+           OpenFileDialog BrowserDialog = new OpenFileDialog();
+           BrowserDialog.InitialDirectory = "C:\\";
 
-            Nullable<bool> fileOpenResult = BrowserDialog.ShowDialog();
+           Nullable<bool> fileOpenResult = BrowserDialog.ShowDialog();
 
-            if (fileOpenResult == false)
-            {
-                tTxt_Logs.AppendText("File was not opened");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
-
-
-            string filename = BrowserDialog.FileName;
-            byte[] data = System.IO.File.ReadAllBytes(filename);
-           
-            tTxt_Logs.AppendText("CERT FILE SIZE : " + data.Length.ToString());
-            tTxt_Logs.AppendText(Environment.NewLine);
+           if (fileOpenResult == false)
+           {
+               tTxt_Logs.AppendText("File was not opened");
+               tTxt_Logs.AppendText(Environment.NewLine);
+               return;
+           }
 
 
-            string userName = tTxt_UserCertficateName.Text;
-            string MobileSN = tTxt_MobileSN.Text;
-            string ApplicationID = tTxt_ApplicationID.Text;
+           string filename = BrowserDialog.FileName;
+           byte[] data = System.IO.File.ReadAllBytes(filename);
 
-            byte[] userNameData = new byte[(int)INNCOM_CONF.NUM_USER_NAME];
-            byte[] MobileSNData = new byte[(int)INNCOM_CONF.NUM_MOBILE_SN];
-            byte[] ApplicationData = new byte[(int)INNCOM_CONF.NUM_APPLICATION_ID];
-            byte[] sendData = null;
-            int len = userName.Length;
-            if (len > (int)INNCOM_CONF.NUM_USER_NAME)
-            {
-                len = (int)INNCOM_CONF.NUM_USER_NAME;
-            }
-            Encoding.ASCII.GetBytes(userName, 0, len, userNameData, 0);
-            sendData = userNameData;
-
-            len = MobileSN.Length;
-            if (len > (int)INNCOM_CONF.NUM_MOBILE_SN)
-            {
-                len = (int)INNCOM_CONF.NUM_MOBILE_SN;
-            }
-            Encoding.ASCII.GetBytes(MobileSN, 0, len, MobileSNData, 0);
-            sendData = Utility.mergeByteArray(sendData, MobileSNData);
+           tTxt_Logs.AppendText("CERT FILE SIZE : " + data.Length.ToString());
+           tTxt_Logs.AppendText(Environment.NewLine);
 
 
+           string userName = tTxt_UserCertficateName.Text;
+           string MobileSN = tTxt_MobileSN.Text;
+           string ApplicationID = tTxt_ApplicationID.Text;
 
-            len = ApplicationID.Length;
-            if (len > (int)INNCOM_CONF.NUM_APPLICATION_ID)
-            {
-                len = (int)INNCOM_CONF.NUM_APPLICATION_ID;
-            }
-            Encoding.ASCII.GetBytes(ApplicationID, 0, len, ApplicationData, 0);
-            sendData = Utility.mergeByteArray(sendData, ApplicationData);
+           byte[] userNameData = new byte[(int)INNCOM_CONF.NUM_USER_NAME];
+           byte[] MobileSNData = new byte[(int)INNCOM_CONF.NUM_MOBILE_SN];
+           byte[] ApplicationData = new byte[(int)INNCOM_CONF.NUM_APPLICATION_ID];
+           byte[] sendData = null;
+           int len = userName.Length;
+           if (len > (int)INNCOM_CONF.NUM_USER_NAME)
+           {
+               len = (int)INNCOM_CONF.NUM_USER_NAME;
+           }
+           Encoding.ASCII.GetBytes(userName, 0, len, userNameData, 0);
+           sendData = userNameData;
+
+           len = MobileSN.Length;
+           if (len > (int)INNCOM_CONF.NUM_MOBILE_SN)
+           {
+               len = (int)INNCOM_CONF.NUM_MOBILE_SN;
+           }
+           Encoding.ASCII.GetBytes(MobileSN, 0, len, MobileSNData, 0);
+           sendData = Utility.mergeByteArray(sendData, MobileSNData);
 
 
-            sendData = Utility.mergeByteArray(sendData, data);
 
-            
-             QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_SEND_USER_CERT, sendData,ref err, 700);
-            if (err != ERROR_LIST.ERROR_NONE)
-            {
-                tTxt_Logs.AppendText("ERROR - Send User Certificate file");
-                tTxt_Logs.AppendText(Environment.NewLine);
-                return;
-            }
-
-            tTxt_Logs.AppendText("SENT USER CERT FILE SUCCESSFULLY");
-            tTxt_Logs.AppendText(Environment.NewLine);
+           len = ApplicationID.Length;
+           if (len > (int)INNCOM_CONF.NUM_APPLICATION_ID)
+           {
+               len = (int)INNCOM_CONF.NUM_APPLICATION_ID;
+           }
+           Encoding.ASCII.GetBytes(ApplicationID, 0, len, ApplicationData, 0);
+           sendData = Utility.mergeByteArray(sendData, ApplicationData);
 
 
-        }
-        */
+           sendData = Utility.mergeByteArray(sendData, data);
+
+
+            QuattroProtocol.sendCommand(COMM_COMMAND_LIST.COMM_CMD_SEND_USER_CERT, sendData,ref err, 700);
+           if (err != ERROR_LIST.ERROR_NONE)
+           {
+               tTxt_Logs.AppendText("ERROR - Send User Certificate file");
+               tTxt_Logs.AppendText(Environment.NewLine);
+               return;
+           }
+
+           tTxt_Logs.AppendText("SENT USER CERT FILE SUCCESSFULLY");
+           tTxt_Logs.AppendText(Environment.NewLine);
+
+
+       }
+       */
         /*
          * Need Debug
          */
@@ -469,10 +491,12 @@ namespace IncomUtility.APP
                 return;
             }
 
-            string certificate = "-----BEGIN CERTIFICATE-----\n" + Convert.ToBase64String(certificateData) + "\n-----END CERTIFICATE-----";
-            tTxt_Logs.AppendText(certificate);
-            tTxt_Logs.AppendText(Environment.NewLine);
+            ParserX509Certificate(certificateData);
 
+            string certificate = "-----BEGIN CERTIFICATE-----\n" + Convert.ToBase64String(certificateData) + "\n-----END CERTIFICATE-----";
+            //tTxt_Logs.AppendText(certificate);
+           // tTxt_Logs.AppendText(Environment.NewLine);
+            
             /*
              * Save Certificate
              */

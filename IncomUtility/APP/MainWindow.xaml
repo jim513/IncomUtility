@@ -7,7 +7,7 @@
         mc:Ignorable="d" 
         Icon="/IncomUtility;component/logo.ico" 
         Loaded="Window_Loaded"  SizeChanged="Window_SizeChanged"  Closing="Window_Closing"
-        Title="Incom Utility v.0.0.9" Height="800" Width="1350">
+        Title="Incom Utility v.0.1.0" Height="800" Width="1350">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="93*"/>
