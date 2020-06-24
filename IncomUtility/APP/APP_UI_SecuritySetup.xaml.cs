@@ -210,14 +210,14 @@ namespace IncomUtility.APP
 
             X509Certificate cert = new X509Certificate(data);
 
-            byte[] pubkey_results = cert.GetPublicKey();
+            string publicKey = cert.GetPublicKeyString();
             string serialNum = cert.GetSerialNumberString();
             string subject = cert.Subject;
             string name  = cert.Issuer;
 
             tTxt_Logs.AppendText("Name : " + name);
             tTxt_Logs.AppendText(Environment.NewLine);
-            tTxt_Logs.AppendText("Public resutl : " + BitConverter.ToString(pubkey_results).Replace("-", string.Empty).Trim('\0'));
+            tTxt_Logs.AppendText("Public resutl : " + publicKey);
             tTxt_Logs.AppendText(Environment.NewLine);
             tTxt_Logs.AppendText("Subject: " + subject);
             tTxt_Logs.AppendText(Environment.NewLine);
@@ -494,8 +494,8 @@ namespace IncomUtility.APP
             ParserX509Certificate(certificateData);
 
             string certificate = "-----BEGIN CERTIFICATE-----\n" + Convert.ToBase64String(certificateData) + "\n-----END CERTIFICATE-----";
-            //tTxt_Logs.AppendText(certificate);
-           // tTxt_Logs.AppendText(Environment.NewLine);
+            tTxt_Logs.AppendText(certificate);
+            tTxt_Logs.AppendText(Environment.NewLine);
             
             /*
              * Save Certificate
